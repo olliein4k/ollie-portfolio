@@ -68,31 +68,3 @@ document.addEventListener("DOMContentLoaded", () => {
     cards.forEach(card => observer.observe(card));
 
 });
-
-/* ==========
-   Parallax
-============= */
-
-let mouseX = 0;
-let mouseY = 0;
-
-let currentX = 0;
-let currentY = 0;
-
-document.addEventListener("mousemove", e => {
-    mouseX = e.clientX - window.innerWidth / 2;
-    mouseY = e.clientY - window.innerHeight / 2;
-});
-
-function animateParallax() {
-
-    currentX += (mouseX - currentX) * 0.08;
-    currentY += (mouseY - currentY) * 0.08;
-
-    document.documentElement.style.setProperty("--mouse-x", currentX + "px");
-    document.documentElement.style.setProperty("--mouse-y", currentY + "px");
-
-    requestAnimationFrame(animateParallax);
-}
-
-animateParallax();
