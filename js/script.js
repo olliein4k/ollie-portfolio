@@ -4,17 +4,17 @@
 ════════════════════════════════════════════════ */
 
 // // ── NAV VISIBILITY ──────────────────────────────
-// const nav = document.getElementById('nav');
+const nav = document.getElementById('nav');
 
-// function updateNav() {
-//   if (window.scrollY > window.innerHeight * 0.6) {
-//     nav.classList.add('visible');
-//   } else {
-//     nav.classList.remove('visible');
-//   }
-// }
+function updateNav() {
+  if (window.scrollY > window.innerHeight * 0.6) {
+    nav.classList.add('visible');
+  } else {
+    nav.classList.remove('visible');
+  }
+}
 
-// window.addEventListener('scroll', updateNav, { passive: true });
+window.addEventListener('scroll', updateNav, { passive: true });
 
 // ── ACTIVE NAV LINK ─────────────────────────────
 const sections = document.querySelectorAll('section[id]');

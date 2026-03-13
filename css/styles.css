@@ -22,11 +22,9 @@
   --c-text-muted: #475569;
   --c-white:      #ffffff;
 
-  /* --f-display: 'Bebas Neue', sans-serif;
+  --f-display: 'Bebas Neue', sans-serif;
   --f-body:    'Outfit', sans-serif;
-  --f-mono:    'JetBrains Mono', monospace; */
-
-  font-family: Arial, Helvetica, sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
 
   --section-pad: 120px 60px;
   --max-w: 1080px;
@@ -340,6 +338,7 @@ section { position: relative; }
 
 .stats-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 0;
   margin: 48px 0 36px;
   border: 1px solid var(--c-border);
@@ -764,7 +763,15 @@ footer a:hover { color: var(--c-text); }
 
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .about-left .section-heading { position: static; }
-  .stat { min-width: 45%; }
+
+  .stat {
+    flex: 0 0 50%;   /* exactly 2 per row */
+    border-right: 1px solid var(--c-border);
+    box-sizing: border-box;
+    }
+    .stat:nth-child(2n) { border-right: none; }
+    .stat:nth-child(1),
+    .stat:nth-child(2) { border-bottom: 1px solid var(--c-border); }
 
   .project-card, .achievement-card { grid-template-columns: 1fr; }
   .project-number, .ach-index { display: none; }
@@ -785,6 +792,12 @@ footer a:hover { color: var(--c-text); }
   .hero-cta a { width: 100%; justify-content: center; }
   .hud-corner { display: none; }
   .stats-row { flex-direction: column; }
-  .stat { border-right: none; border-bottom: 1px solid var(--c-border); }
+  .stat {
+    flex: 0 0 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .stat:last-child { border-bottom: none; }
+  .stat:nth-child(2n) { border-right: none; }
   .stat:last-child { border-bottom: none; }
 }
