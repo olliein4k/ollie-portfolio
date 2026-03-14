@@ -41,23 +41,47 @@ revealEls.forEach(el => revealObserver.observe(el));
 
 // ── HERO TEXT REVEAL ────────────────────────────
 function initHeroReveal() {
+  const CHARS    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+  const STAGGER  = 80;   // ms between each character starting
+  const DURATION = 600;  // ms of scrambling before resolving
+  const RATE     = 40;   // ms between scramble frame updates
+
   const lines = document.querySelectorAll('.hero-name .line');
+
   lines.forEach((line, lineIdx) => {
     const text = line.textContent.trim();
     line.textContent = '';
-    [...text].forEach((char, i) => {
+
+    [...text].forEach((finalChar, charIdx) => {
       const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char;
       span.classList.add('hero-char');
-      // line 2 starts after line 1 finishes (5 chars × 38ms = 190ms)
-      const delay = (lineIdx * text.length * 38) + (i * 38);
-      span.style.animationDelay = `${delay}ms`;
+      span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
       line.appendChild(span);
+
+      // Stagger start: line 2 begins after line 1 finishes
+      const startDelay = (lineIdx * text.length * STAGGER) + (charIdx * STAGGER);
+
+      setTimeout(() => {
+        span.classList.add('hero-char--active');
+        const endTime = performance.now() + DURATION;
+
+        function scramble() {
+          if (performance.now() < endTime) {
+            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+            setTimeout(scramble, RATE);
+          } else {
+            span.textContent = finalChar;
+            span.classList.add('hero-char--resolved');
+          }
+        }
+
+        scramble();
+      }, startDelay);
     });
   });
 
-  // Supporting elements fade in after name finishes (~380ms + 120ms buffer)
-  const afterName = 500;
+  // Last char of NEBEL starts at (1×5×80)+(4×80) = 720ms, resolves at 720+600 = 1320ms
+  const afterName = 1420;
   [
     { selector: '.hero-label',       extra: 0   },
     { selector: '.hero-sub',         extra: 120 },

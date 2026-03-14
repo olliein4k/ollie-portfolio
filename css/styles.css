@@ -754,32 +754,21 @@ footer a:hover { color: var(--c-text); }
 /* ══════════════════════════════════════════════
    HERO TEXT REVEAL
 ══════════════════════════════════════════════ */
+/* ── HERO DECRYPT ── */
 .hero-char {
   display: inline-block;
   opacity: 0;
-  transform: translateY(60%) scaleY(0.6);
-  animation: char-reveal 0.5s var(--ease-out) forwards;
+  color: var(--c-blue);
 }
 
-@keyframes char-reveal {
-  to {
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
+.hero-char--active {
+  opacity: 1;
+  color: var(--c-blue-light);   /* scrambling — glowing blue */
 }
 
-/* Elements that fade in after the name */
-.hero-fade-up {
-  opacity: 0;
-  transform: translateY(16px);
-  animation: fade-up-in 0.7s var(--ease-out) forwards;
-}
-
-@keyframes fade-up-in {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-char--resolved {
+  color: var(--c-white);        /* final — snaps to white */
+  transition: color 0.12s ease;
 }
 
 /* ══════════════════════════════════════════════
