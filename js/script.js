@@ -86,12 +86,12 @@ function initHeroReveal() {
     { selector: '.hero-label',       extra: 0   },
     { selector: '.hero-sub',         extra: 120 },
     { selector: '.hero-cta',         extra: 260 },
-    { selector: '.hero-coords',      extra: 360 },
+    { selector: '.hero-coords', extra: 360, cls: 'hero-fade-up-centred' },
     { selector: '.scroll-indicator', extra: 400 },
-  ].forEach(({ selector, extra }) => {
+  ].forEach(({ selector, extra, cls }) => {
     const el = document.querySelector(selector);
     if (!el) return;
-    el.classList.add('hero-fade-up');
+    el.classList.add(cls);
     el.style.animationDelay = `${afterName + extra}ms`;
   });
 }
