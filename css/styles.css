@@ -162,6 +162,19 @@ section { position: relative; }
   pointer-events: none;
 }
 
+#hero-model-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  z-index: 0;
+}
+
+#hero-model-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .hud-corner {
   position: absolute;
   width: 32px; height: 32px;
