@@ -1,0 +1,4 @@
+header display on mobile
+initial hero animation (do other elements appear in???)
+neaten up code (comments, no redundant code)
+improve efficiency and layout/structure of code
