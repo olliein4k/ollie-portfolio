@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ollie Nebel — Portfolio Plan</title>
+<style>
+  :root {
+    --bg: #05070f;
+    --surface: #0b0f1e;
+    --surface2: #111827;
+    --accent: #3b82f6;
+    --accent2: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --border: #1e293b;
+    --green: #10b981;
+    --purple: #8b5cf6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    padding: 0 0 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #05070f 0%, #0d1a3a 50%, #0a1628 100%);
+    padding: 60px 60px 80px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(245,158,11,0.05) 0%, transparent 40%);
+  }
+
+  .stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 95% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 40% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 15%, rgba(255,255,255,0.5) 0%, transparent 100%);
+  }
+
+  .header-content { position: relative; z-index: 1; max-width: 900px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .badge::before { content: '✦'; font-size: 10px; }
+
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 600px;
+  }
+
+  /* ── LAYOUT ── */
+  main { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── SECTION ── */
+  .section {
+    margin-top: 60px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title .num {
+    background: var(--accent);
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  /* ── ANALYSIS GRID ── */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .analysis-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .analysis-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .analysis-card ul { list-style: none; }
+  .analysis-card li {
+    font-size: 14px;
+    padding: 5px 0;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    gap: 8px;
+  }
+  .analysis-card li:last-child { border-bottom: none; }
+  .analysis-card li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+  .card-green h3 { color: var(--green); }
+  .card-green li::before { color: var(--green); }
+  .card-amber h3 { color: var(--accent2); }
+  .card-amber li::before { color: var(--accent2); }
+  .card-purple h3 { color: var(--purple); }
+  .card-purple li::before { color: var(--purple); }
+  .card-blue h3 { color: var(--accent); }
+
+  /* ── PALETTE ── */
+  .palette {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swatch-color {
+    width: 64px; height: 64px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .swatch-name { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .swatch-hex { font-size: 10px; color: #475569; font-family: monospace; }
+
+  /* ── PAGE SECTIONS ── */
+  .page-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+  }
+
+  .page-section .section-left {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .tag-hero { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .tag-about { background: rgba(16,185,129,0.15); color: #34d399; }
+  .tag-projects { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .tag-experience { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .tag-achievements { background: rgba(239,68,68,0.15); color: #f87171; }
+  .tag-contact { background: rgba(99,102,241,0.15); color: #818cf8; }
+
+  .page-section .section-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+  }
+
+  .page-section .section-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .page-section .section-right {
+    padding: 28px 28px;
+  }
+
+  .section-right h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    margin-top: 16px;
+  }
+
+  .section-right h4:first-child { margin-top: 0; }
+
+  .section-right p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+  }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  /* ── ANIMATION PLAN ── */
+  .anim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .anim-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .anim-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .anim-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+
+  .anim-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── TECH STACK ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .tech-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .tech-card .tech-icon { font-size: 20px; margin-bottom: 8px; }
+  .tech-card .tech-name { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+  .tech-card .tech-desc { font-size: 11px; color: var(--muted); }
+
+  /* ── CONTENT GAPS ── */
+  .gap-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .gap-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  .gap-item strong { display: block; color: #f1f5f9; margin-bottom: 4px; font-size: 13px; }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 20px; padding-bottom: 24px; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); flex-shrink: 0; margin-top: 4px; }
+  .tl-line { flex: 1; width: 2px; background: var(--border); margin-top: 4px; }
+  .tl-item:last-child .tl-line { display: none; }
+  .tl-content { padding-top: 0; }
+  .tl-phase { font-size: 11px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .tl-title { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+  .tl-desc { font-size: 13px; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 960px;
+    margin: 60px auto 0;
+    padding: 24px 40px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stars"></div>
+  <div class="header-content">
+    <div class="badge">Website Strategy Document</div>
+    <h1>Ollie Nebel — Portfolio Redesign Plan</h1>
+    <p class="subtitle">A full-site architecture, content strategy, animation plan, and tech stack for an aerospace-themed portfolio — inspired by thibaultguignand.com and des.de.</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 1. ANALYSIS ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">1</span> Analysis — Current Site & Inspirations</div>
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <h3>🔍 Current Site — What Works</h3>
+        <ul>
+          <li>Clean content structure (About / Projects / Experience / Achievements)</li>
+          <li>Good domain & personal branding</li>
+          <li>Correct content hierarchy</li>
+          <li>Fast, lightweight</li>
+        </ul>
+      </div>
+      <div class="analysis-card card-amber">
+        <h3>⚠️ Current Site — Gaps</h3>
+        <ul>
+          <li>No visual personality or theme</li>
+          <li>No animations or interactivity</li>
+          <li>Very minimal content (sparse detail)</li>
+          <li>No standout hero moment</li>
+          <li>Multi-page feels fragmented — no narrative</li>
+        </ul>
+      </div>
+      <div class="analysis-card card-green">
+        <h3>✦ From thibaultguignand.com</h3>
+        <ul>
+          <li>Full-viewport sections — each "breathes"</li>
+          <li>Cinematic large typography as art</li>
+          <li>Custom cursor with hover effects</li>
+          <li>Project cards with smooth reveal transitions</li>
+          <li>Minimal nav — almost invisible until needed</li>
+          <li>Work shown with full-bleed visual impact</li>
+        </ul>
+      </div>
+      <div class="analysis-card card-purple">
+        <h3>✦ From des.de</h3>
+        <ul>
+          <li>Bold, confident section headings</li>
+          <li>Strong use of negative space</li>
+          <li>Systematic grid layouts</li>
+          <li>Clear content hierarchy — nothing competes</li>
+          <li>Smooth scroll with section snap</li>
+          <li>High-contrast text on dark/image backgrounds</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. THEME & PALETTE ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">2</span> Visual Identity — Aerospace Theme</div>
+    <div class="analysis-card" style="margin-bottom:20px;">
+      <h3>🎨 Concept: "Deep Space Operations"</h3>
+      <ul>
+        <li>Deep near-black backgrounds (#05070f, #0b0f1e) — evoke the void of space</li>
+        <li>Electric blue as the primary accent — control panels, readouts, HUD aesthetics</li>
+        <li>Amber / warm orange as secondary — echoes rocket exhaust and alert states</li>
+        <li>Fine white particle systems for starfields, not distracting but present</li>
+        <li>Monospace type for data/technical elements; refined serif or clean sans for headings</li>
+        <li>Grid lines and coordinate overlays as subtle decorative elements</li>
+        <li>Velocity / trajectory lines in section transitions</li>
+		<li>https://www.figma.com/color-palette-generator/?colors=03050D-070C1A-0B1224-0F1A30-3B82F6-60A5FA-F59E0B</li>
+		<li>https://www.figma.com/color-palette-generator/?colors=E2E8F0-94A3B8-475569-FFFFFF</li>
+      </ul>
+    </div>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#03050D;"></div><div class="swatch-name">Void</div><div class="swatch-hex">#03050D</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#070C1A;"></div><div class="swatch-name">Deep Space</div><div class="swatch-hex">#070C1A</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#0B1224;"></div><div class="swatch-name">Midnight</div><div class="swatch-hex">#0B1224</div></div>
+	  <div class="swatch"><div class="swatch-color" style="background:#0F1A30;"></div><div class="swatch-name">Surface</div><div class="swatch-hex">#0F1A30</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3B82F6;"></div><div class="swatch-name">HUD Blue</div><div class="swatch-hex">#3B82F6</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#60A5FA;"></div><div class="swatch-name">Blue Light</div><div class="swatch-hex">#60A5FA</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F59E0B;"></div><div class="swatch-name">Burn Amber</div><div class="swatch-hex">#F59E0B</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#E2E8F0;"></div><div class="swatch-name">Title</div><div class="swatch-hex">#E2E8F0</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#94A3B8;"></div><div class="swatch-name">Text</div><div class="swatch-hex">#94A3B8</div></div>
+	  <div class="swatch"><div class="swatch-color" style="background:#475569;"></div><div class="swatch-name">Text Mono</div><div class="swatch-hex">#475569</div></div>
+	  <div class="swatch"><div class="swatch-color" style="background:#FFFFFF;"></div><div class="swatch-name">White</div><div class="swatch-hex">#FFFFFF</div></div>
+    </div>
+  </div>
+
+  <!-- ── 3. SITE STRUCTURE ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">3</span> Site Structure — Single Page, Scroll-Driven</div>
+    <div class="analysis-card" style="margin-bottom:20px; border-color: rgba(59,130,246,0.3);">
+      <h3>📐 Architecture Decision</h3>
+      <ul>
+        <li>Single page with smooth scroll — preserves narrative, feels immersive like the inspiration sites</li>
+        <li>Fixed nav with section dots (right side)</li>
+        <li>Each section is full or near-full viewport height — dramatic and deliberate</li>
+        <li>Sections snap softly as user scrolls — guides the experience</li>
+      </ul>
+    </div>
+    <div class="page-sections">
+
+      <!-- HERO -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-hero">01 — Hero</div>
+          <div class="section-name">Landing</div>
+          <div class="section-sub">First impression.<br>Full viewport.</div>
+        </div>
+        <div class="section-right">
+          <h4>Content</h4>
+          <p><strong>Animated name reveal</strong> — "Ollie Nebel" built character by character (à la thibaultguignand).</p>
+          <p><strong>Role tagline</strong> — "Aspiring Aerospace Engineer" typed out</p>
+          <p><strong>Background</strong> — Subtle animated particle starfield. A faint wireframe of a vehicle (spacecraft/aircraft) that slowly rotates in the background.</p>
+          <h4>Animations</h4>
+          <div class="tag-list">
+            <span class="tag">Text mask reveal</span>
+            <span class="tag">Particle starfield</span>
+            <span class="tag">Parallax depth layers</span>
+            <span class="tag">Scroll indicator pulse</span>
+          </div>
+          <h4>Design Notes</h4>
+          <p>No nav visible at start — fades in after 2s or on scroll. Full-bleed dark sky. Name is enormous — the dominant visual element.</p>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-about">02 — About</div>
+          <div class="section-name">About Me</div>
+          <div class="section-sub">Who you are.<br>Why aerospace.</div>
+        </div>
+        <div class="section-right">
+          <h4>Content</h4>
+          <p>Short, punchy paragraph (3–4 sentences). Expand on your personal story: what drew you to aerospace, your specific interests (hypersonics, control systems, simulation, physics modelling).</p>
+          <p><strong>Stats row</strong> — animated counters: Year 12 student · A-Levels: CS / Physics / Maths · </p>
+          <h4>Expand With</h4>
+          <div class="tag-list">
+            <span class="tag">Personal mission statement</span>
+            <span class="tag">What kind of engineer you want to be</span>
+            <span class="tag">Interests beyond school</span>
+            <span class="tag">Photo (optional)</span>
+          </div>
+          <h4>Animations</h4>
+          <div class="tag-list">
+            <span class="tag">Scroll-triggered text reveal</span>
+            <span class="tag">Counter animation on stats</span>
+            <span class="tag">Fade-up on scroll</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-projects">03 — Projects</div>
+          <div class="section-name">Projects</div>
+          <div class="section-sub">Your work.<br>Most important section.</div>
+        </div>
+        <div class="section-right">
+          <h4>Existing Projects</h4>
+          <p><strong>Hypersonic Flight Research</strong> — Scramjet propulsion, shock wave interactions, reusable vehicle design. Add: what you produced (report? simulation? diagrams?), key findings, duration, tools used.</p>
+          <p><strong>Game Movement Systems</strong> — Dash mechanics, input buffering, coyote time. Add: language/engine used, GitHub link, demo GIF or screenshot.</p>
+          <h4>Suggested Additional Projects to Add</h4>
+          <div class="tag-list">
+            <span class="tag">Any simulation code / scripts</span>
+            <span class="tag">Physics or maths models</span>
+            <span class="tag">School competition work</span>
+            <span class="tag">Wharton competition data work</span>
+          </div>
+          <h4>Card Design</h4>
+          <p>Large cards, one per row. Each has: project title, discipline tags, short description, key technical keywords, optional image/visual, and link. Hover reveals more detail (à la thibaultguignand). Featured/pinned project can have a full-width hero treatment.</p>
+          <h4>Animations</h4>
+          <div class="tag-list">
+            <span class="tag">Card slide-in stagger on scroll</span>
+            <span class="tag">Hover: card lift + background reveal</span>
+            <span class="tag">Tag animate-in on hover</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-experience">04 — Experience</div>
+          <div class="section-name">Experience</div>
+          <div class="section-sub">Roles &amp; skills<br>demonstrated.</div>
+        </div>
+        <div class="section-right">
+          <h4>Existing</h4>
+          <p><strong>High Ropes Instructor — Caterham School</strong> — Safety management, leadership with 8–16 year olds, confidence coaching. Add start date, hours/frequency, and skills gained.</p>
+          <h4>Expand With (to add)</h4>
+          <div class="tag-list">
+            <span class="tag">Any shadowing / work experience</span>
+            <span class="tag">Aerospace clubs or societies</span>
+            <span class="tag">Volunteering</span>
+            <span class="tag">Tutoring / teaching</span>
+            <span class="tag">Leadership roles at school</span>
+          </div>
+          <h4>Layout</h4>
+          <p>Vertical timeline — draws a literal "flight path" line connecting entries, each node animating in as you scroll. The aerospace metaphor is strong here: a trajectory upward.</p>
+          <h4>Animations</h4>
+          <div class="tag-list">
+            <span class="tag">Timeline line draws on scroll</span>
+            <span class="tag">Entry nodes pop in on reach</span>
+            <span class="tag">Smooth fade-up per entry</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACHIEVEMENTS -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-achievements">05 — Achievements</div>
+          <div class="section-name">Achievements</div>
+          <div class="section-sub">Proof of<br>excellence.</div>
+        </div>
+        <div class="section-right">
+          <h4>Existing</h4>
+          <p><strong>Arkwright Engineering Scholarship</strong> — One of the UK's most prestigious engineering scholarships for school students. Add year, sponsor company if applicable, what project it recognised.</p>
+          <p><strong>UKMT Gold Mathematical Challenge</strong> — Add year, any follow-on rounds (Kangaroo, Olympiad).</p>
+          <p><strong>Wharton Investment Competition — Data Lead</strong> — Add year, team role, what data work you did, result/placement.</p>
+          <h4>Layout Options</h4>
+          <p>Option A: Bold horizontal "ribbon" cards — large achievement name, small description, year pill. Option B: 3-column icon grid with brief descriptions. Option A recommended for impact.</p>
+          <h4>Expand With</h4>
+          <div class="tag-list">
+            <span class="tag">Any academic prizes</span>
+            <span class="tag">Competition rankings</span>
+            <span class="tag">EPQ or extended project</span>
+            <span class="tag">Sports / non-academic awards</span>
+          </div>
+          <h4>Animations</h4>
+          <div class="tag-list">
+            <span class="tag">Achievement cards fly in on scroll</span>
+            <span class="tag">Glowing highlight on featured award</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="page-section">
+        <div class="section-left">
+          <div class="section-tag tag-contact">06 — Contact</div>
+          <div class="section-name">Contact</div>
+          <div class="section-sub">End with<br>an invitation.</div>
+        </div>
+        <div class="section-right">
+          <h4>Content</h4>
+          <p>Full-height closing section. Large heading: "Let's Connect" or "Get In Touch". Brief sentence on what you're open to (work experience, conversations, collaboration).</p>
+          <p>Email button (prominent CTA) + LinkedIn icon link. Copy-to-clipboard on email.</p>
+          <h4>Design</h4>
+          <p>Atmospheric — bring back the starfield or a subtle orbital arc animation. Make this section feel like "signing off from mission control."</p>
+          <h4>Footer</h4>
+          <p>Minimal: © 2026 Ollie Nebel · Email · LinkedIn · GitHub · </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 4. ANIMATION PLAN ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">4</span> Animation Plan</div>
+    <div class="anim-grid">
+      <div class="anim-card">
+        <div class="anim-icon">✦</div>
+        <h4>Hero Text Reveal</h4>
+        <p>Name letters mask in from below, staggered 30ms each. Subtitle fades in 400ms after. Creates a cinematic opening moment.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">🌌</div>
+        <h4>Particle Starfield</h4>
+        <p>Canvas-based background, ~150 particles at varying speeds and opacities. Subtle parallax on mouse move. Fades between sections.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">↓</div>
+        <h4>Scroll-Triggered Reveals</h4>
+        <p>Every section element triggers when 20% into view. Fade-up with 0.6s ease-out. Stagger between children for rhythm.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">🖱</div>
+        <h4>Custom Cursor</h4>
+        <p>Small circular cursor with a trailing dot. Expands on hover over links. Subtle glow on interactive elements. Strong signature detail.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">📋</div>
+        <h4>Project Card Hovers</h4>
+        <p>Card lifts 4px with box shadow, background image fades in, border glow activates. Scale 1.02 on transform for depth.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">📈</div>
+        <h4>Timeline Draw</h4>
+        <p>SVG line in experience section draws itself as you scroll down, with nodes "popping" into existence at each entry point.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">🔢</div>
+        <h4>Counter Animations</h4>
+        <p>Any numerical stats (scholarship year, competition rank, hours, etc.) count up from 0 when scrolled to — satisfying and draws attention.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">⚡</div>
+        <h4>Navigation</h4>
+        <p>Nav hidden on hero, fades in with backdrop blur after first scroll. Active section indicator slides smoothly between nav items.</p>
+      </div>
+      <div class="anim-card">
+        <div class="anim-icon">🛸</div>
+        <h4>Page Transitions</h4>
+        <p>If using multi-page: full-screen wipe with a horizontal bar sweep in deep navy — like a launch sequence. Otherwise smooth scroll between sections.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. TECH STACK ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">5</span> Recommended Tech Stack</div>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">⚛️</div>
+        <div class="tech-name">Next.js</div>
+        <div class="tech-desc">React framework, great for portfolio sites, easy deploy to Vercel</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🎞</div>
+        <div class="tech-name">Framer Motion</div>
+        <div class="tech-desc">Scroll-triggered animations, layout transitions, gesture support</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🎨</div>
+        <div class="tech-name">Tailwind CSS</div>
+        <div class="tech-desc">Utility-first CSS — fast to build, consistent design tokens</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🌐</div>
+        <div class="tech-name">Three.js</div>
+        <div class="tech-desc">Optional: 3D elements, rotating wireframe models, particle systems</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">✍️</div>
+        <div class="tech-name">GSAP</div>
+        <div class="tech-desc">Alternative to Framer Motion — industry standard for complex timelines</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">▲</div>
+        <div class="tech-name">Netlify</div>
+        <div class="tech-desc">Free hosting, instant deploys from GitHub, perfect for personal sites</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🔡</div>
+        <div class="tech-name">Inter / Space Grotesk</div>
+        <div class="tech-desc">Clean modern sans-serif with technical feel — free via Google Fonts</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📦</div>
+        <div class="tech-name">tsParticles</div>
+        <div class="tech-desc">Easy-to-configure particle engine for the starfield background</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. CONTENT TO ADD ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">6</span> Content Gaps — What You Need to Fill In</div>
+    <div class="gap-list">
+      <div class="gap-item">
+        <strong>Personal Bio (150–200 words)</strong>
+        Write a compelling "about me" — what drives your interest in aerospace, what specific areas excite you most, and where you want to go.
+      </div>
+      <div class="gap-item">
+        <strong>Project Details</strong>
+        For each project: tools used, what you produced, what you learned, and ideally a visual (screenshot, diagram, chart, or cover image).
+      </div>
+      <div class="gap-item">
+        <strong>Arkwright Scholarship Detail</strong>
+        Year awarded, sponsor company, which project it supported — this is a prestige signal and deserves a full card.
+      </div>
+      <div class="gap-item">
+        <strong>Wharton Competition</strong>
+        What data work you did, what tools you used (Excel?), team result or ranking.
+      </div>
+      <div class="gap-item">
+        <strong>Work Experience / Shadowing</strong>
+        Any aerospace, engineering, or tech industry contact — even brief shadowing is worth including.
+      </div>
+      <div class="gap-item">
+        <strong>Skills List</strong>
+        Technical skills: languages (Python? C++?), tools, software. Keep it honest and specific.
+      </div>
+      <div class="gap-item">
+        <strong>Profile Photo (optional)</strong>
+        A clean, well-lit headshot or even a professional-looking photo adds personality.
+      </div>
+      <div class="gap-item">
+        <strong>Education Section</strong>
+        Caterham School, A-Levels (CS / Physics / Maths), predicted or current grades if comfortable including.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7. BUILD PHASES ── -->
+  <div class="section">
+    <div class="section-title"><span class="num">7</span> Recommended Build Phases</div>
+    <div class="analysis-card">
+      <h3>🗺 Phased Approach</h3>
+    </div>
+    <div style="margin-top: 20px;">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-phase">Phase 1</div>
+            <div class="tl-title">Foundation — Content & Structure</div>
+            <div class="tl-desc">Set up Next.js project, Tailwind config with your colour tokens. Write all copy and gather all content first — design around real content, not placeholders. Build static versions of all 6 sections.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot" style="background:var(--accent2);"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-phase" style="color:var(--accent2);">Phase 2</div>
+            <div class="tl-title">Visual Identity — Theme & Typography</div>
+            <div class="tl-desc">Apply the aerospace colour palette, set up the starfield canvas, choose and integrate fonts (Space Grotesk for headings, Inter for body). Get the hero looking dramatic.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot" style="background:var(--green);"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-phase" style="color:var(--green);">Phase 3</div>
+            <div class="tl-title">Animation Layer</div>
+            <div class="tl-desc">Add Framer Motion scroll triggers, hero text reveal, project card hovers, timeline draw animation, and counter animations. Add custom cursor last (easy win, high impact).</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot" style="background:var(--purple);"></div><div class="tl-line"></div></div>
+          <div class="tl-content">
+            <div class="tl-phase" style="color:var(--purple);">Phase 4</div>
+            <div class="tl-title">Polish & Performance</div>
+            <div class="tl-desc">Add mobile responsiveness, test animation performance (reduce particle count on mobile), add page meta / SEO, check accessibility (contrast ratios), and deploy to Vercel with your existing domain.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-left"><div class="tl-dot" style="background:#f87171;"></div></div>
+          <div class="tl-content">
+            <div class="tl-phase" style="color:#f87171;">Phase 5 (Optional)</div>
+            <div class="tl-title">Advanced Features</div>
+            <div class="tl-desc">Three.js wireframe model in the hero, interactive orbit path in the background, WebGL shader effects, or a blog/writing section for research notes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>Ollie Nebel — Portfolio Strategy Plan · March 2026</span>
+  <span>ollienebel.co.uk</span>
+</footer>
+
+</body>
+</html>

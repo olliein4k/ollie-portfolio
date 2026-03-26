@@ -24,8 +24,45 @@ function updateActiveLink() {
   navLinks.forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === '#' + current);
   });
+  document.querySelectorAll('.nav-mobile-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
 }
 window.addEventListener('scroll', updateActiveLink, { passive: true });
+
+// ── HAMBURGER MENU ───────────────────────────────
+function initHamburger() {
+  const btn   = document.getElementById('nav-hamburger');
+  const panel = document.getElementById('nav-mobile-panel');
+  if (!btn || !panel) return;
+
+  function closeMenu() {
+    btn.classList.remove('open');
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', () => {
+    const isOpen = panel.classList.contains('open');
+    if (isOpen) {
+      closeMenu();
+    } else {
+      btn.classList.add('open');
+      panel.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+  // Close menu when a link is tapped
+  panel.querySelectorAll('.nav-mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close menu on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#nav')) closeMenu();
+  });
+}
 
 // ── SCROLL REVEAL ───────────────────────────────
 const revealEls = document.querySelectorAll('.reveal');
@@ -233,6 +270,30 @@ function initStarfield(canvasId) {
   new ResizeObserver(init).observe(canvas.parentElement || canvas);
 }
 
+// ── TAP FEEDBACK ─────────────────────────────────
+function initTapFeedback() {
+  const HOLD_MS = 300; // how long the tapped state stays visible
+
+  const targets = document.querySelectorAll(
+    '.project-card, .achievement-card, .contact-btn, .btn-primary, .btn-ghost'
+  );
+
+  targets.forEach(el => {
+    el.addEventListener('touchstart', () => {
+      el.classList.add('tapped');
+    }, { passive: true });
+
+    el.addEventListener('touchend', () => {
+      // Keep the tapped state briefly so the user sees it
+      setTimeout(() => el.classList.remove('tapped'), HOLD_MS);
+    }, { passive: true });
+
+    el.addEventListener('touchcancel', () => {
+      el.classList.remove('tapped');
+    }, { passive: true });
+  });
+}
+
 // ── BOOT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initHeroReveal();
@@ -240,6 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initTimelineDraw();
   initStarfield('starfield');
   initStarfield('contact-starfield');
+  initHamburger();
+  initTapFeedback();
   updateNav();
   updateActiveLink();
 });
