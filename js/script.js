@@ -79,7 +79,7 @@ revealEls.forEach(el => revealObserver.observe(el));
 // ── HERO TEXT REVEAL ────────────────────────────
 function initHeroReveal() {
   const CHARS    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
-  const STAGGER  = 80;   // ms between each character starting
+  const STAGGER  = 100;   // ms between each character starting
   const DURATION = 600;  // ms of scrambling before resolving
   const RATE     = 40;   // ms between scramble frame updates
 

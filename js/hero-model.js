@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-const MODEL_PATH = '/assets/model.glb'; // ← update this to match your filename
+const MODEL_PATH = '/assets/model.glb';
 
 function initHeroModel() {
   const container = document.getElementById('hero-model-container');
@@ -29,7 +29,7 @@ function initHeroModel() {
     color: 0x3b82f6,
     wireframe: true,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.3,
   });
 
   // ── Load model ──
@@ -68,7 +68,7 @@ function initHeroModel() {
       model.position.sub(pivot.worldToLocal(scaledCentre));
 
       // Tilt the pivot
-      pivot.rotation.z = 0.4;
+      pivot.rotation.z = 0.5; // tilt in the yz plane
     },
     undefined,
     (err) => console.error('Model load error:', err)
