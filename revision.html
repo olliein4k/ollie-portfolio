@@ -157,11 +157,12 @@
       }
 
       function saveData() {
+        const TOKEN = 'revision123';
         clearTimeout(saveTimer);
         statusEl.textContent = 'Saving...';
         saveTimer = setTimeout(async () => {
           try {
-            await setDoc(doc(db, 'tracker', 'april2026'), { ...data, token: authToken });
+            await setDoc(doc(db, 'tracker', 'april2026'), {...data, token: TOKEN});
             statusEl.textContent = 'Synced';
           } catch (e) {
             statusEl.textContent = e.code === 'permission-denied' ? 'Auth failed' : 'Save failed';
