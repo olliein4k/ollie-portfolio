@@ -108,6 +108,19 @@
 
       let data = {};
       let saveTimer = null;
+      let authToken = null;
+
+      async function getAuthToken() {
+        try {
+          const configSnap = await getDoc(doc(db, 'auth', 'config'));
+          if (configSnap.exists()) {
+            return configSnap.data().token;
+          }
+        } catch (e) {
+          console.error('Failed to fetch auth token:', e);
+        }
+        return null;
+      }
 
       function initData() {
         for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
@@ -119,9 +132,18 @@
 
       async function loadData() {
         try {
+          authToken = await getAuthToken();
+          if (!authToken) {
+            statusEl.textContent = 'Auth failed';
+            initData();
+            renderTable();
+            updateTotals();
+            return;
+          }
           const docSnap = await getDoc(doc(db, 'tracker', 'april2026'));
           if (docSnap.exists()) {
             data = docSnap.data();
+            delete data.token;
           } else {
             initData();
           }
@@ -139,10 +161,10 @@
         statusEl.textContent = 'Saving...';
         saveTimer = setTimeout(async () => {
           try {
-            await setDoc(doc(db, 'tracker', 'april2026'), data);
+            await setDoc(doc(db, 'tracker', 'april2026'), { ...data, token: authToken });
             statusEl.textContent = 'Synced';
           } catch (e) {
-            statusEl.textContent = 'Save failed';
+            statusEl.textContent = e.code === 'permission-denied' ? 'Auth failed' : 'Save failed';
           }
         }, 1000);
       }
