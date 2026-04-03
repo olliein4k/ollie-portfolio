@@ -53,7 +53,9 @@
           <div class="subtitle">1 Apr – 20 Apr · Log hours per subject each day</div>
         </div>
         <span class="status" id="status">Loading...</span>
+        <span class="status" id="auth-status">Not authenticated</span>
         <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+        <input type="password" id="token-input" placeholder="Enter password" style="font-size:13px;padding:6px 10px;border:0.5px solid #ccc;border-radius:8px;">
       </div>
 
       <div class="summary-row">
@@ -105,22 +107,35 @@
       const end = new Date(2026, 3, 20);
       const tbody = document.getElementById('tbody');
       const statusEl = document.getElementById('status');
+      const authStatusEl = document.getElementById('auth-status');
 
       let data = {};
       let saveTimer = null;
-      let authToken = null;
+      let authToken = '';
 
-      async function getAuthToken() {
+      document.getElementById('token-input').value = localStorage.getItem('trackerToken') || '';
+
+      document.getElementById('token-input').addEventListener('input', async (e) => {
+        const token = e.target.value;
+        localStorage.setItem('trackerToken', token);
+
+        if (!token) {
+          authStatusEl.textContent = 'Not authenticated';
+          return;
+        }
+
         try {
           const configSnap = await getDoc(doc(db, 'auth', 'config'));
-          if (configSnap.exists()) {
-            return configSnap.data().token;
+          if (configSnap.exists() && configSnap.data().token === token) {
+            authStatusEl.textContent = 'Authenticated';
+          } else {
+            authStatusEl.textContent = 'Invalid password';
           }
-        } catch (e) {
-          console.error('Failed to fetch auth token:', e);
+        } catch (err) {
+          authStatusEl.textContent = 'Auth check failed';
+          console.error(err);
         }
-        return null;
-      }
+      });
 
       function initData() {
         for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
@@ -132,14 +147,6 @@
 
       async function loadData() {
         try {
-          authToken = await getAuthToken();
-          if (!authToken) {
-            statusEl.textContent = 'Auth failed';
-            initData();
-            renderTable();
-            updateTotals();
-            return;
-          }
           const docSnap = await getDoc(doc(db, 'tracker', 'april2026'));
           if (docSnap.exists()) {
             data = docSnap.data();
@@ -157,7 +164,15 @@
       }
 
       function saveData() {
-        const TOKEN = 'revision123';
+        const TOKEN = document.getElementById('token-input').value;
+        if (!TOKEN) {
+          statusEl.textContent = 'Enter password';
+          return;
+        }
+        if (authStatusEl.textContent !== 'Authenticated') {
+          statusEl.textContent = 'Invalid password';
+          return;
+        }
         clearTimeout(saveTimer);
         statusEl.textContent = 'Saving...';
         saveTimer = setTimeout(async () => {
