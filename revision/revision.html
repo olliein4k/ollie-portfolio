@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision Tracker — April 2026</title>
+    <link rel="stylesheet" href="revision_style.css">
+  </head>
+  <body>
+    <div class="tracker">
+      <div class="header">
+        <div>
+          <div class="title">Revision tracker — April 2026</div>
+          <div class="subtitle">1 Apr – 20 Apr · Log hours per subject each day</div>
+        </div>
+        <span class="status" id="status">Loading...</span>
+        <span class="status" id="auth-status">Not authenticated</span>
+        <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+        <input type="password" id="token-input" placeholder="Enter password" style="font-size:13px;padding:6px 10px;border:0.5px solid #ccc;border-radius:8px;">
+      </div>
+
+      <div class="summary-row">
+        <div class="sum-card"><div class="sum-label">Total hrs</div><div class="sum-val" id="s-total">0</div></div>
+        <div class="sum-card"><div class="sum-label" style="color:#185FA5">Physics</div><div class="sum-val" id="s-phy">0</div></div>
+        <div class="sum-card"><div class="sum-label" style="color:#3B6D11">Pure</div><div class="sum-val" id="s-pur">0</div></div>
+        <div class="sum-card"><div class="sum-label" style="color:#993C1D">Mechanics</div><div class="sum-val" id="s-mec">0</div></div>
+        <div class="sum-card"><div class="sum-label" style="color:#854F0B">Stats</div><div class="sum-val" id="s-sta">0</div></div>
+        <div class="sum-card"><div class="sum-label" style="color:#533AB7">Comp Sci</div><div class="sum-val" id="s-cs">0</div></div>
+      </div>
+
+      <table id="tracker-table">
+        <thead>
+          <tr>
+            <th class="date-col">Date</th>
+            <th class="col-phy">Physics</th>
+            <th class="col-pur">Pure</th>
+            <th class="col-mec">Mechanics</th>
+            <th class="col-sta">Stats</th>
+            <th class="col-cs">Comp Sci</th>
+            <th>Daily total</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <script type="module" src="js/script.js"></script>
+  </body>
+</html>
