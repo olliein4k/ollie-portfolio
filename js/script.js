@@ -294,8 +294,149 @@ function initTapFeedback() {
   });
 }
 
+// ── NEWS TICKER ──────────────────────────────────
+async function initTicker() {
+  const track        = document.getElementById('ticker-track');
+  if (!track) return;
+
+  const CACHE_KEY    = 'ticker_cache';
+  const CACHE_TTL    = 30 * 60 * 1000;             // 30 minutes in ms
+  const FEED_URL     = 'https://www.space.com/feeds.xml';
+  const PROXY     = 'https://corsproxy.io/?url=';
+  const BLOCKED_CATS = ['entertainment'];
+  const SCROLL_PPS   = 50;                          // pixels per second — lower = slower
+
+  // ── 1. Read cache ──
+  let headlines = [];
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && Date.now() - cached.ts < CACHE_TTL) {
+      headlines = cached.data;
+    }
+  } catch (_) {}
+
+  // ── 2. Fetch if cache is stale ──
+  if (!headlines.length) {
+    try {
+      const res  = await fetch(PROXY + encodeURIComponent(FEED_URL));
+      const text = await res.text();
+      const xml  = new DOMParser().parseFromString(text, 'text/xml');      const items = [...xml.querySelectorAll('item')];
+
+      headlines = items
+        .filter(item => {
+          const cats = [...item.querySelectorAll('category')]
+            .map(c => c.textContent.trim().toLowerCase());
+          return !cats.some(c => BLOCKED_CATS.includes(c));
+        })
+        .slice(0, 20)
+        .map(item => ({
+          title: item.querySelector('title')?.textContent?.trim() || '',
+          link:  item.querySelector('link')?.textContent?.trim()  || '#',
+        }))
+        .filter(h => h.title);
+
+      // ── 3. Save to cache ──
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: headlines }));
+    } catch (err) {
+      console.warn('Ticker fetch failed:', err);
+      return;
+    }
+  }
+
+  if (!headlines.length) return;
+
+  // ── 4. Build one copy of all headlines ──
+  function buildCopy() {
+    const copy = document.createElement('span');
+    copy.className = 'ticker-copy';
+    headlines.forEach((h, i) => {
+      const span = document.createElement('span');
+      span.className = 'ticker-headline';
+      const a = document.createElement('a');
+      a.href        = h.link;
+      a.target      = '_blank';
+      a.rel         = 'noopener noreferrer';
+      a.textContent = h.title;
+      span.appendChild(a);
+      copy.appendChild(span);
+      if (i < headlines.length - 1) {
+        const sep = document.createElement('span');
+        sep.className   = 'ticker-sep';
+        sep.textContent = '✦';
+        copy.appendChild(sep);
+      }
+    });
+    return copy;
+  }
+
+  // ── 5. Inject two identical copies for seamless loop ──
+  const copyA     = buildCopy();
+  const bridgeSep = document.createElement('span');
+  bridgeSep.className   = 'ticker-sep';
+  bridgeSep.textContent = '✦';
+  const copyB = buildCopy();
+
+  track.appendChild(copyA);
+  track.appendChild(bridgeSep);
+  track.appendChild(copyB);
+
+  // ── 6. Calculate duration from content width then start ──
+  requestAnimationFrame(() => {
+    const totalWidth = copyA.offsetWidth + bridgeSep.offsetWidth;
+    const duration   = Math.round(totalWidth / SCROLL_PPS);
+    track.style.setProperty('--ticker-duration', `${duration}s`);
+    track.classList.add('running');
+  });
+}
+
+// ── TICKER COLLAPSE ──────────────────────────────
+function initTickerToggle() {
+  const ticker = document.getElementById('news-ticker');
+  const btn    = document.getElementById('ticker-toggle');
+  const nav    = document.getElementById('nav');
+  if (!ticker || !btn || !nav) return;
+
+  const STORAGE_KEY = 'ticker_collapsed';
+
+  function syncTickerHeight() {
+    document.body.style.setProperty('--ticker-height', `${ticker.offsetHeight}px`);
+  }
+
+  function setCollapsed(collapsed) {
+    ticker.classList.toggle('collapsed', collapsed);
+    nav.classList.toggle('ticker-collapsed', collapsed);
+    btn.classList.toggle('ticker-collapsed', collapsed);
+    document.body.classList.toggle('ticker-collapsed', collapsed);
+    syncTickerHeight();
+    btn.setAttribute('aria-label', collapsed ? 'Expand news ticker' : 'Collapse news ticker');
+    localStorage.setItem(STORAGE_KEY, collapsed);
+  }
+
+  syncTickerHeight();
+
+  if ('ResizeObserver' in window) {
+    const resizeObserver = new ResizeObserver(syncTickerHeight);
+    resizeObserver.observe(ticker);
+  } else {
+    window.addEventListener('resize', syncTickerHeight, { passive: true });
+  }
+
+  // Restore saved state
+  if (localStorage.getItem(STORAGE_KEY) === 'true') {
+    setCollapsed(true);
+  } else {
+    syncTickerHeight();
+  }
+
+  btn.addEventListener('click', () => {
+    setCollapsed(!ticker.classList.contains('collapsed'));
+  });
+}
+
 // ── BOOT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  initTicker();
+  initTickerToggle();
   initHeroReveal();
   initCursor();
   initTimelineDraw();
