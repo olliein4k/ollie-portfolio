@@ -302,7 +302,7 @@ async function initTicker() {
   const CACHE_KEY    = 'ticker_cache';
   const CACHE_TTL    = 30 * 60 * 1000;             // 30 minutes in ms
   const FEED_URL     = 'https://www.space.com/feeds.xml';
-  const PROXY     = 'https://cors-anywhere.com/';
+  const PROXY     = 'https://go.x2u.in/proxy?email=ollie.nebel@caterhamschool.co.uk&apiKey=34ae6a39&url=';
   const BLOCKED_CATS = ['entertainment'];
   const SCROLL_PPS   = 50;                          // pixels per second — lower = slower
 
