@@ -302,7 +302,7 @@ async function initTicker() {
   const CACHE_KEY    = 'ticker_cache';
   const CACHE_TTL    = 30 * 60 * 1000;             // 30 minutes in ms
   const FEED_URL     = 'https://www.space.com/feeds.xml';
-  const PROXY     = 'https://corsproxy.io/?url=';
+  const PROXY     = 'https://cors-anywhere.com/';
   const BLOCKED_CATS = ['entertainment'];
   const SCROLL_PPS   = 50;                          // pixels per second — lower = slower
 
