@@ -714,6 +714,11 @@ body:not(.ticker-collapsed) .hud-tr {
   color: var(--c-text-muted);
 }
 
+.tl-skill:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  color: var(--c-blue-light);
+}
+
 /* ══════════════════════════════════════════════
    05 — ACHIEVEMENTS
 ══════════════════════════════════════════════ */
@@ -918,6 +923,7 @@ footer a:hover { color: var(--c-text); }
 /* ══════════════════════════════════════════════
    SCROLL REVEAL
 ══════════════════════════════════════════════ */
+
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -932,6 +938,16 @@ footer a:hover { color: var(--c-text); }
 /* stagger siblings */
 .reveal:nth-child(2) { transition-delay: 0.1s; }
 .reveal:nth-child(3) { transition-delay: 0.2s; }
+
+/* ── UTILITY: HIDE ELEMENTS ── */
+.is-hidden {
+  display: none !important;
+}
+
+/* override for achievements animation container */
+#achievements-extra.is-hidden {
+  display: block !important;
+}
 
 /* ══════════════════════════════════════════════
    HERO TEXT REVEAL
@@ -1246,4 +1262,24 @@ footer a:hover { color: var(--c-text); }
   .stat:last-child { border-bottom: none; }
   .stat:nth-child(2n) { border-right: none; }
   .stat:last-child { border-bottom: none; }
+}
+
+
+#achievements-extra {
+  overflow: hidden;
+  max-height: auto;
+  transition: max-height 0.45s var(--ease-out), opacity 0.28s ease, transform 0.28s ease;
+  will-change: max-height, opacity, transform;
+}
+
+#achievements-extra.is-hidden {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  max-height: 0;
+}
+
+#achievements-extra.leaving {
+  opacity: 0;
+  transform: translateY(8px);
 }

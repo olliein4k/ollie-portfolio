@@ -64,17 +64,73 @@ function initHamburger() {
   });
 }
 
-// ── SCROLL REVEAL ───────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
+// ── ACHIEVEMENTS TOGGLE ────────────────────────────
+function initAchievementsToggle() {
+  const extra = document.getElementById('achievements-extra');
+  const button = document.getElementById('achievements-toggle');
+
+  if (!extra || !button) return;
+
+  const isHidden = extra.classList.contains('is-hidden');
+  button.textContent = isHidden ? 'Show More' : 'Show Less';
+
+    button.addEventListener('click', () => {
+    const hidden = extra.classList.contains('is-hidden');
+
+    if (hidden) {
+      extra.classList.remove('is-hidden');
+      button.textContent = 'Show Less';
+
+      // trigger replay animation
+      replayReveal(extra);
+    } else {
+      // start exit animation phase (no layout manipulation)
+      extra.classList.add('leaving');
+      button.textContent = 'Show More';
+
+      setTimeout(() => {
+        extra.classList.add('is-hidden');
+        extra.classList.remove('leaving');
+
+        // reset animation state after hiding
+        const cards = extra.querySelectorAll('.reveal');
+        cards.forEach(el => el.classList.remove('visible'));
+      }, 280);
     }
   });
-}, { threshold: 0.15 });
-revealEls.forEach(el => revealObserver.observe(el));
+}
+
+// ── REPLAY REVEAL (ACHIEVEMENTS ONLY) ──────────────
+function replayReveal(container) {
+  const els = container.querySelectorAll('.reveal');
+
+  els.forEach((el, i) => {
+    el.classList.remove('visible');
+    void el.offsetHeight;
+
+    setTimeout(() => {
+      el.classList.add('visible');
+    }, i * 80);
+  });
+}
+
+// ── SCROLL REVEAL (ONCE ONLY) ─────────────────────
+function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal');
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      entry.target.classList.add('visible');
+      obs.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  els.forEach(el => observer.observe(el));
+}
 
 // ── HERO TEXT REVEAL ────────────────────────────
 function initHeroReveal() {
@@ -444,6 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initStarfield('contact-starfield');
   initHamburger();
   initTapFeedback();
+  initAchievementsToggle();
   updateNav();
   updateActiveLink();
+  initScrollReveal();
 });
