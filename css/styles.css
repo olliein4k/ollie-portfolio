@@ -537,7 +537,7 @@ body:not(.ticker-collapsed) .hud-tr {
   background: var(--c-surface);
   border: 1px solid var(--c-border-sub);
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 1fr;
   overflow: hidden;
   transition: border-color 0.3s, transform 0.3s var(--ease-out);
 }
@@ -734,7 +734,7 @@ body:not(.ticker-collapsed) .hud-tr {
 .achievement-card {
   position: relative;
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 1fr;
   background: var(--c-surface);
   border: 1px solid var(--c-border-sub);
   overflow: hidden;
@@ -1234,7 +1234,7 @@ footer a:hover { color: var(--c-text); }
     .stat:nth-child(2) { border-bottom: 1px solid var(--c-border); }
 
   .project-card, .achievement-card { grid-template-columns: 1fr; }
-  .project-number, .ach-index { display: none; }
+
   .project-body, .ach-body { padding: 28px 24px; }
 
   .tl-entry { grid-template-columns: 28px 1fr; gap: 0 20px; }
