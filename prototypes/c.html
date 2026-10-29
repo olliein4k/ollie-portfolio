@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ollie Nebel | Prototype C</title>
+<meta name="description" content="Ollie Nebel, Year 13. I build models, then test where they break.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--grid:#D9DCE0;--head:#F1F3F4;--ink:#1F2328;--mut:#5F6B76;--blue:#1A56DB;--blue-bg:#EEF3FF;--green:#0F7B5F;--red:#C62828;--sel:#0F7B5F;--panel:#F8F9FA;--hl:#E3EDE9;
+ --sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(.16,1,.3,1)}
+[data-skin=notebook]{--bg:#1E1F22;--grid:#2E3035;--head:#26282C;--ink:#D4D4D4;--mut:#8B9098;--blue:#9CDCFE;--blue-bg:#232A33;--green:#B5CEA8;--red:#F48771;--sel:#DCDCAA;--panel:#222428;--hl:#2C3033}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:400 13.5px/1.45 var(--sans);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+code,.mono{font-family:var(--mono)}
+#app{height:100dvh;display:grid;grid-template-rows:auto auto auto 1fr auto auto}
+/* title + toolbar */
+.title{display:flex;align-items:center;gap:14px;padding:8px 14px;border-bottom:1px solid var(--grid);background:var(--panel)}
+.logo{width:22px;height:22px;border-radius:4px;background:var(--green);display:grid;place-items:center}
+.logo i{width:12px;height:12px;background:linear-gradient(var(--bg) 0 0) 50% 0/2px 100% no-repeat,linear-gradient(var(--bg) 0 0) 0 50%/100% 2px no-repeat;opacity:.9}
+.fname{font-weight:600}.saved{color:var(--mut);font-size:12px}
+.sp{flex:1}
+.btn{border:1px solid var(--grid);border-radius:6px;padding:5px 11px;font-size:12.5px;font-weight:500;background:var(--bg);transition:background .15s,border-color .15s}
+.btn:hover{background:var(--head)}.btn[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.go{background:var(--green);border-color:var(--green);color:#fff;text-decoration:none;display:inline-block}
+[data-skin=notebook] .btn.go{color:#1E1F22}
+.tool{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:7px 14px;border-bottom:1px solid var(--grid)}
+.leg{display:flex;gap:10px;font-size:12px;color:var(--mut);margin-left:auto}
+.leg b{font-weight:600}.leg .b{color:var(--blue)}.leg .g{color:var(--green)}
+kbd{font:500 11px var(--mono);border:1px solid var(--grid);border-radius:4px;padding:1px 5px;background:var(--head)}
+/* formula bar */
+.fbar{display:flex;align-items:stretch;border-bottom:1px solid var(--grid);font-family:var(--mono);font-size:12.5px}
+.nb{width:72px;padding:6px 10px;border-right:1px solid var(--grid);font-weight:500;background:var(--panel)}
+.fxl{padding:6px 12px;color:var(--mut);font-style:italic;border-right:1px solid var(--grid)}
+#fc{padding:6px 12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* grid */
+.main{display:grid;grid-template-columns:1fr 300px;min-height:0}
+.gridwrap{overflow:auto;min-height:0;position:relative}
+#grid{display:grid;width:max-content;min-width:100%;grid-auto-rows:32px}
+.corner,.ch,.rh{background:var(--head);color:var(--mut);font-size:11.5px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);position:sticky;z-index:2;user-select:none}
+.corner{top:0;left:0;z-index:4}.ch{top:0;z-index:3}.rh{left:0}
+.ch.hl,.rh.hl{background:var(--hl);color:var(--ink);font-weight:600}
+.cell{padding:0 10px;display:flex;align-items:center;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);white-space:nowrap;overflow:hidden;position:relative;cursor:cell;outline:none}
+.cell.n,.cell.in{justify-content:flex-end;font-variant-numeric:tabular-nums}
+.cell.in{color:var(--blue);background:var(--blue-bg);font-weight:500}
+.cell.fx{font-weight:600;flex-direction:column;align-items:flex-end;justify-content:center;line-height:1.15}
+.rg{display:none;font:400 10px var(--mono);color:var(--red)}.stress .rg{display:block}
+.cell.title{font-size:30px;font-weight:700;letter-spacing:-.035em;grid-row-end:span 1;overflow:visible}
+.cell.sub{font-size:15px;color:var(--mut)}
+.cell.lab{color:var(--mut)}
+.cell.unit,.cell.muted{color:var(--mut);font-size:12px}
+.cell.band{background:var(--ink);color:var(--bg);font:500 11.5px var(--mono)}
+.cell.head{font-weight:600;border-bottom:2px solid var(--ink);background:var(--panel)}
+.cell.lnk a{text-decoration:underline;text-underline-offset:3px}
+.cell.sel{outline:2px solid var(--sel);outline-offset:-2px;z-index:1;overflow:visible}
+.cell.sel::after{content:'';position:absolute;right:-4px;bottom:-4px;width:7px;height:7px;background:var(--sel);border:1.5px solid var(--bg)}
+.cell.prec{outline:2px dashed var(--blue);outline-offset:-2px}
+.cell.flash{animation:flash .9s var(--ease)}
+.cell.bad{animation:bad .4s}
+.cell input{width:100%;font:inherit;text-align:right;background:var(--bg);color:var(--ink);border:0;outline:0;height:100%}
+@keyframes flash{from{background:#FFE27A;color:#1F2328}}
+@keyframes bad{25%{background:var(--red);color:#fff}}
+.intro .cell{animation:cin .5s var(--ease) both;animation-delay:calc(var(--r)*20ms)}
+@keyframes cin{from{opacity:0;transform:translateY(6px)}}
+/* inspector */
+#insp{border-left:1px solid var(--grid);padding:18px 18px 24px;background:var(--panel);overflow:auto}
+#insp .k{font:500 11.5px var(--mono);color:var(--mut);margin-bottom:12px}
+#insp h3{font-size:18px;letter-spacing:-.02em;margin-bottom:10px}
+#insp p,#insp dd{color:var(--mut);margin-bottom:10px}
+#insp dt{font:500 11.5px var(--mono);color:var(--ink);margin-top:10px}
+#insp code{display:block;padding:9px 11px;background:var(--bg);border:1px solid var(--grid);border-radius:6px;margin-bottom:12px;font-size:12.5px}
+.rng{height:8px;background:var(--head);border-radius:4px;position:relative;margin:10px 0 6px}
+.rng i{position:absolute;top:-3px;width:3px;height:14px;background:var(--green);border-radius:2px}
+.rng+small{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--mut)}
+/* tabs + status */
+.tabs{display:flex;gap:2px;padding:0 10px;border-top:1px solid var(--grid);background:var(--panel);overflow-x:auto}
+.tabs button{padding:8px 16px;font-size:12.5px;border-bottom:2px solid transparent;color:var(--mut);white-space:nowrap}
+.tabs button:hover{color:var(--ink)}.tabs button[aria-selected=true]{color:var(--ink);font-weight:600;border-color:var(--green);background:var(--bg)}
+.status{display:flex;gap:18px;padding:4px 14px;font-size:11.5px;color:var(--mut);border-top:1px solid var(--grid);background:var(--panel)}
+/* palette */
+#pal{position:fixed;inset:0;z-index:50;background:rgba(10,12,14,.45);display:grid;align-items:start;justify-items:center;padding-top:14vh}
+#pal[hidden]{display:none}
+.pbox{width:min(560px,92vw);background:var(--bg);border:1px solid var(--grid);border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.35);overflow:hidden;animation:cin .25s var(--ease)}
+.pbox input{width:100%;padding:14px 16px;font:500 15px var(--sans);border:0;border-bottom:1px solid var(--grid);background:transparent;color:var(--ink);outline:0}
+.pbox ul{list-style:none;max-height:300px;overflow:auto;padding:6px}
+.pbox li{padding:9px 12px;border-radius:6px;cursor:pointer}.pbox li.on{background:var(--head)}
+/* plain */
+#plain{display:none;max-width:860px;margin:0 auto;padding:32px 20px 80px}
+#plain h1{font-size:44px;letter-spacing:-.04em}#plain h2{margin:36px 0 8px;font-size:22px}
+#plain table{border-collapse:collapse;width:100%}#plain td{padding:7px 10px 7px 0;border-bottom:1px solid var(--grid);vertical-align:top}
+.pnote{color:var(--mut);margin-top:6px}
+body.plain #app{display:none}body.plain #plain{display:block}
+@media(max-width:1100px){.main{grid-template-columns:1fr;grid-template-rows:1fr 170px}#insp{border-left:0;border-top:1px solid var(--grid)}.leg{display:none}}
+@media(max-width:820px){#app{display:none}#plain{display:block}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body data-skin="workbook">
+<div id="app">
+  <header class="title">
+    <span class="logo"><i></i></span><span class="fname">Ollie.xlsx</span><span class="saved" id="saved">All changes saved</span>
+    <span class="sp"></span>
+    <button class="btn" id="palBtn">Jump to <kbd>Ctrl K</kbd></button>
+    <button class="btn" id="skinBtn" aria-pressed="false">Notebook skin</button>
+    <button class="btn" id="plainBtn">Plain view</button>
+  </header>
+  <div class="tool">
+    <button class="btn" id="stBtn" aria-pressed="false">Stress test (±10%)</button>
+    <button class="btn" id="resetBtn">Reset inputs</button>
+    <a class="btn go" href="cv.pdf">Download CV</a>
+    <span class="leg"><span class="b"><b>Blue</b> input</span><span><b>Black</b> formula</span><span class="g"><b>Green</b> link</span></span>
+  </div>
+  <div class="fbar"><span class="nb" id="nb">A1</span><span class="fxl">fx</span><div id="fc" aria-live="polite"></div></div>
+  <div class="main"><div class="gridwrap"><div id="grid" role="grid" aria-label="Workbook sheet"></div></div><aside id="insp" aria-label="Inspector"></aside></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Sheets"></nav>
+  <footer class="status"><span id="st">Ready</span><span>Calculation: automatic</span><span id="vl"></span><span class="sp"></span><span id="sn"></span></footer>
+</div>
+<div id="plain"></div>
+<div id="pal" hidden><div class="pbox" role="dialog" aria-label="Jump to"><input id="pin" placeholder="Jump to a sheet or action" aria-label="Jump to"><ul id="plist"></ul></div></div>
+
+<script>
+const $ = s => document.querySelector(s), esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const L = t => ({v:t, cls:'lab'}), I = v => ({v, in:1}), F = (v,f) => ({v, f}), NA = t => ({v:t, cls:'muted'});
+const Hd = (...a) => a.map(t => ({v:t, cls:'head'})), LK = (v,href,span=1) => ({v, href, span, cls:'lnk'});
+const DETAIL = [
+ ['Independent researcher and lecturer','Literature review, then Navier-Stokes through to DSMC simulation methods','Report, lecture and a published article'],
+ ['Data Lead, team of 6','Excel cash flow model and dataset management','Add placement'],
+ ['Presenter and participant','Market growth, regulation and behavioural economics; derivation of the Kelly criterion','Talk delivered; add slides link'],
+ ['Researcher and presenter','Euler\u2019s totient function and RSA; Manim animation; QKD link budgets','20-minute talk and a report'],
+ ['Team member','Inverted Pratt truss, strength-to-weight optimisation','108.26 g held 27.5 kg, about 254 to 1; won the year group'],
+ ['Team of five','OpenRocket flight modelling, 3D printing, laser cutting','Regional round in Cambridge; add result'],
+ ['Solo','Registers, ALU and conditional unit; custom instruction set and assembly','Maze-solving program running'],
+ ['Solo','Custom input and movement systems on Unity physics','In progress']];
+const SH = [
+ {id:'summary', name:'Summary', w:[210,130,110,110,110,110,110,110], note:'Blue cells are inputs. Edit one (Enter or double-click) and the formulas recalculate. Then try the stress test.', rows:[
+  [{v:'Ollie Nebel', cls:'title', span:8}],
+  [{v:'I build models, then test where they break.', cls:'sub', span:8}],
+  [],
+  [L('School'), {v:'Caterham School, Year 13', span:5}],
+  [L('Predicted'), {v:'A*A*A*A* in Mathematics, Further Mathematics, Physics, Computer Science', span:7}],
+  [L('Applying for'), {v:'2027 entry: engineering, finance, consulting, audit', span:7}],
+  [L('CV'), LK('Download cv.pdf','cv.pdf',3)],
+  [],
+  [{v:'LIVE MODEL: CHANGE THE BLUE CELLS', cls:'band', span:8}],
+  [L('Bridge mass (g)'), I(108.26)],
+  [L('Bridge max load (kg)'), I(27.5)],
+  [L('Strength-to-weight'), F('=B11*1000/B10','0.0'), {v:'to 1', cls:'unit'}],
+  [],
+  [L('Trailblazer rank'), I(131)],
+  [L('Entrants'), I(5383)],
+  [L('Percentile'), F('=1-B14/B15','0.0%'), {v:'of entrants ranked below', cls:'unit', span:3}],
+  [],
+  [L('UKROC target (m)'), I(229)],
+  [L('Predicted apogee (m)'), I(241), {v:'illustrative', cls:'unit'}],
+  [L('Error (m)'), F('=ABS(B19-B18)','0.0')]]},
+ {id:'projects', name:'Projects', w:[48,290,70,110,420,100], note:'Select a project row to see its role, method and outcome here.', rows:[
+  Hd('#','Project','Year','Type','Outcome','Link'),
+  ['01','Modelling hypersonic flight','2025','Research','10-page report, lecture, published article',NA('add link')],
+  ['02','Wharton Investment Competition','2025','Finance','Data Lead, team of 6, 5,000+ teams',NA('add link')],
+  ['03','BNPL talk and Kelly criterion','2025','Finance','Economics Society talk; Econometrics Club',NA('add link')],
+  ['04','RSA cryptography and satellite QKD','2026','Research','20-minute animated talk and a report',NA('add link')],
+  ['05','Bridge design','2026','Engineering','108.26 g held 27.5 kg; won the year group',NA('add link')],
+  ['06','UK Youth Rocketry Challenge','2026','Engineering','Five-person team; 229 m target',NA('add link')],
+  ['07','CPU from logic gates','2026','Engineering','Turing-complete CPU, custom instruction set',NA('add link')],
+  ['08','Metroidvania game','2025','Engineering',{v:'#N/A', cls:'muted'},NA('not built yet')]]},
+ {id:'experience', name:'Experience', w:[300,200,170,420], note:'Work, responsibilities and panels.', rows:[
+  Hd('Role','Organisation','Dates','Notes'),
+  ['Work experience','Stratos Aero','Oct 2026','Aircraft lease valuation model and residual value'],
+  ['Youth Panellist','Q5','Oct 2026 to now','Sixth Form advisory panel on consulting issues'],
+  ['Freelance web developer','Self-employed','Jun 2026 to now','WordPress maintenance and performance'],
+  ['High Ropes Instructor','Caterham School','Mar 2025 to now','Safety protocols; ages 8 to 16']]},
+ {id:'achievements', name:'Achievements', w:[360,260,330], note:'Awards and responsibilities.', rows:[
+  Hd('Award','Body','Result'),
+  ['Engineering Scholarship','Arkwright','Scholar'],
+  ['Senior Mathematical Challenge','UKMT','Gold; Senior Kangaroo'],
+  ['Trailblazer Challenge','Raspberry Pi and Bebras','Gold; 131 of 5,383'],
+  ['Senior Physics Challenge','British Physics Olympiad','Silver'],
+  ['President','Moncrieff-Jones Society','2025 to now; co-editor, Quantum Ultimatum'],
+  ['Sergeant','RAF section, CCF','Four years in the section'],
+  ['Grade 8 Acting','LAMDA','High Distinction'],
+  ['Duke of Edinburgh\u2019s Award','DofE','Silver; Gold in progress']]},
+ {id:'contact', name:'Contact', w:[160,380,110,110,110,110,110,110], note:'Open to apprenticeship and work experience opportunities.', rows:[
+  [{v:'Get in touch', cls:'title', span:8}],
+  [],
+  [L('Email'), LK('ollie.nebel@gmail.com','mailto:ollie.nebel@gmail.com')],
+  [L('LinkedIn'), LK('linkedin.com/in/ollie-nebel','https://www.linkedin.com/in/ollie-nebel-925741302/')],
+  [L('CV'), LK('Download cv.pdf','cv.pdf')],
+  [L('Status'), 'Open to 2027 entry']]},
+ {id:'sources', name:'Sources', w:[330,330,200], note:'Every claim should point to evidence. Links to be added.', rows:[
+  Hd('Claim','Evidence','Link'),
+  ['Bridge: 108.26 g held 27.5 kg','School physics competition record',NA('add link')],
+  ['Trailblazer: 131 of 5,383','Challenge results',NA('add link')],
+  ['Wharton: Data Lead, 5,000+ teams','Competition records',NA('add link')],
+  ['Hypersonics report, lecture, article','Report PDF; Quantum Ultimatum issue',NA('add link')],
+  ['Stratos Aero work experience','Referee on request',NA('add link')]]}
+];
+
+/* ---------- model ---------- */
+const COLS = 8, isF = o => typeof o.v === 'string' && o.v[0] === '=';
+SH.forEach(sh => {
+  while (sh.w.length < COLS) sh.w.push(110);
+  sh.map = {}; sh.grid = [];
+  for (let r = 0; r < Math.max(sh.rows.length, 26); r++) {
+    const line = []; let c = 0;
+    const put = o => { o.r = r; o.c = c; o.span = o.span || 1; o.ref = String.fromCharCode(65+c) + (r+1); if (typeof o.v === 'number') o.cur = o.v; line.push(o); sh.map[o.ref] = o; c += o.span; };
+    (sh.rows[r] || []).forEach(x => put(x && typeof x === 'object' ? x : {v: x == null ? '' : x}));
+    while (c < COLS) put({v:''});
+    sh.grid.push(line);
+  }
+});
+const num = (ref, ov) => { if (ov && ref in ov) return ov[ref]; const o = SH[0].map[ref]; return isF(o) ? ev(o.v.slice(1), ov) : o.cur; };
+const ev = (e, ov) => Function('n', 'ov', 'return ' + e.replace(/ABS[(]/g, 'Math.abs(').replace(/[A-Z]+[0-9]+/g, m => `n('${m}',ov)`))(num, ov);
+const fmt = (o, x) => o.f === '0.0%' ? (x*100).toFixed(1) + '%' : o.f === '0.0' ? x.toFixed(1) : String(x);
+const disp = o => isF(o) ? fmt(o, ev(o.v.slice(1))) : typeof o.v === 'number' ? fmt(o, o.cur) : o.v;
+const cellHtml = o => {
+  if (o.href) return `<a href='${o.href}' ${/^https?:/.test(o.href) ? `target='_blank' rel='noopener'` : ''}>${esc(disp(o))}</a>`;
+  return isF(o) ? `<span class='v'>${esc(disp(o))}</span><span class='rg'></span>` : esc(disp(o));
+};
+const desc = (r, c) => { const l = SH[cur].grid[r]; return l.find(x => x.c <= c && c < x.c + x.span) || l[0]; };
+
+/* ---------- render ---------- */
+let cur = 0, sel = {r:0, c:0}, editing = false, palOpen = false;
+function render(first){
+  const sh = SH[cur], g = $('#grid');
+  g.style.gridTemplateColumns = '46px ' + sh.w.map(w => w + 'px').join(' ');
+  let h = '<div class=\"corner\"></div>' + sh.w.map((_, i) => `<div class='ch' data-c='${i}'>${String.fromCharCode(65+i)}</div>`).join('');
+  sh.grid.forEach((line, r) => {
+    h += `<div class='rh' data-r='${r}'>${r+1}</div>`;
+    line.forEach(o => { h += `<div class='cell ${o.cls||''} ${o.in?'in':''} ${isF(o)?'fx':''} ${typeof o.v==='number'?'n':''}' role='gridcell' id='c-${o.ref}' data-r='${r}' data-c='${o.c}' tabindex='-1' style='grid-column:span ${o.span};--r:${r}'>${cellHtml(o)}</div>`; });
+  });
+  g.innerHTML = h; g.classList.toggle('intro', !!first);
+  $('#tabs').innerHTML = SH.map((s, i) => `<button role='tab' aria-selected='${i===cur}' data-i='${i}'>${s.name}</button>`).join('');
+  $('#sn').textContent = `Sheet ${cur+1} of ${SH.length}`;
+  if (document.body.classList.contains('stress')) stress(true);
+}
+function select(r, c, focus = true){
+  const o = desc(r, c); sel = {r: o.r, c: o.c};
+  document.querySelectorAll('.sel,.prec,.hl').forEach(e => e.classList.remove('sel', 'prec', 'hl'));
+  document.querySelectorAll('.cell[tabindex=\"0\"]').forEach(e => e.tabIndex = -1);
+  const el = $('#c-' + o.ref); el.classList.add('sel'); el.tabIndex = 0;
+  $(`.ch[data-c='${o.c}']`).classList.add('hl'); $(`.rh[data-r='${o.r}']`).classList.add('hl');
+  if (isF(o)) (o.v.match(/[A-Z]+[0-9]+/g) || []).forEach(p => { const e = $('#c-' + p); if (e) e.classList.add('prec'); });
+  $('#nb').textContent = o.ref;
+  $('#fc').textContent = isF(o) ? o.v : typeof o.v === 'number' ? String(o.cur) : o.v;
+  $('#vl').textContent = typeof o.v === 'number' || isF(o) ? 'Value: ' + disp(o) : '';
+  inspect(o);
+  if (focus) { el.focus({preventScroll:true}); el.scrollIntoView({block:'nearest', inline:'nearest'}); }
+}
+function inspect(o){
+  const sh = SH[cur]; let h = `<p class='k'>${sh.name} / ${o.ref}</p>`;
+  if (cur === 1 && o.r >= 1 && DETAIL[o.r-1]) { const d = DETAIL[o.r-1]; h += `<h3>${esc(sh.grid[o.r][1].v)}</h3><dl><dt>Role</dt><dd>${esc(d[0])}</dd><dt>Method</dt><dd>${esc(d[1])}</dd><dt>Outcome</dt><dd>${esc(d[2])}</dd></dl>`; }
+  else if (isF(o)) {
+    h += `<h3>Formula</h3><code>${esc(o.v)}</code><p>Reads from ${[...new Set(o.v.match(/[A-Z]+[0-9]+/g))].join(', ')}. Change a blue cell and this recalculates.</p>`;
+    if (o.lo != null && document.body.classList.contains('stress')) {
+      const b = ev(o.v.slice(1)), p = o.hi === o.lo ? 50 : (b - o.lo) / (o.hi - o.lo) * 100;
+      h += `<h3>Stress test</h3><p>Every input moved 10% up and down.</p><div class='rng'><i style='left:calc(${p}% - 1px)'></i></div><small>${fmt(o,o.lo)}<span>${fmt(o,b)}</span>${fmt(o,o.hi)}</small>`;
+    }
+  }
+  else if (o.in) h += '<h3>Input</h3><p>Press Enter or double-click to edit. Numbers only; anything else is rejected.</p>';
+  else h += `<p>${sh.note}</p>`;
+  $('#insp').innerHTML = h;
+}
+function move(dr, dc){
+  const o = desc(sel.r, sel.c); let r = sel.r + dr, c = dc > 0 ? o.c + o.span : dc < 0 ? o.c - 1 : sel.c;
+  select(Math.max(0, Math.min(SH[cur].grid.length - 1, r)), Math.max(0, Math.min(COLS - 1, c)));
+}
+function go(i){ cur = (i + SH.length) % SH.length; render(true); select(0, 0, false); }
+
+/* ---------- editing + recalculation ---------- */
+function edit(o){
+  const el = $('#c-' + o.ref); editing = true;
+  el.innerHTML = `<input value='${o.cur}' inputmode='decimal' aria-label='Edit ${o.ref}'>`;
+  const i = el.firstChild; i.focus(); i.select();
+  const done = ok => {
+    if (!editing) return; editing = false;
+    const n = Number(i.value.replace(/,/g, ''));
+    if (ok) { if (i.value.trim() === '' || !isFinite(n)) { el.classList.add('bad'); setTimeout(() => el.classList.remove('bad'), 500); } else o.cur = n; }
+    el.innerHTML = cellHtml(o); recalc(); select(o.r, o.c);
+  };
+  i.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); done(true); } if (e.key === 'Escape') { e.preventDefault(); done(false); } e.stopPropagation(); };
+  i.onblur = () => done(true);
+}
+function recalc(){
+  $('#st').textContent = 'Calculating\u2026'; setTimeout(() => $('#st').textContent = 'Ready', 350);
+  if (cur === 0) Object.values(SH[0].map).filter(isF).forEach(o => {
+    const el = $('#c-' + o.ref), s = el && el.querySelector('.v'), v = disp(o);
+    if (s && s.textContent !== v) { s.textContent = v; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  });
+  if (document.body.classList.contains('stress')) stress(true);
+  plainDoc(); select(sel.r, sel.c, false);
+}
+function stress(on){
+  document.body.classList.toggle('stress', on); $('#stBtn').setAttribute('aria-pressed', on);
+  if (on) { const m = SH[0].map;
+    Object.values(m).filter(isF).forEach(o => {
+      const ps = [...new Set(o.v.match(/[A-Z]+[0-9]+/g))].filter(p => !isF(m[p]));
+      let lo = Infinity, hi = -Infinity;
+      for (let k = 0; k < 1 << ps.length; k++) { const ov = {}; ps.forEach((p, i) => ov[p] = m[p].cur * (k >> i & 1 ? 1.1 : .9)); const x = ev(o.v.slice(1), ov); lo = Math.min(lo, x); hi = Math.max(hi, x); }
+      o.lo = lo; o.hi = hi; const el = cur === 0 && $('#c-' + o.ref); if (el) el.querySelector('.rg').textContent = fmt(o, lo) + ' to ' + fmt(o, hi);
+    });
+  }
+  select(sel.r, sel.c, false);
+}
+function reset(){ Object.values(SH[0].map).forEach(o => { if (o.in) { o.cur = o.v; const el = $('#c-' + o.ref); if (cur === 0 && el) el.innerHTML = cellHtml(o); } }); recalc(); }
+
+/* ---------- plain view, skin, palette ---------- */
+function plainDoc(){
+  $('#plain').innerHTML = '<h1>Ollie Nebel</h1><p class=\"pnote\">Plain view: the same content as the workbook.</p>' + SH.map(sh => `<h2>${sh.name}</h2><table>${sh.grid.map(l => { const c = l.filter(o => o.v !== ''); return c.length ? `<tr>${c.map(o => `<td>${o.href ? `<a href='${o.href}'>${esc(disp(o))}</a>` : esc(disp(o))}</td>`).join('')}</tr>` : ''; }).join('')}</table>`).join('');
+}
+const plain = () => { const p = document.body.classList.toggle('plain'); $('#plainBtn').textContent = p ? 'Workbook view' : 'Plain view'; };
+const skin = () => { const n = document.body.dataset.skin !== 'notebook'; document.body.dataset.skin = n ? 'notebook' : 'workbook'; $('#skinBtn').setAttribute('aria-pressed', n); };
+const ACT = [...SH.map((s, i) => ({t: 'Go to sheet: ' + s.name, f: () => go(i)})),
+ {t:'Download CV', f:() => location.href = 'cv.pdf'}, {t:'Email Ollie', f:() => location.href = 'mailto:ollie.nebel@gmail.com'},
+ {t:'Open LinkedIn', f:() => window.open('https://www.linkedin.com/in/ollie-nebel-925741302/', '_blank', 'noopener')},
+ {t:'Run or clear stress test', f:() => stress(!document.body.classList.contains('stress'))}, {t:'Reset inputs', f:reset},
+ {t:'Toggle Notebook skin', f:skin}, {t:'Toggle plain view', f:plain}];
+let pi = 0, shown = ACT;
+function palList(){ const q = $('#pin').value.toLowerCase(); shown = ACT.filter(a => a.t.toLowerCase().includes(q)); pi = Math.min(pi, Math.max(0, shown.length - 1)); $('#plist').innerHTML = shown.map((a, i) => `<li class='${i===pi?'on':''}' data-i='${i}'>${a.t}</li>`).join(''); }
+function palToggle(on){ palOpen = on; $('#pal').hidden = !on; $('#app').toggleAttribute('inert', on); if (on) { $('#pin').value = ''; pi = 0; palList(); $('#pin').focus(); } else select(sel.r, sel.c); }
+function run(i){ const a = shown[i]; palToggle(false); if (a) a.f(); }
+
+/* ---------- events ---------- */
+$('#grid').addEventListener('click', e => { const el = e.target.closest('.cell'); if (el) select(+el.dataset.r, +el.dataset.c); });
+$('#grid').addEventListener('dblclick', e => { const el = e.target.closest('.cell'); if (!el) return; const o = desc(+el.dataset.r, +el.dataset.c); if (o.in) edit(o); });
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(+b.dataset.i); });
+$('#stBtn').onclick = () => stress(!document.body.classList.contains('stress'));
+$('#resetBtn').onclick = reset; $('#skinBtn').onclick = skin; $('#plainBtn').onclick = plain; $('#palBtn').onclick = () => palToggle(true);
+$('#pin').oninput = () => { pi = 0; palList(); };
+$('#pin').onkeydown = e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); pi = Math.min(shown.length - 1, pi + 1); palList(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); pi = Math.max(0, pi - 1); palList(); }
+  else if (e.key === 'Enter') { e.preventDefault(); run(pi); }
+  else if (e.key === 'Escape') palToggle(false);
+};
+$('#plist').onclick = e => { const li = e.target.closest('li'); if (li) run(+li.dataset.i); };
+$('#pal').onclick = e => { if (e.target.id === 'pal') palToggle(false); };
+addEventListener('keydown', e => {
+  if (palOpen || editing || e.target.tagName === 'INPUT') return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); palToggle(true); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const o = desc(sel.r, sel.c), mv = {ArrowDown:[1,0], ArrowUp:[-1,0], ArrowRight:[0,1], ArrowLeft:[0,-1]}[e.key];
+  if (mv) { e.preventDefault(); move(...mv); }
+  else if (e.key === 'Tab') { e.preventDefault(); move(0, e.shiftKey ? -1 : 1); }
+  else if (e.key === 'Enter') { if (o.in) edit(o); else if (o.href) $('#c-' + o.ref + ' a').click(); else move(1, 0); }
+  else if (e.key === '[') go(cur - 1); else if (e.key === ']') go(cur + 1);
+  else if (e.key.toLowerCase() === 't') stress(!document.body.classList.contains('stress'));
+});
+console.log('%cOllie.xlsx', 'font:700 18px sans-serif', '\nCtrl K to jump, [ and ] to switch sheets, T to stress-test.');
+
+/* ---------- boot ---------- */
+plainDoc(); render(true); select(0, 0, false);
+</script>
+</body>
+</html>
