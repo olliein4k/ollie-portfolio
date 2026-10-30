@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ollie Nebel | Prototype A4</title>
+<meta name="description" content="Ollie Nebel, Year 13. I build models, then test where they break.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDEEF0;--ink:#14171C;--sig:#FF4B1F;--grid:#C9CDD3;--mut:#5E6672;--ease:cubic-bezier(.16,1,.3,1);--sans:'Bricolage Grotesque',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--top:env(safe-area-inset-top,0px);--bot:env(safe-area-inset-bottom,0px)}
+[data-theme=dark]{--bg:#121418;--ink:#ECEDEF;--sig:#FF6A45;--grid:#2A2F37;--mut:#98A1AD}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;transition:background .4s,color .4s;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}a{color:inherit}
+:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+.mono{font:500 12px/1.4 var(--mono);letter-spacing:.02em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* header */
+.top{position:fixed;inset:0 0 auto;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(14px + var(--top)) clamp(16px,3vw,40px) 14px;background:linear-gradient(var(--bg) 40%,transparent)}
+.logo{font-weight:700;letter-spacing:-.02em;text-decoration:none}
+#nav{display:flex;gap:22px}#nav a{font:500 12px var(--mono);text-decoration:none;color:var(--mut);padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s}
+#nav a:hover,#nav a.on{color:var(--ink);border-color:var(--sig)}
+.tools{display:flex;align-items:center;gap:10px}
+.pill{font:500 12px var(--mono);border:1px solid var(--grid);border-radius:99px;padding:5px 13px;background:var(--bg);transition:.2s}.pill:hover,.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tgl{position:relative;width:54px;height:28px;border-radius:99px;border:1px solid var(--grid);background:var(--bg)}
+.tgl .knob{position:absolute;left:2px;top:2px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;transition:transform .4s var(--ease)}
+.tgl[aria-checked=true] .knob{transform:translateX(26px)}
+.tgl svg{position:absolute;width:13px;height:13px;transition:opacity .25s,transform .4s var(--ease)}
+.tgl .moon{opacity:0;transform:rotate(-60deg) scale(.5)}.tgl[aria-checked=true] .moon{opacity:1;transform:none}.tgl[aria-checked=true] .sun{opacity:0;transform:rotate(60deg) scale(.5)}
+/* sections */
+section{position:relative;z-index:1;min-height:100svh;padding:110px clamp(20px,5vw,72px) 70px;display:flex;flex-direction:column;justify-content:center}
+.col{max-width:560px}
+h2{font-weight:800;letter-spacing:-.04em;line-height:.95;font-size:clamp(40px,6vw,76px);margin-bottom:22px}
+h2 small{display:block;font:500 12px var(--mono);letter-spacing:.02em;color:var(--sig);margin-bottom:14px}
+p{color:var(--mut);max-width:56ch}p+p{margin-top:12px}
+#hero{justify-content:flex-end}
+.hero-copy{max-width:640px}
+.line{font-weight:700;letter-spacing:-.03em;line-height:1.05;font-size:clamp(26px,3.6vw,46px);color:var(--ink);margin-bottom:12px}
+.hl{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:18px 0 22px;font:500 12px var(--mono);color:var(--ink)}
+.hl li::before{content:'';display:inline-block;width:6px;height:6px;background:var(--sig);margin-right:8px}
+.btn{display:inline-block;padding:11px 22px;border:1.5px solid var(--ink);border-radius:99px;font-weight:600;text-decoration:none;margin:0 8px 8px 0;transition:.25s var(--ease)}
+.btn.p{background:var(--ink);color:var(--bg)}.btn:hover{background:var(--sig);border-color:var(--sig);color:#fff;transform:translateY(-2px)}
+.scroll{position:absolute;right:clamp(20px,5vw,72px);bottom:60px;color:var(--mut);font:500 12px var(--mono)}
+.facts{display:grid;grid-template-columns:max-content 1fr;gap:6px 22px;margin:22px 0;font-size:15px}.facts dt{font:500 12px var(--mono);color:var(--mut);padding-top:3px}
+.panel{margin-top:26px;padding:18px 20px;border:1px solid var(--grid);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(6px)}
+.panel label{display:grid;grid-template-columns:1fr auto;gap:2px 12px;font:500 12px var(--mono);margin-bottom:14px}.panel input{grid-column:1/-1}
+input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:var(--grid);width:100%;margin:10px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--sig);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--sig);border-radius:50%;cursor:grab}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--sig);border:3px solid var(--bg);border-radius:50%;cursor:grab}
+#readout{font-size:14px;margin:4px 0 12px;color:var(--ink)}
+/* index rows */
+.idx{list-style:none;border-top:1.5px solid var(--ink);margin-top:8px}
+.idx li{border-bottom:1px solid var(--grid)}
+.row{width:100%;text-align:left;display:grid;grid-template-columns:34px 1fr auto 18px;gap:0 12px;align-items:baseline;padding:15px 0;transition:padding .3s var(--ease),color .2s}
+.row:hover,.row:focus-visible,.row[aria-expanded=true]{padding-left:10px;color:var(--sig)}
+.row b{font-weight:600;letter-spacing:-.015em;color:var(--ink)}.row:hover b,.row[aria-expanded=true] b{color:var(--sig)}
+.row span{font:400 12px var(--mono);color:var(--mut)}.row i{font:400 18px/1 var(--mono);font-style:normal;transition:transform .3s var(--ease)}.row[aria-expanded=true] i{transform:rotate(45deg)}
+.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}.det>div{overflow:hidden}.det.open{grid-template-rows:1fr}
+.det dl{display:grid;grid-template-columns:max-content 1fr;gap:5px 18px;padding:0 0 16px 46px;font-size:14.5px}.det dt{font:500 12px var(--mono);color:var(--mut);padding-top:2px}
+.det .out{padding:0 0 14px 46px;color:var(--ink);font-size:14.5px}
+#cap{position:fixed;left:clamp(16px,3vw,40px);bottom:calc(16px + var(--bot));z-index:9;color:var(--mut);max-width:60vw;transition:opacity .3s}
+#cap b{color:var(--sig);font-weight:500}
+.big{display:block;font-weight:800;letter-spacing:-.04em;font-size:clamp(26px,4.4vw,52px);text-decoration:none;border-bottom:2px solid var(--ink);padding:8px 0;transition:padding .3s var(--ease),color .2s}.big:hover{padding-left:14px;color:var(--sig)}
+footer{position:relative;z-index:1;padding:22px clamp(20px,5vw,72px) 60px;display:flex;justify-content:space-between;color:var(--mut)}
+#rig{position:fixed;right:clamp(16px,3vw,40px);bottom:calc(14px + var(--bot));z-index:9;display:flex;align-items:center;gap:14px;text-align:right}
+#rig .rd{display:grid;gap:2px}#rig b{color:var(--ink);font-weight:500}#rig span{color:var(--sig)}#hud{color:var(--mut);font-style:normal}
+#dial{--a:-90deg;--p:.3;position:relative;width:80px;height:80px;border-radius:50%;background:conic-gradient(from -135deg,var(--sig) calc(var(--p)*270deg),var(--grid) 0 270deg,transparent 0);cursor:ns-resize;touch-action:none;flex:none;transition:transform .3s var(--ease)}
+#dial:hover{transform:scale(1.06)}
+#dial .face{position:absolute;inset:7px;border-radius:50%;background:var(--bg);border:1px solid var(--grid)}
+#dial .nd{position:absolute;left:50%;top:50%;width:3px;height:27px;margin:-27px 0 0 -1.5px;background:var(--ink);border-radius:2px;transform-origin:50% 100%;transform:rotate(var(--a))}
+.logo .wp{margin-left:12px;color:var(--mut);font-weight:500}
+body.plain #rig{display:none}
+.col,.hero-copy{position:relative}
+.col::before,.hero-copy::before{content:'';position:absolute;inset:-48px -64px -48px -90px;z-index:-1;background:linear-gradient(90deg,var(--bg) 62%,transparent);opacity:.9;pointer-events:none}
+#hero{justify-content:center}.hero-copy{max-width:520px}.col{max-width:min(560px,46vw)}
+.scroll{right:auto;left:clamp(20px,5vw,72px);bottom:26px}
+#rig{flex-direction:column;align-items:flex-end;gap:10px}#rig .rw{display:flex;align-items:center;gap:14px}
+#cap{position:static;left:auto;bottom:auto;max-width:min(360px,34vw);text-align:right}
+@media(max-width:820px){.col{max-width:none}.col::before,.hero-copy::before{inset:-20px;background:var(--bg);opacity:.74}#cap{display:none!important}section{padding-bottom:130px}.scroll{display:none}#hero{justify-content:flex-end}#rig{bottom:calc(10px + var(--bot))}}
+footer{padding-top:30px;padding-bottom:56px;padding-right:min(480px,42vw)}
+@media(max-width:820px){footer{padding-right:20px;padding-bottom:140px}}
+/* plain view and small screens */
+body.plain #cv,body.plain #cap,body.plain .scroll{display:none}
+body.plain section{min-height:0;padding-top:70px;background:var(--bg)}
+@media(max-width:820px){#nav{display:none}section{background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(3px)}#hero{background:none;backdrop-filter:none}#cap{max-width:90vw;bottom:8px}}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body data-theme="light">
+<canvas id="cv" aria-hidden="true"></canvas>
+<header class="top">
+  <a class="logo" href="#hero">Ollie Nebel</a>
+  <nav id="nav" aria-label="Sections"><a href="#about">About</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#achievements">Achievements</a><a href="#contact">Contact</a></nav>
+  <div class="tools">
+    <button class="tgl" id="tgl" role="switch" aria-checked="false" aria-label="Dark theme" title="Light or dark theme"><span class="knob"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button>
+    <button class="pill" id="ps" aria-pressed="false">Pause motion</button>
+    <button class="pill" id="pl">Plain view</button>
+  </div>
+</header>
+
+<main>
+<section id="hero" data-state="name">
+  <h1 class="sr">Ollie Nebel</h1>
+  <div class="hero-copy">
+    <p class="line">I build models, then test where they break.</p>
+    <p>Year 13 at Caterham School. Predicted A*A*A*A* in Mathematics, Further Mathematics, Physics and Computer Science. Applying for 2027 entry in engineering, finance, consulting and audit.</p>
+    <ul class="hl"><li>Arkwright Scholar</li><li>UKMT Gold</li><li>Trailblazer Gold</li><li>President, Moncrieff-Jones Society</li></ul>
+    <a class="btn p" href="cv.pdf">Download CV</a><a class="btn" href="#contact">Get in touch</a>
+  </div>
+  <span class="scroll">Scroll to advance the simulation</span>
+</section>
+
+<section id="about" data-state="fan">
+  <div class="col">
+    <h2><small>§1 Method</small>Same method, different fields.</h2>
+    <p>Build a model, change the assumptions, see where the answer breaks, then explain it. That has meant a DCF sensitivity analysis, the Wharton cash flow model, OpenRocket flight simulations and independent research on hypersonic flow.</p>
+    <dl class="facts"><dt>School</dt><dd>Caterham School, Year 13</dd><dt>Predicted</dt><dd>A*A*A*A*: Maths, Further Maths, Physics, Computer Science</dd><dt>GCSE</dt><dd>12 GCSEs including Grade 9 in Mathematics, English Language, Physics</dd><dt>Tools</dt><dd>Excel, Python, C#, JavaScript, Assembly, OpenRocket, Manim</dd></dl>
+    <p id="readout" aria-live="polite" style="color:var(--ink);margin-top:20px"></p><p class="mono" style="color:var(--sig);margin-top:10px">Turn the dial, bottom right, to change the volatility.</p>
+  </div>
+</section>
+
+<section id="projects" data-state="flow">
+  <div class="col"><h2><small>§2 Results</small>Work, as models.</h2><p>Hover or focus a row and the particles reshape to match. Select one for the role, method and outcome.</p><ol class="idx" id="pj"></ol></div>
+</section>
+
+<section id="experience" data-state="lease">
+  <div class="col"><h2><small>§3 Practice</small>Practice.</h2><ol class="idx" id="ex"></ol></div>
+</section>
+
+<section id="achievements" data-state="fourier">
+  <div class="col"><h2><small>§4 Recognition</small>Built up, term by term.</h2><p>Awards and responsibilities, in no particular order.</p><ol class="idx" id="ac"></ol></div>
+</section>
+
+<section id="contact" data-state="cta">
+  <div class="col"><h2><small>§5 Correspondence</small>Got a problem worth modelling?</h2><p>Open to apprenticeships and work experience in engineering, finance, consulting and audit, for 2027 entry. If it can be modelled, I would like to try.</p><br>
+    <a class="big" href="mailto:ollie.nebel@gmail.com">ollie.nebel@gmail.com</a><a class="big" href="https://www.linkedin.com/in/ollie-nebel-925741302/" target="_blank" rel="noopener">LinkedIn</a><a class="big" href="cv.pdf">Download CV</a><button class="btn" id="rerun" style="margin-top:26px">Re-run from the start ↑</button></div>
+</section>
+</main>
+<footer class="mono"><span>© 2026 Ollie Nebel</span><span>Every dot is a particle with a goal</span></footer>
+<div id="rig"><p id="cap" class="mono" aria-hidden="true"></p><div class="rw"><div class="rd mono"><b id="dl"></b><span id="dv"></span><i id="hud"></i></div><div id="dial" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Assumption dial" title="Drag, scroll or use arrow keys"><i class="face"></i><i class="nd"></i></div></div></div>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = $('#cv'), cx = cv.getContext('2d');
+let W, H, DPR, N, X, Y, VX, VY, KK, AA, HT, WK, PM, mx = -1e4, my = -1e4, T = 0, paused = false, C = {};
+const rnd = (a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(11);
+const gauss = () => Math.sqrt(-2*Math.log(rnd() + 1e-9)) * Math.cos(6.2832*rnd());
+const colours = () => { const s = getComputedStyle(document.body); C = {ink:s.getPropertyValue('--ink').trim(), sig:s.getPropertyValue('--sig').trim(), grid:s.getPropertyValue('--grid').trim(), mut:s.getPropertyValue('--mut').trim()}; };
+
+/* ---------- data ---------- */
+const PJ = [
+ ['Modelling hypersonic flight','2025','Research','flow','Independent researcher and lecturer','Literature review, then Navier-Stokes through to DSMC simulation methods','Report, lecture and a published article'],
+ ['Wharton Investment Competition','2025','Finance','fan','Data Lead, team of 6','Excel cash flow model and dataset management','5,000+ teams entered; add placement'],
+ ['BNPL talk and Kelly criterion','2025','Finance','fan','Presenter and participant','Market growth, regulation, behavioural economics; Kelly derivation','Talk delivered; add slides link'],
+ ['RSA cryptography and satellite QKD','2026','Research','qkd','Researcher and presenter','Euler\u2019s totient function and RSA; Manim animation; QKD link budgets','20-minute talk and a report'],
+ ['Bridge design','2026','Engineering','truss','Team member','Inverted Pratt truss, strength-to-weight optimisation','108.26 g held 27.5 kg, about 254 to 1; won the year group'],
+ ['UK Youth Rocketry Challenge','2026','Engineering','arc','Team of five','OpenRocket flight modelling, 3D printing, laser cutting','Regional round in Cambridge; 229 m target'],
+ ['CPU from logic gates','2026','Engineering','cpu','Solo','Registers, ALU and conditional unit; custom instruction set','Maze-solving program running'],
+ ['Metroidvania game','2025','Engineering','game','Solo','Custom input and movement systems on Unity physics','In progress']];
+const EX = [['Work experience, Stratos Aero','Oct 2026','Aircraft','Reviewed the lease valuation model and how residual value drives the value of a lease.','lease'],['Youth Panellist, Q5','Oct 2026 to now','Consulting','Sixth Form advisory panel on business issues faced by consultants and their clients.','network'],['Freelance web developer','Jun 2026 to now','Web','WordPress maintenance, performance and contact forms.','layout'],['High Ropes Instructor, Caterham','Mar 2025 to now','Safety','Safety protocols, equipment checks and sessions for ages 8 to 16.','ropes']];
+const AC = [['Arkwright Engineering Scholarship','Scholar'],['UKMT Senior Maths Challenge','Gold, Kangaroo'],['Trailblazer Challenge','Gold'],['Senior Physics Challenge','Silver'],['President, Moncrieff-Jones Society','2025 to now'],['Sergeant, RAF section, CCF','Four years'],['LAMDA Grade 8 Acting','High Distinction'],['Duke of Edinburgh\u2019s Award','Silver; Gold in progress']];
+const row = (t, a, b, det, st, i) => `<li><button class="row" data-s="${st || ''}" aria-expanded="false" aria-controls="d${st||''}${i}" data-d="${i}"><span>0${i+1}</span><b>${t}</b><span>${a}</span><i>+</i></button><div class="det" id="d${st||''}${i}"><div>${det}</div></div></li>`;
+$('#pj').innerHTML = PJ.map((p, i) => row(p[0], p[1] + ' / ' + p[2], '', `<dl><dt>Role</dt><dd>${p[4]}</dd><dt>Method</dt><dd>${p[5]}</dd><dt>Outcome</dt><dd>${p[6]}</dd></dl>`, p[3], i)).join('');
+$('#ex').innerHTML = EX.map((p, i) => row(p[0], p[1], '', `<p class="out">${p[3]}</p>`, p[4], i)).join('');
+$('#ac').innerHTML = AC.map((p, i) => row(p[0], p[1], '', '', 'fourier', i)).join('');
+$$('.row').forEach(b => { if (!b.nextElementSibling.textContent.trim()) b.querySelector('i').remove(); b.addEventListener('click', () => { const d = b.nextElementSibling; if (!d.textContent.trim()) return; const o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o); d.classList.toggle('open', o); }); });
+
+/* ---------- particles ---------- */
+function size(){ W = innerWidth; H = innerHeight; DPR = Math.min(devicePixelRatio || 1, W < 700 ? 1.5 : 2); cv.width = W*DPR; cv.height = H*DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px'; cx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function alloc(){
+  N = W < 700 ? 2200 : 4200;
+  [X, Y, VX, VY, KK, AA, WK] = Array.from({length:7}, () => new Float32Array(N)); HT = new Uint8Array(N); PM = new Uint16Array(N);
+  for (let i = 0; i < N; i++) { X[i] = Math.random()*W; Y[i] = Math.random()*H; KK[i] = .012 + Math.random()*.02; AA[i] = 1; PM[i] = i; }
+  for (let i = N-1; i > 0; i--) { const j = Math.random()*(i+1) | 0; [PM[i], PM[j]] = [PM[j], PM[i]]; }
+}
+const reg = () => W > 820 ? {x:W*.44, y:H*.14, w:W*.52, h:Math.max(H*.45, H*.86 - 215)} : {x:W*.06, y:H*.1, w:W*.88, h:H*.42};
+const P = {mu:.08, sg:.2}, K = 26, S = 60, Z = Array.from({length:K}, () => Array.from({length:S}, gauss));
+
+function textPts(lines, b){
+  const c = document.createElement('canvas'), g = c.getContext('2d'), fs = 200, F = `800 ${fs}px 'Bricolage Grotesque'`;
+  g.font = F; const w = Math.max(...lines.map(l => g.measureText(l).width)); c.width = Math.ceil(w) + 20; c.height = Math.ceil(lines.length*fs*.98) + 40;
+  g.font = F; g.textBaseline = 'top'; lines.forEach((l, i) => g.fillText(l, 10, 10 + i*fs*.98));
+  const d = g.getImageData(0, 0, c.width, c.height).data, p = [];
+  for (let y = 0; y < c.height; y += 4) for (let x = 0; x < c.width; x += 4) if (d[(y*c.width + x)*4 + 3] > 120) p.push([x, y]);
+  const k = Math.min(b.w/c.width, b.h/c.height), ox = b.x + (b.w - c.width*k)/2, oy = b.y + (b.h - c.height*k)/2;
+  return p.map(([x, y]) => [ox + x*k, oy + y*k]);
+}
+const DV = {name:.06, cta:.06, fan:.28, flow:.35, qkd:.12, truss:.35, arc:.25, cpu:.4, game:.5, lease:.4, network:.4, layout:.8, ropes:.5, fourier:.3};
+const DL = {name:'Temperature', cta:'Temperature', fan:'Volatility', flow:'Mach number', qkd:'Orbit altitude', truss:'Load', arc:'Drag coefficient', cpu:'Clock rate', game:'Jump power', lease:'Residual value', network:'Connections', layout:'Screen width', ropes:'Rope tension', fourier:'Terms'};
+const FIG = {name:1, fan:2, flow:3, qkd:4, truss:5, arc:6, cpu:7, game:8, lease:9, network:10, layout:11, ropes:12, fourier:13, cta:14};
+const RX = Float32Array.from({length:4200}, rnd), RY = Float32Array.from({length:4200}, rnd);
+const fixed = (pts, cap, hot = () => 0, draw, key) => ({cap:() => cap, draw, hot, fmt:() => key ? 'T = ' + Math.round(300 + DV[key]*2700) + ' K' : '',
+  at(j, t, o){ const p = pts[Math.floor(j*pts.length/N)], A = key ? .5 + DV[key]*DV[key]*70 : .6; o.x = p[0] + Math.sin(t*1.7 + j*3.1)*A; o.y = p[1] + Math.cos(t*1.3 + j*1.7)*A; o.a = 1; }});
+function along(segs, n = N){
+  const L = segs.map(s => Math.hypot(s[2]-s[0], s[3]-s[1])), tot = L.reduce((a, b) => a + b, 0), pts = [], hot = [], idx = [];
+  for (let i = 0; i < n; i++) { let d = (i + .5)/n*tot, k = 0; while (k < segs.length-1 && d > L[k]) { d -= L[k]; k++; } const s = segs[k], u = d/(L[k] || 1); pts.push([s[0] + (s[2]-s[0])*u, s[1] + (s[3]-s[1])*u]); hot.push(s[4] ? 1 : 0); idx.push(k); }
+  return [pts, hot, idx];
+}
+const rectp = (x, y, w, h, u) => { const d = u*2*(w + h); return d < w ? [x + d, y] : d < w + h ? [x + w, y + d - w] : d < 2*w + h ? [x + w - (d - w - h), y + h] : [x, y + h - (d - 2*w - h)]; };
+const sm = v => v <= 0 ? 0 : v >= 1 ? 1 : v*v*(3 - 2*v);
+function readout(){ const m = Math.exp((P.mu - P.sg*P.sg/2)*10), sp = 1.645*P.sg*Math.sqrt(10); $('#readout').textContent = `From 1.00 after 10 years: median ${m.toFixed(2)}, and 90% of outcomes between ${(m*Math.exp(-sp)).toFixed(2)} and ${(m*Math.exp(sp)).toFixed(2)}.`; }
+const B = {
+ name(){ return fixed(textPts(['OLLIE', 'NEBEL'], reg()), 'Name set in particles. Raise the temperature and it melts.', j => j % 9 === 0, null, 'name'); },
+ cta(){ return fixed(textPts(['LET\u2019S', 'MODEL IT'], reg()), 'Let\u2019s model it. Raise the temperature and it melts again.', j => j % 7 === 0, null, 'cta'); },
+ fan(){
+  const r = reg(), dt = 10/S, lo = -1.2, hi = 2.3, YY = l => r.y + r.h - (l - lo)/(hi - lo)*r.h, XX = s => r.x + s/S*r.w; let path, end, low;
+  const mk = () => { P.sg = .05 + .55*DV.fan; const dr = (P.mu - P.sg*P.sg/2)*dt, vo = P.sg*Math.sqrt(dt); path = Z.map(z => { let l = 0; return [0, ...z.map(v => l += dr + vo*v)]; }); end = path.map(p => p[S]); low = end.filter(e => e < Math.log(.5)).length; readout(); };
+  mk();
+  return {set:mk, fmt:() => Math.round(P.sg*100) + '% a year', cap:() => `Price paths, geometric Brownian motion, illustrative. ${low} of ${K} end below half their start (orange).`, hot:j => end[j % K] < Math.log(.5),
+   at(j, t, o){ const p = j % K, u = Math.floor(j/K)/(N/K)*S, s = Math.min(S-1, Math.floor(u)), f = u - s, l = path[p][s]*(1-f) + path[p][s+1]*f; o.x = XX(u); o.y = Math.max(r.y - 30, YY(l)) + Math.sin(t*1.4 + j)*1.1; o.a = 1; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.lineWidth = 1; [.5, 1, 2, 4, 8].forEach(v => { const y = YY(Math.log(v)); g.strokeStyle = C.grid; g.beginPath(); g.moveTo(r.x, y); g.lineTo(r.x + r.w, y); g.stroke(); g.fillStyle = C.mut; g.fillText(v + '\u00d7', r.x - 30, y + 4); });
+    [0, 5, 10].forEach(v => g.fillText(v + 'y', XX(v/10*S) - 6, r.y + r.h + 22)); g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath(); for (let s = 0; s <= S; s++) { const l = (P.mu - P.sg*P.sg/2)*s*dt, x = XX(s), y = Math.max(r.y - 30, YY(l)); s ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }};
+ },
+ flow(){
+  const r = reg(), sc = r.w/8, cxm = r.x + r.w/2, cym = r.y + r.h/2, nL = 28, M = 240, nc = Math.floor(N*.07), PS = [], Ys = [], pu = new Float32Array(N), hz = new Uint8Array(N); let ph = 0;
+  for (let q = 0; q < nL; q++) { const psi = (q < nL/2 ? q - nL/2 : q - nL/2 + 1)*.13, a = Math.abs(psi), ys = new Float32Array(M); PS.push(psi);
+   for (let m = 0; m < M; m++) { const x = -4 + 8*m/(M-1); let lo = Math.sqrt(Math.max(0, 1 - x*x)), hi = a + 2; for (let k = 0; k < 32; k++) { const y = (lo + hi)/2; (y - y/(x*x + y*y) < a ? lo = y : hi = y); } ys[m] = Math.sign(psi)*(lo + hi)/2; } Ys.push(ys); }
+  const Mn = () => .3 + DV.flow*5, xs = y => -(1.25 + .7/Mn()) + .38*y*y;
+  return {tick:dt => ph += dt*(.03 + DV.flow*.14), fmt:() => 'Mach ' + Mn().toFixed(1) + ', ' + (Mn() < .8 ? 'subsonic' : Mn() < 1.2 ? 'transonic' : Mn() < 3 ? 'supersonic' : 'hypersonic'),
+   cap:() => { const m = Mn(); return m < .8 ? 'Subsonic flow around a cylinder, illustrative. Smooth, symmetric streamlines.' : m < 1.2 ? 'Transonic: the flow is about to form a shock.' : m < 3 ? 'Supersonic: a bow shock forms. Gas upstream cannot sense the body until it hits the shock. Wake turbulence begins.' : 'Hypersonic: the shock hugs the body and the shock layer heats up (orange).'; },
+   hot:j => j < nc || hz[j] === 1,
+   at(j, t, o){
+    if (j < nc) { const a = j/nc*6.2832 + ph*.6; o.x = cxm + Math.cos(a)*sc; o.y = cym + Math.sin(a)*sc; o.a = 1; return; }
+    const q = j % nL, u0 = Math.floor(j/nL)/(N/nL) + ph, u = u0 - Math.floor(u0), m = Mn(), x = -4.5 + 9*u, psi = PS[q], ys = Ys[q][Math.min(M-1, Math.max(0, Math.round((x + 4)/8*(M-1))))]; let y = ys;
+    if (m > 1.05) y = psi + (ys - psi)*sm((x - xs(psi))/.4);
+    hz[j] = m > 2.5 && x > xs(psi) && x < xs(psi) + 1.2 ? 1 : 0;
+    if (x > 1 && m > 1.05) y += Math.sin(t*6 + j*1.9)*Math.min(1, (x - 1)/1.5)*Math.min(.22, .05*(m - 1));
+    if (u < pu[j] - .5) o.snap = 1; pu[j] = u;
+    o.x = cxm + x*sc; o.y = cym + y*sc; o.a = Math.min(1, (x + 4.5)/.5, (4.5 - x)/.5); },
+   draw(g){ const m = Mn(); if (m < 1.05) return; const sd = 1.25 + .7/m; g.strokeStyle = C.sig; g.lineWidth = 1.6; g.setLineDash([5, 5]); g.beginPath(); for (let y = -2.6; y <= 2.6; y += .1) { const x = cxm + (-sd + .38*y*y)*sc; y < -2.55 ? g.moveTo(x, cym + y*sc) : g.lineTo(x, cym + y*sc); } g.stroke(); g.setLineDash([]); g.fillStyle = C.sig; g.font = '11px IBM Plex Mono'; g.fillText('bow shock', cxm + (-sd + .38*6.76)*sc + 8, cym - 2.6*sc); }};
+ },
+ qkd(){
+  const r = reg(), cxm = r.x + r.w/2, R = r.w*.95, top = r.y + r.h - 30, cE = top + R, nE = Math.floor(N*.22), nS = 70, nSt = 36, nB = N - nE - nS - 2*nSt, pu = new Float32Array(N), rb = Float32Array.from({length:N}, rnd);
+  const earth = x => cE - Math.sqrt(R*R - (x - cxm)*(x - cxm)), xa = cxm - r.w*.36, xb = cxm + r.w*.36, stA = [xa, earth(xa)], stB = [xb, earth(xb)]; let alt = 500, eta = 1, db = 0, ph = 0;
+  const mk = () => { alt = 500 + DV.qkd*DV.qkd*35000; db = 20*Math.log10(alt/500); eta = Math.pow(10, -db/42); }; mk();
+  const sat = () => [cxm + Math.sin(ph*.25)*r.w*.06, top - 70 - DV.qkd*(r.h*.55 - 20)], tri = (s, k, n) => { const u = k/n*3, i = Math.floor(u), f = u - i, V = [[s[0], s[1] - 16], [s[0] - 10, s[1]], [s[0] + 10, s[1]]], a = V[i % 3], b = V[(i + 1) % 3]; return [a[0] + (b[0] - a[0])*f, a[1] + (b[1] - a[1])*f]; };
+  return {set:mk, tick:dt => ph += dt, fmt:() => `${Math.round(alt).toLocaleString('en-GB')} km, +${db.toFixed(0)} dB loss`, cap:() => 'Satellite quantum key distribution, illustrative: single photons travel down to two ground stations. A higher orbit means a wider beam and fewer photons arriving.',
+   hot:j => (j >= nE && j < nE + nS + 2*nSt) || (j >= nE + nS + 2*nSt && j % 9 === 0),
+   at(j, t, o){ o.a = 1;
+    if (j < nE) { const x = r.x - r.w*.1 + j/nE*r.w*1.2; o.x = x; o.y = earth(x) + Math.sin(j)*.8; return; }
+    if (j < nE + nS) { const k = j - nE, s = sat(), p = k < 20 ? rectp(s[0] - 8, s[1] - 6, 16, 12, k/20) : k < 45 ? rectp(s[0] - 38, s[1] - 3, 26, 6, (k - 20)/25) : rectp(s[0] + 12, s[1] - 3, 26, 6, (k - 45)/25); o.x = p[0]; o.y = p[1]; return; }
+    if (j < nE + nS + 2*nSt) { const k = j - nE - nS, st = k < nSt ? stA : stB, p = tri(st, k % nSt, nSt); o.x = p[0]; o.y = p[1]; return; }
+    const bj = j - nE - nS - 2*nSt, s = sat(), tg = bj % 2 ? stB : stA, u0 = Math.floor(bj/2)/(nB/2) + ph*.5, p = u0 - Math.floor(u0); if (p < pu[j] - .5) o.snap = 1; pu[j] = p;
+    const sp = (rb[j] - .5)*(3 + alt/35500*70*p) + (p > .85 ? (rb[(j*7) % N] - .5)*14*(p - .85)/.15 : 0), dx = tg[0] - s[0], dy = tg[1] - s[1], L = Math.hypot(dx, dy);
+    o.x = s[0] + dx*p - dy/L*sp; o.y = s[1] + dy*p + dx/L*sp; o.a = rb[(j*13) % N] < Math.pow(eta, p*3) ? 1 : 0; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.fillStyle = C.mut; g.fillText('Alice', stA[0] - 16, stA[1] + 24); g.fillText('Bob', stB[0] - 10, stB[1] + 24); const s = sat(); g.fillText('satellite', s[0] - 26, s[1] - 16); g.fillStyle = C.ink; g.fillText('photons received ' + (Math.pow(eta, 3)*100).toFixed(1) + '%', r.x + 4, r.y + 14); }};
+ },
+
+ truss(){
+  const r = reg(), b = r.y + r.h*.72, h = r.h*.34, x0 = r.x + r.w*.06, x1 = r.x + r.w*.94, n = 6, dx = (x1 - x0)/n, Bn = k => [x0 + k*dx, b], Tn = k => [x0 + k*dx, b - h], sg = [], wt = [], add = (s, w) => { sg.push(s); wt.push(w); };
+  add([x0, b, x1, b], .5); add([...Tn(1), ...Tn(n-1)], .6); add([x0, b, ...Tn(1)], 1); add([x1, b, ...Tn(n-1)], 1);
+  for (let k = 1; k < n; k++) add([...Tn(k), ...Bn(k)], .35); for (let k = 1; k < n/2; k++) { add([...Tn(k), ...Bn(k+1)], .8); add([...Tn(n-k), ...Bn(n-k-1)], .8); }
+  sg.forEach(q => { q[1] = 2*b - h - q[1]; q[3] = 2*b - h - q[3]; }); const [pts, , idx] = along(sg), FAIL = .786, worst = wt.indexOf(Math.max(...wt)); let tb = -1;
+  return {set:() => { if (DV.truss > FAIL) { if (tb < 0) tb = T; } else tb = -1; }, fmt:() => (DV.truss*35).toFixed(1) + ' kg of 27.5', cap:() => DV.truss > FAIL ? 'Inverted Pratt truss: an end post buckles above 27.5 kg. The real bridge held 27.5 kg at 108.26 g.' : 'Inverted Pratt truss: orange members carry the most load. Turn it up until something gives.', hot:j => DV.truss*wt[idx[j]] > .3,
+   at(j, t, o){ const p = pts[j], k = idx[j]; o.x = p[0]; o.y = p[1]; o.a = 1; if (tb >= 0 && k === worst) { const q = T - tb; o.y += Math.min(420, 260*q*q); o.x += Math.sin(j)*q*18; o.a = Math.max(0, 1 - q*.7); } else { const s = DV.truss*wt[k]*.9; o.x += Math.sin(t*30 + j)*s; o.y += Math.cos(t*27 + j)*s; } }};
+ },
+ arc(){
+  const r = reg(), AX = r.x + 46, AW = r.w - 46, AY = r.y + 10, AH = r.h - 50, near = new Uint8Array(N), wgt = new Float32Array(N), P0 = .55, Q0 = .5; let cd = .45, dA = 0;
+  const A = (p, q) => 420*p/(.5 + q)*(1.35 - cd)/.9;
+  const mk = () => { cd = .3 + .6*DV.arc; for (let j = 0; j < N; j++) { const e = A(RX[j], 1 - RY[j]) - 229; near[j] = Math.abs(e) < 9 ? 1 : 0; wgt[j] = .3 + .7*Math.exp(-e*e/(2*45*45)); } dA = A(P0, Q0); }; mk();
+  return {set:mk, fmt:() => `Cd ${cd.toFixed(2)}, design apogee ${dA.toFixed(0)} m`, cap:() => `Design space for the rocket, illustrative: each dot is a design (motor impulse across, mass up). Orange dots land within 9 m of the 229 m target, and the ridge moves with the drag coefficient. The cross is the current design, ${dA - 229 > 0 ? '+' : ''}${(dA - 229).toFixed(0)} m from target.`, hot:j => near[j],
+   at(j, t, o){ o.x = AX + RX[j]*AW + Math.sin(t*1.3 + j)*.5; o.y = AY + RY[j]*AH + Math.cos(t*1.1 + j)*.5; o.a = wgt[j]; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.lineWidth = 1; g.strokeRect(AX, AY, AW, AH); g.fillStyle = C.mut; g.fillText('motor impulse \u2192', AX + AW - 110, AY + AH + 18); g.save(); g.translate(AX - 14, AY + 70); g.rotate(-Math.PI/2); g.fillText('mass \u2192', 0, 0); g.restore();
+    const x = AX + P0*AW, y = AY + (1 - Q0)*AH; g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath(); g.moveTo(x - 12, y); g.lineTo(x + 12, y); g.moveTo(x, y - 12); g.lineTo(x, y + 12); g.stroke(); g.fillStyle = C.sig; g.fillText('design ' + dA.toFixed(0) + ' m', x + 14, y - 8); g.fillStyle = C.mut; g.fillText('target 229 m', AX + 8, AY + 14); }};
+ },
+
+ cpu(){
+  const r = reg(), cell = Math.min(r.w*.6/10, r.h*.86/10), gx = r.x, gy = r.y + r.h*.06, sz = cell*.78, NB = 80, rp = Math.floor(N*.07), per = Math.floor((N - 4*rp - NB)/100), rx = gx + 10*cell + cell*.9, rw = Math.min(r.w*.28, 150), rh = cell*1.1; let ph = 0;
+  const bx = a => [gx + (a % 10 + .5)*cell, gy + (Math.floor(a/10) + .5)*cell], RG = ['PC', 'IR', 'ACC', 'OUT'].map((n, i) => ({n, x:rx, y:gy + i*(rh + cell*.5), w:rw, h:rh})), cen = i => [RG[i].x + rw/2, RG[i].y + rh/2];
+  const PROG = [['LDA', 90], ['ADD', 91], ['STA', 92], ['OUT', 0], ['BRA', 0]], ACC = [7, 12, 12, 12, 12], dat = ins => ins[0] === 'LDA' || ins[0] === 'ADD' || ins[0] === 'STA';
+  return {tick:dt => ph += dt*(.25 + DV.cpu*1.6), fmt:() => (.25 + DV.cpu*1.6).toFixed(1) + ' steps/s', cap:() => 'Little Man Computer: mailboxes, program counter and accumulator running LDA, ADD, STA, OUT, BRA. Orange is the active mailbox and the data bus.',
+   hot:j => { const s = Math.floor(ph), pc = s % 5, f = ph - s, ins = PROG[pc]; if (j >= N - NB) return 1; if (j < per*100) return Math.floor(j/per) === (f < .35 ? pc : dat(ins) ? ins[1] : -1) ? 1 : 0; const i = Math.floor((j - per*100)/rp); return (i === 0 && f < .35) || (i === 1 && f > .3 && f < .5) || (i === 2 && f > .5 && f < .95 && ins[0] !== 'BRA') || (i === 3 && ins[0] === 'OUT' && f > .7) ? 1 : 0; },
+   at(j, t, o){
+    const s = Math.floor(ph), pc = s % 5, f = ph - s, ins = PROG[pc]; o.a = 1;
+    if (j >= N - NB) { const k = (j - (N - NB))/NB, a = f < .35; let A, Bp; if (a) { A = bx(pc); Bp = cen(1); } else if (ins[0] === 'LDA' || ins[0] === 'ADD') { A = bx(ins[1]); Bp = cen(2); } else if (ins[0] === 'STA') { A = cen(2); Bp = bx(ins[1]); } else if (ins[0] === 'OUT') { A = cen(2); Bp = cen(3); } else { A = cen(1); Bp = cen(0); }
+     const p = Math.min(1, Math.max(0, (a ? f/.35 : (f - .35)/.5)*1.3 - k*.3)); o.x = A[0] + (Bp[0] - A[0])*p; o.y = A[1] + (Bp[1] - A[1])*p; o.a = f > .9 ? 0 : 1; return; }
+    if (j < per*100) { const c = bx(Math.floor(j/per)), p = rectp(c[0] - sz/2, c[1] - sz/2, sz, sz, (j % per)/per); o.x = p[0]; o.y = p[1]; return; }
+    const g = RG[Math.min(3, Math.floor((j - per*100)/rp))], p = rectp(g.x, g.y, g.w, g.h, ((j - per*100) % rp)/rp); o.x = p[0]; o.y = p[1]; },
+   draw(g){ const s = Math.floor(ph), pc = s % 5, ins = PROG[pc]; g.font = '9px IBM Plex Mono'; g.fillStyle = C.mut; g.textAlign = 'center';
+    for (let a = 0; a < 100; a++) { const c = bx(a); g.fillText(a < 5 ? PROG[a][0] : a === 90 ? '7' : a === 91 ? '5' : a === 92 ? '12' : String(a).padStart(2, '0'), c[0], c[1] + 3); }
+    g.font = '11px IBM Plex Mono'; g.textAlign = 'left'; const vals = [pc, ins[0] + (ins[1] ? ' ' + ins[1] : ''), ACC[pc], ACC[pc]]; RG.forEach((q, i) => { g.fillStyle = C.mut; g.fillText(q.n, q.x, q.y - 5); g.fillStyle = C.ink; g.fillText(String(vals[i]), q.x + 8, q.y + rh/2 + 4); }); }};
+ },
+ game(){
+  const r = reg(), np = 6, nC = 70, seq = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1], PL = Array.from({length:np}, (_, i) => [r.x + r.w*(.03 + i*.16), r.y + r.h*(.38 + (i % 3)*.18 - (i === 4 ? .12 : 0)), r.w*.12]), [pts] = along(PL.map(p => [p[0], p[1], p[0] + p[2], p[1]])), off = Array.from({length:nC}, () => [(rnd() - .5)*9, (rnd() - .5)*14]); let ph = 0;
+  return {tick:dt => ph += dt*1.1, fmt:() => 'jump ' + Math.round(DV.game*100) + '%', cap:() => 'Metroidvania prototype: platforms and a jump arc. Jump power sets how far apart rooms can be.', hot:j => j >= N - nC,
+   at(j, t, o){ o.a = 1; if (j >= N - nC) { const s = Math.floor(ph), f = ph - s, A = PL[seq[s % 10]], Bq = PL[seq[(s + 1) % 10]], k = f < .25 ? 0 : (f - .25)/.75, apx = 30 + DV.game*170, w = off[j - (N - nC)]; o.x = A[0] + A[2]*.5 + (Bq[0] + Bq[2]*.5 - A[0] - A[2]*.5)*k + w[0]; o.y = A[1] + (Bq[1] - A[1])*k - 4*apx*k*(1 - k) - 14 + w[1]; return; } const p = pts[j]; o.x = p[0]; o.y = p[1]; }};
+ },
+ lease(){
+  const r = reg(), yrs = 10, bw = r.w/(yrs + 3.2), gy = r.y + r.h*.84, uh = r.h*.5/10; let pts = [], hot = [], pv = 0, res = 0;
+  const mk = () => { res = DV.lease*.6; const rs = []; for (let i = 0; i < yrs; i++) rs.push([r.x + i*bw, gy - uh, bw*.78, uh, 0]); rs.push([r.x + yrs*bw + bw*.2, gy - res*10*uh, bw*2.4, Math.max(.01, res*10*uh), 1]);
+   const A = rs.map(q => q[2]*q[3]), tot = A.reduce((a, b) => a + b); let acc = 0, k = 0; pts = []; hot = []; for (let j = 0; j < N; j++) { const d = (j + .5)/N*tot; while (k < rs.length - 1 && acc + A[k] < d) { acc += A[k]; k++; } const q = rs[k]; pts.push([q[0] + q[2]*RX[j], q[1] + q[3]*RY[j]]); hot.push(q[4]); }
+   pv = res*10/Math.pow(1.08, yrs); for (let t = 1; t <= yrs; t++) pv += 1/Math.pow(1.08, t); }; mk();
+  return {set:mk, fmt:() => Math.round(DV.lease*60) + '% residual', cap:() => `Lease economics, illustrative: ten years of rent plus the aircraft's residual value at the end. Together they set the lease value (${pv.toFixed(2)} for an aircraft worth 10, discounted at 8%).`, hot:j => hot[j],
+   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t + j)*.4; o.y = p[1] + Math.cos(t + j)*.4; o.a = 1; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.beginPath(); g.moveTo(r.x - 8, gy); g.lineTo(r.x + (yrs + 3.2)*bw, gy); g.stroke(); g.fillStyle = C.mut; [1, 5, 10].forEach(y => g.fillText('yr ' + y, r.x + (y - 1)*bw, gy + 18)); g.fillText('rent, 1 a year', r.x, gy - uh - 10); g.fillStyle = C.sig; g.fillText('residual', r.x + yrs*bw + bw*.3, gy - res*10*uh - 10); g.fillStyle = C.ink; g.fillText('Lease value ' + pv.toFixed(2) + ' (aircraft = 10)', r.x, r.y + 8); }};
+ },
+ network(){
+  const r = reg(), cxm = r.x + r.w/2, cym = r.y + r.h/2, R = Math.min(r.w, r.h)*.38, n = 9, nd = Array.from({length:n}, (_, i) => [cxm + Math.cos(i/n*6.2832 - 1.57)*R, cym + Math.sin(i/n*6.2832 - 1.57)*R]); let ph = 0, pts, hot, ed = 0;
+  const oct = (x, y, rr) => Array.from({length:8}, (_, k) => [x + Math.cos(k/8*6.2832)*rr, y + Math.sin(k/8*6.2832)*rr, x + Math.cos((k + 1)/8*6.2832)*rr, y + Math.sin((k + 1)/8*6.2832)*rr, 1]);
+  const mk = () => { const sg = []; nd.forEach((p, i) => { sg.push([p[0], p[1], nd[(i + 1) % n][0], nd[(i + 1) % n][1]], ...oct(p[0], p[1], 9)); }); ed = n; const ch = Math.round(DV.network*9); for (let k = 0; k < ch; k++) { const a = nd[(k*2) % n], b = nd[(k*2 + 3 + k) % n]; sg.push([a[0], a[1], b[0], b[1]]); ed++; } if (DV.network > .5) { nd.forEach(p => sg.push([cxm, cym, p[0], p[1]])); sg.push(...oct(cxm, cym, 14)); ed += n; } [pts, hot] = along(sg); }; mk();
+  return {set:mk, tick:dt => ph += dt, fmt:() => ed + ' links', cap:() => 'A discussion network: more connections bring more perspectives, and more to reconcile. Pulses are ideas moving between people.', hot:j => hot[j] || (j*7 + Math.floor(ph*50)) % 61 < 2,
+   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t*1.3 + j)*.6; o.y = p[1] + Math.cos(t*1.1 + j)*.6; o.a = 1; }};
+ },
+ layout(){
+  const r = reg(); let pts, hot, cols, wv;
+  const mk = () => { const wpx = r.w*(.3 + .7*DV.layout), fx = r.x + (r.w - wpx)/2, fy = r.y + r.h*.02, fh = r.h*.92, sg = [], R = (x, y, w, h, hh) => sg.push([x, y, x + w, y, hh], [x + w, y, x + w, y + h, hh], [x + w, y + h, x, y + h, hh], [x, y + h, x, y, hh]);
+   wv = Math.round(320 + DV.layout*1100); cols = wv > 900 ? 3 : wv > 600 ? 2 : 1; R(fx, fy, wpx, fh); R(fx, fy, wpx, fh*.07); R(fx + 8, fy + fh*.1, wpx - 16, fh*.2, 1);
+   const g = 8, cw = (wpx - 16 - g*(cols - 1))/cols, ch = cols === 1 ? fh*.09 : fh*.14; for (let i = 0; i < 6; i++) R(fx + 8 + (i % cols)*(cw + g), fy + fh*.34 + Math.floor(i/cols)*(ch + g), cw, ch); [pts, hot] = along(sg); }; mk();
+  return {set:mk, fmt:() => wv + ' px, ' + cols + (cols > 1 ? ' columns' : ' column'), cap:() => 'A responsive layout: the same six cards reflow as the screen narrows. Orange is the hero block.', hot:j => hot[j],
+   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t*1.2 + j)*.5; o.y = p[1] + Math.cos(t*1.1 + j)*.5; o.a = 1; }};
+ },
+ ropes(){
+  const r = reg(), gy = r.y + r.h*.94, xA = r.x + r.w*.14, xB = r.x + r.w*.84, aA = gy - r.h*.62, aB = gy - r.h*.5, nF = Math.floor(N*.3), nP = 130, nS = N - nF - nP, CY = 7, lc = new Int16Array(N); let sag = 0, spts = [];
+  const wire = u => [xA + (xB - xA)*u, aA - 6 + (aB - aA + 6)*u + sag*4*u*(1 - u)], ell = (cx, cy, a, b, j) => { const th = RX[j]*6.2832, rr = Math.sqrt(RY[j]); return [cx + Math.cos(th)*a*rr, cy + Math.sin(th)*b*rr]; };
+  const LS = [[0,0,-7,38],[0,0,7,38],[0,36,0,58],[0,58,-7,80],[0,58,8,80],[0,40,-10,52],[0,40,10,52]];
+  for (let k = 0; k < 8; k++) { const a = k/8*6.2832, b = (k + 1)/8*6.2832; LS.push([Math.cos(a)*6, 30 + Math.sin(a)*6, Math.cos(b)*6, 30 + Math.sin(b)*6], [Math.cos(a)*3, Math.sin(a)*3, Math.cos(b)*3, Math.sin(b)*3]); }
+  const PL = along(LS, nP)[0];
+  const mk = () => { sag = r.h*(.12 - .09*DV.ropes); const pA = aA + 78, pB = aB + 78, sg = [[xA - 150, gy, xB + 150, gy], [xA - 11, gy, xA - 9, aA - 30], [xA + 11, gy, xA + 9, aA - 30], [xB - 10, gy, xB - 8, aB - 26], [xB + 10, gy, xB + 8, aB - 26],
+    [xA - 30, pA, xA + 44, pA], [xA - 30, pA + 7, xA + 44, pA + 7], [xA + 44, pA, xA + 44, pA - 30], [xB - 44, pB, xB + 30, pB], [xB - 44, pB + 7, xB + 30, pB + 7], [xB - 44, pB, xB - 44, pB - 30]];
+   for (let i = 0; i < 60; i++) { const a = wire(i/60), b = wire((i + 1)/60); sg.push([a[0], a[1], b[0], b[1]]); } spts = along(sg, nS)[0]; }; mk();
+  return {set:mk, fmt:() => Math.round(60 + DV.ropes*40) + '% tension', cap:() => 'Zip line on the high ropes course: tension sets how much the line sags between the two platforms. The climber hangs from the line by a harness and pulley.', hot:j => j >= nF + nS,
+   at(j, t, o){ const c = t/CY, ci = Math.floor(c), f = (c - ci)*CY; if (lc[j] !== ci) { lc[j] = ci; o.snap = 1; } o.a = 1;
+    if (j < nF) { const e = j % 2 ? ell(xB, aB - 56, 60, 46, j) : ell(xA, aA - 62, 78, 56, j); o.x = e[0] + Math.sin(t + j)*.5; o.y = e[1]; o.a = .65; return; }
+    if (j < nF + nS) { const p = spts[j - nF]; o.x = p[0]; o.y = p[1]; return; }
+    const ride = Math.min(1, Math.max(0, (f - .6)/3.8)), e = ride*ride*(3 - 2*ride), us = 38/(xB - xA), ue = (xB - xA - 42)/(xB - xA), w = wire(us + (ue - us)*e), th = .16*Math.sin(f*2.4)*Math.sin(ride*Math.PI), p = PL[j - nF - nS], cs = Math.cos(th), sn = Math.sin(th);
+    o.x = w[0] + p[0]*cs - p[1]*sn; o.y = w[1] + p[0]*sn + p[1]*cs; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.fillStyle = C.mut; const m = wire(.5); g.fillText('zip line', m[0] - 20, m[1] - 12); }};
+ },
+
+ fourier(){
+  const r = reg(), X0 = r.x + r.w*.03, Wd = r.w*.94, cy = r.y + r.h*.5, amp = r.h*.26, nSq = Math.floor(N*.2), CM = 700, cum = new Float32Array(CM + 1), cum2 = new Float32Array(CM + 1), px = new Float32Array(CM + 1), py = new Float32Array(CM + 1), qy = new Float32Array(CM + 1); let ph = 0, tot = 1, tot2 = 1; const nT = () => 1 + Math.round(DV.fourier*24);
+  const build = () => { const n = nT(); let L = 0, L2 = 0; for (let i = 0; i <= CM; i++) { const th = i/CM*12.566 - ph; let s = 0; for (let k = 1; k < 2*n; k += 2) s += Math.sin(k*th)/k; px[i] = X0 + Wd*i/CM; py[i] = cy - amp*1.2732*s; qy[i] = cy - amp*(Math.sin(th) >= 0 ? 1 : -1); if (i) { L += Math.hypot(px[i] - px[i-1], py[i] - py[i-1]); L2 += Math.hypot(px[i] - px[i-1], qy[i] - qy[i-1]); } cum[i] = L; cum2[i] = L2; } tot = L; tot2 = L2; }; build();
+  const pick = (cm, ys, s) => { let a = 0, b = CM; while (b - a > 1) { const m = (a + b) >> 1; cm[m] < s ? a = m : b = m; } const f = (s - cm[a])/((cm[b] - cm[a]) || 1); return [px[a] + (px[b] - px[a])*f, ys[a] + (ys[b] - ys[a])*f]; };
+  return {set:build, tick:dt => { ph += dt*.5; build(); }, fmt:() => nT() + (nT() === 1 ? ' term' : ' terms'), cap:() => 'Fourier series: a square wave (orange) built from sine waves. Each term sharpens the corners; the overshoot never fully goes away.', hot:j => j < nSq,
+   at(j, t, o){ const g = (j*.6180339) % 1, p = j < nSq ? pick(cum2, qy, g*tot2) : pick(cum, py, g*tot); o.x = p[0]; o.y = p[1]; o.a = 1; },
+   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.lineWidth = 1; [-1, 0, 1].forEach(v => { g.beginPath(); g.moveTo(X0, cy - v*amp); g.lineTo(X0 + Wd, cy - v*amp); g.stroke(); g.fillStyle = C.mut; g.fillText(v > 0 ? '+1' : v < 0 ? '-1' : '0', X0 - 22, cy - v*amp + 4); }); }};
+ }
+};
+
+/* ---------- state machine ---------- */
+let ST = {}, st, prev, cur = '', sec = 'name', hover = '', now0 = performance.now();
+const get = n => ST[n] || (ST[n] = B[n]());
+function setState(n, instant){
+  if (n === cur && !instant) return; prev = st; cur = n; st = get(n); st.t0 = T; const t = performance.now();
+  for (let i = 0; i < N; i++) WK[i] = t + Math.random()*(instant ? 0 : 650);
+  if (st.set) st.set(); capUpdate(); dialUpdate();
+}
+const eff = () => ((activeSec === 'projects' || activeSec === 'experience') && hover) || sec;
+let activeSec = 'hero';
+function sync(){ setState(eff()); }
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { sec = e.target.dataset.state; if (activeSec !== e.target.id) hover = ''; activeSec = e.target.id; sync(); $$('#nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); } }), {threshold:.5});
+$$('section[data-state]').forEach(s => io.observe(s));
+$$('#pj .row, #ex .row').forEach(b => { const on = () => { hover = b.dataset.s; sync(); }; ['mouseenter', 'focus', 'click'].forEach(v => b.addEventListener(v, on)); });
+
+
+/* ---------- loop ---------- */
+const o = {x:0, y:0, a:1}; let last = performance.now();
+function frame(now){
+  requestAnimationFrame(frame); if (document.hidden || document.body.classList.contains('plain')) return;
+  const dt = Math.min(.05, (now - last)/1000), f = dt*60; last = now; const snap = RM || paused; if (!snap) T += dt; if (!snap && st.tick) st.tick(dt); const SPD = Math.min(40, Math.hypot(pvx, pvy));
+  const RR = 110*110;
+  for (let i = 0; i < N; i++) {
+    const SS = now >= WK[i] ? st : prev || st, j = PM[i], tt = T - SS.t0; o.snap = 0; SS.at(j, tt, o); if (o.snap) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; AA[i] = 0; }
+    AA[i] += (o.a - AA[i])*.15; HT[i] = SS.hot(j, tt) ? 1 : 0;
+    if (snap) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; continue; }
+    VX[i] = (VX[i] + (o.x - X[i])*KK[i]*f)*Math.pow(.86, f); VY[i] = (VY[i] + (o.y - Y[i])*KK[i]*f)*Math.pow(.86, f);
+    const dx = X[i] - mx, dy = Y[i] - my, d2 = dx*dx + dy*dy; if (d2 < RR) { const d = Math.sqrt(d2) + .01, q = 1 - d/110, al = SPD > .5 ? (dx*pvx + dy*pvy)/(d*Math.hypot(pvx, pvy) + 1e-6) : 0, s = q*(1.2 + SPD*.1*Math.max(0, al))*f; VX[i] += dx/d*s; VY[i] += dy/d*s; if (al < 0) { VX[i] -= pvx*.05*q*al*f; VY[i] -= pvy*.05*q*al*f; } }
+    X[i] += VX[i]*f; Y[i] += VY[i]*f;
+  }
+  cx.clearRect(0, 0, W, H); if (st.draw) st.draw(cx, T - st.t0); drawCone(); hudTick(dt);
+  for (const hot of [0, 1]) { cx.fillStyle = hot ? C.sig : C.ink; const z = hot ? 3 : 2.2; for (let i = 0; i < N; i++) if (HT[i] === hot && AA[i] > .04) { const s = z*AA[i]; cx.fillRect(X[i] - s/2, Y[i] - s/2, s, s); } }
+}
+addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; pvx = .6*pvx + .4*(e.movementX || 0); pvy = .6*pvy + .4*(e.movementY || 0); });
+addEventListener('pointerleave', () => { mx = my = -1e4; });
+addEventListener('pointerdown', e => { if (RM || paused || e.target.closest('#rig')) return; for (let i = 0; i < N; i++) { const dx = X[i] - e.clientX, dy = Y[i] - e.clientY, d = Math.hypot(dx, dy); if (d < 260) { const s = (1 - d/260)*14; VX[i] += dx/(d + 1)*s; VY[i] += dy/(d + 1)*s; } } });
+
+/* ---------- dial, hud, cursor shock ---------- */
+function capUpdate(){ $('#cap').innerHTML = '<b>Fig. ' + FIG[cur] + '.</b> ' + st.cap(); }
+function dialUpdate(){ const v = DV[cur], d = $('#dial'); d.style.setProperty('--a', (-135 + 270*v) + 'deg'); d.style.setProperty('--p', v); d.setAttribute('aria-valuenow', Math.round(v*100)); $('#dl').textContent = DL[cur]; $('#dv').textContent = st.fmt(); }
+function setDial(v){ DV[cur] = Math.max(0, Math.min(1, v)); if (st.set) st.set(); capUpdate(); dialUpdate(); }
+let dragY = null, dragV = 0, pvx = 0, pvy = 0, fps = 60, fc = 0; const dial = $('#dial');
+dial.addEventListener('pointerdown', e => { dial.setPointerCapture(e.pointerId); dragY = e.clientY; dragV = DV[cur]; });
+dial.addEventListener('pointermove', e => { if (dragY !== null) setDial(dragV + (dragY - e.clientY)/180); });
+dial.addEventListener('pointerup', () => dragY = null);
+dial.addEventListener('keydown', e => { const k = {ArrowUp:.03, ArrowRight:.03, ArrowDown:-.03, ArrowLeft:-.03, PageUp:.1, PageDown:-.1}[e.key]; if (k) { e.preventDefault(); setDial(DV[cur] + k); } });
+dial.addEventListener('wheel', e => { e.preventDefault(); setDial(DV[cur] - e.deltaY/1200); }, {passive:false});
+function drawCone(){ const sp = Math.hypot(pvx, pvy); if (sp < 6 || mx < 0) return; const a = Math.asin(Math.min(1, 6/sp)), g = Math.atan2(-pvy, -pvx); cx.strokeStyle = C.sig; cx.globalAlpha = Math.min(.5, sp/60); cx.lineWidth = 1.2; for (const s of [-1, 1]) { cx.beginPath(); cx.moveTo(mx, my); cx.lineTo(mx + Math.cos(g + s*a)*110, my + Math.sin(g + s*a)*110); cx.stroke(); } cx.globalAlpha = 1; }
+function hudTick(dt){ fps += (1/Math.max(dt, .001) - fps)*.05; pvx *= .9; pvy *= .9; if (++fc % 20 === 0) $('#hud').textContent = `n = ${N} \u00b7 ${Math.round(fps)} fps \u00b7 cursor Mach ${(Math.hypot(pvx, pvy)/6).toFixed(1)}`; }
+/* ---------- controls ---------- */
+$('#tgl').onclick = e => { const d = document.body.dataset.theme !== 'dark'; document.body.dataset.theme = d ? 'dark' : 'light'; e.currentTarget.setAttribute('aria-checked', d); colours(); };
+$('#ps').onclick = e => { paused = !paused; e.currentTarget.setAttribute('aria-pressed', paused); };
+$('#pl').onclick = e => { const p = document.body.classList.toggle('plain'); e.currentTarget.textContent = p ? 'Particle view' : 'Plain view'; };
+if (new URLSearchParams(location.search).has('plain')) $('#pl').click();
+addEventListener('resize', () => { size(); alloc(); ST = {}; cur = ''; prev = null; sync(); });
+
+$('#rerun').onclick = () => { scrollTo({top:0, behavior:RM ? 'auto' : 'smooth'}); for (let i = 0; i < N; i++) { const a = Math.random()*6.28, v = 8 + Math.random()*14; VX[i] += Math.cos(a)*v; VY[i] += Math.sin(a)*v; } };
+/* ---------- boot ---------- */
+size(); alloc(); colours(); readout();
+if (matchMedia('(prefers-color-scheme: dark)').matches) $('#tgl').click();
+document.fonts.load("800 100px 'Bricolage Grotesque'").then(() => { cur = ''; ST = {}; setState('name', true); requestAnimationFrame(frame); });
+console.log('%cOllie Nebel', 'font:700 18px sans-serif', '\nParticles are drawn on a 2D canvas. Click to scatter them.');
+</script>
+</body>
+</html>
