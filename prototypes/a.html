@@ -3,102 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ollie Nebel | Prototype A4</title>
+<title>Ollie Nebel</title>
 <meta name="description" content="Ollie Nebel, Year 13. I build models, then test where they break.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
 <style>
-:root{--bg:#EDEEF0;--ink:#14171C;--sig:#FF4B1F;--grid:#C9CDD3;--mut:#5E6672;--ease:cubic-bezier(.16,1,.3,1);--sans:'Bricolage Grotesque',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--top:env(safe-area-inset-top,0px);--bot:env(safe-area-inset-bottom,0px)}
+/* ===== Tokens ===== */
+:root{
+  --bg:#EDEEF0;--ink:#14171C;--sig:#FF4B1F;--grid:#C9CDD3;--mut:#5E6672;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --sans:'Bricolage Grotesque',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --top:env(safe-area-inset-top,0px);--bot:env(safe-area-inset-bottom,0px);
+  --gut:clamp(20px,5vw,72px);
+}
 [data-theme=dark]{--bg:#121418;--ink:#ECEDEF;--sig:#FF6A45;--grid:#2A2F37;--mut:#98A1AD}
+
+/* ===== Base ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;transition:background .4s,color .4s;overflow-x:hidden}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
 :focus-visible{outline:2px solid var(--sig);outline-offset:3px}
-#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
 .mono{font:500 12px/1.4 var(--mono);letter-spacing:.02em}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-/* header */
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+.band{display:none}
+
+/* ===== Header ===== */
 .top{position:fixed;inset:0 0 auto;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(14px + var(--top)) clamp(16px,3vw,40px) 14px;background:linear-gradient(var(--bg) 40%,transparent)}
-.logo{font-weight:700;letter-spacing:-.02em;text-decoration:none}
-#nav{display:flex;gap:22px}#nav a{font:500 12px var(--mono);text-decoration:none;color:var(--mut);padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s}
+.brand{display:flex;align-items:baseline;gap:12px;min-width:0}
+.logo{font-weight:700;letter-spacing:-.02em;text-decoration:none;white-space:nowrap}
+#where{display:none;color:var(--sig)}
+#nav{display:flex;gap:22px}
+#nav a{font:500 12px var(--mono);text-decoration:none;color:var(--mut);padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s}
 #nav a:hover,#nav a.on{color:var(--ink);border-color:var(--sig)}
 .tools{display:flex;align-items:center;gap:10px}
-.pill{font:500 12px var(--mono);border:1px solid var(--grid);border-radius:99px;padding:5px 13px;background:var(--bg);transition:.2s}.pill:hover,.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.tgl{position:relative;width:54px;height:28px;border-radius:99px;border:1px solid var(--grid);background:var(--bg)}
+.pill{font:500 12px var(--mono);border:1px solid var(--grid);border-radius:99px;padding:5px 13px;background:var(--bg);transition:.2s;white-space:nowrap}
+.pill:hover,.pill[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tgl{position:relative;width:54px;height:28px;border-radius:99px;border:1px solid var(--grid);background:var(--bg);flex:none}
 .tgl .knob{position:absolute;left:2px;top:2px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;transition:transform .4s var(--ease)}
 .tgl[aria-checked=true] .knob{transform:translateX(26px)}
 .tgl svg{position:absolute;width:13px;height:13px;transition:opacity .25s,transform .4s var(--ease)}
-.tgl .moon{opacity:0;transform:rotate(-60deg) scale(.5)}.tgl[aria-checked=true] .moon{opacity:1;transform:none}.tgl[aria-checked=true] .sun{opacity:0;transform:rotate(60deg) scale(.5)}
-/* sections */
-section{position:relative;z-index:1;min-height:100svh;padding:110px clamp(20px,5vw,72px) 70px;display:flex;flex-direction:column;justify-content:center}
-.col{max-width:560px}
+.tgl .moon{opacity:0;transform:rotate(-60deg) scale(.5)}
+.tgl[aria-checked=true] .moon{opacity:1;transform:none}
+.tgl[aria-checked=true] .sun{opacity:0;transform:rotate(60deg) scale(.5)}
+
+/* ===== Sections ===== */
+section{position:relative;z-index:1;min-height:100svh;padding:110px var(--gut) 70px;display:flex;flex-direction:column;justify-content:center}
+.col,.hero-copy{position:relative}
+.col{max-width:min(560px,46vw)}
+.hero-copy{max-width:520px}
+/* scrim keeps copy readable over the particle figure */
+.col::before,.hero-copy::before{content:'';position:absolute;inset:-48px -64px -48px -90px;z-index:-1;background:linear-gradient(90deg,var(--bg) 70%,transparent);opacity:.94;pointer-events:none}
 h2{font-weight:800;letter-spacing:-.04em;line-height:.95;font-size:clamp(40px,6vw,76px);margin-bottom:22px}
 h2 small{display:block;font:500 12px var(--mono);letter-spacing:.02em;color:var(--sig);margin-bottom:14px}
-p{color:var(--mut);max-width:56ch}p+p{margin-top:12px}
-#hero{justify-content:flex-end}
-.hero-copy{max-width:640px}
+p{color:var(--mut);max-width:56ch}
+p+p{margin-top:12px}
+
+/* hero */
 .line{font-weight:700;letter-spacing:-.03em;line-height:1.05;font-size:clamp(26px,3.6vw,46px);color:var(--ink);margin-bottom:12px}
 .hl{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:18px 0 22px;font:500 12px var(--mono);color:var(--ink)}
 .hl li::before{content:'';display:inline-block;width:6px;height:6px;background:var(--sig);margin-right:8px}
 .btn{display:inline-block;padding:11px 22px;border:1.5px solid var(--ink);border-radius:99px;font-weight:600;text-decoration:none;margin:0 8px 8px 0;transition:.25s var(--ease)}
-.btn.p{background:var(--ink);color:var(--bg)}.btn:hover{background:var(--sig);border-color:var(--sig);color:#fff;transform:translateY(-2px)}
-.scroll{position:absolute;right:clamp(20px,5vw,72px);bottom:60px;color:var(--mut);font:500 12px var(--mono)}
-.facts{display:grid;grid-template-columns:max-content 1fr;gap:6px 22px;margin:22px 0;font-size:15px}.facts dt{font:500 12px var(--mono);color:var(--mut);padding-top:3px}
-.panel{margin-top:26px;padding:18px 20px;border:1px solid var(--grid);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(6px)}
-.panel label{display:grid;grid-template-columns:1fr auto;gap:2px 12px;font:500 12px var(--mono);margin-bottom:14px}.panel input{grid-column:1/-1}
-input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:var(--grid);width:100%;margin:10px 0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--sig);border:3px solid var(--bg);box-shadow:0 0 0 1px var(--sig);border-radius:50%;cursor:grab}
-input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--sig);border:3px solid var(--bg);border-radius:50%;cursor:grab}
-#readout{font-size:14px;margin:4px 0 12px;color:var(--ink)}
+.btn.p{background:var(--ink);color:var(--bg)}
+.btn:hover{background:var(--sig);border-color:var(--sig);color:#fff;transform:translateY(-2px)}
+.link{display:block;margin-top:10px;color:var(--mut);text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--sig)}
+.scroll{position:absolute;left:var(--gut);bottom:26px;color:var(--mut);font:500 12px var(--mono)}
+/* hero intro: copy staggers in once the particles have formed the name */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.js .hero-copy>*{opacity:0}
+.js .ready .hero-copy>*{opacity:1;animation:rise .8s var(--ease) backwards}
+.hero-copy>:nth-child(2){animation-delay:.08s!important}.hero-copy>:nth-child(3){animation-delay:.16s!important}
+.hero-copy>:nth-child(4),.hero-copy>:nth-child(5){animation-delay:.24s!important}.hero-copy>:nth-child(6){animation-delay:.32s!important}
+
+/* about */
+.facts{display:grid;grid-template-columns:max-content 1fr;gap:6px 22px;margin:22px 0;font-size:15px}
+.facts dt{font:500 12px var(--mono);color:var(--mut);padding-top:3px}
+#readout{font-size:14px;margin:20px 0 12px;color:var(--ink)}
+
 /* index rows */
 .idx{list-style:none;border-top:1.5px solid var(--ink);margin-top:8px}
 .idx li{border-bottom:1px solid var(--grid)}
 .row{width:100%;text-align:left;display:grid;grid-template-columns:34px 1fr auto 18px;gap:0 12px;align-items:baseline;padding:15px 0;transition:padding .3s var(--ease),color .2s}
-.row:hover,.row:focus-visible,.row[aria-expanded=true]{padding-left:10px;color:var(--sig)}
-.row b{font-weight:600;letter-spacing:-.015em;color:var(--ink)}.row:hover b,.row[aria-expanded=true] b{color:var(--sig)}
-.row span{font:400 12px var(--mono);color:var(--mut)}.row i{font:400 18px/1 var(--mono);font-style:normal;transition:transform .3s var(--ease)}.row[aria-expanded=true] i{transform:rotate(45deg)}
-.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}.det>div{overflow:hidden}.det.open{grid-template-rows:1fr}
-.det dl{display:grid;grid-template-columns:max-content 1fr;gap:5px 18px;padding:0 0 16px 46px;font-size:14.5px}.det dt{font:500 12px var(--mono);color:var(--mut);padding-top:2px}
+.row b{font-weight:600;letter-spacing:-.015em;color:var(--ink)}
+.row span{font:400 12px var(--mono);color:var(--mut)}
+.row i{font:400 18px/1 var(--mono);font-style:normal;transition:transform .3s var(--ease)}
+button.row:hover,button.row:focus-visible,button.row[aria-expanded=true]{padding-left:10px;color:var(--sig)}
+button.row:hover b,button.row[aria-expanded=true] b{color:var(--sig)}
+.row[aria-expanded=true] i{transform:rotate(45deg)}
+.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.det>div{overflow:hidden}
+.det.open{grid-template-rows:1fr}
+.det dl{display:grid;grid-template-columns:max-content 1fr;gap:5px 18px;padding:0 0 16px 46px;font-size:14.5px}
+.det dt{font:500 12px var(--mono);color:var(--mut);padding-top:2px}
 .det .out{padding:0 0 14px 46px;color:var(--ink);font-size:14.5px}
-#cap{position:fixed;left:clamp(16px,3vw,40px);bottom:calc(16px + var(--bot));z-index:9;color:var(--mut);max-width:60vw;transition:opacity .3s}
+.det .fig{color:var(--mut);margin-top:-6px}
+
+/* contact */
+.big{display:block;font-weight:800;letter-spacing:-.04em;font-size:clamp(26px,4.4vw,52px);text-decoration:none;border-bottom:2px solid var(--ink);padding:8px 0;transition:padding .3s var(--ease),color .2s}
+.big:hover{padding-left:14px;color:var(--sig)}
+footer{position:relative;z-index:1;padding:30px min(480px,42vw) 56px var(--gut);display:flex;justify-content:space-between;gap:16px;color:var(--mut)}
+
+/* ===== Dial rig (bottom right) ===== */
+#rig{position:fixed;right:clamp(16px,3vw,40px);bottom:calc(14px + var(--bot));z-index:9;display:flex;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}
+#rig .rw{display:flex;align-items:center;gap:14px}
+#rig .rd{display:grid;gap:2px}
+#rig b{color:var(--ink);font-weight:500}
+#rig span{color:var(--sig)}
+#hud{color:var(--mut);font-style:normal}
+#cap{max-width:min(360px,34vw);color:var(--mut);transition:opacity .3s}
 #cap b{color:var(--sig);font-weight:500}
-.big{display:block;font-weight:800;letter-spacing:-.04em;font-size:clamp(26px,4.4vw,52px);text-decoration:none;border-bottom:2px solid var(--ink);padding:8px 0;transition:padding .3s var(--ease),color .2s}.big:hover{padding-left:14px;color:var(--sig)}
-footer{position:relative;z-index:1;padding:22px clamp(20px,5vw,72px) 60px;display:flex;justify-content:space-between;color:var(--mut)}
-#rig{position:fixed;right:clamp(16px,3vw,40px);bottom:calc(14px + var(--bot));z-index:9;display:flex;align-items:center;gap:14px;text-align:right}
-#rig .rd{display:grid;gap:2px}#rig b{color:var(--ink);font-weight:500}#rig span{color:var(--sig)}#hud{color:var(--mut);font-style:normal}
 #dial{--a:-90deg;--p:.3;position:relative;width:80px;height:80px;border-radius:50%;background:conic-gradient(from -135deg,var(--sig) calc(var(--p)*270deg),var(--grid) 0 270deg,transparent 0);cursor:ns-resize;touch-action:none;flex:none;transition:transform .3s var(--ease)}
 #dial:hover{transform:scale(1.06)}
 #dial .face{position:absolute;inset:7px;border-radius:50%;background:var(--bg);border:1px solid var(--grid)}
 #dial .nd{position:absolute;left:50%;top:50%;width:3px;height:27px;margin:-27px 0 0 -1.5px;background:var(--ink);border-radius:2px;transform-origin:50% 100%;transform:rotate(var(--a))}
-.logo .wp{margin-left:12px;color:var(--mut);font-weight:500}
-body.plain #rig{display:none}
-.col,.hero-copy{position:relative}
-.col::before,.hero-copy::before{content:'';position:absolute;inset:-48px -64px -48px -90px;z-index:-1;background:linear-gradient(90deg,var(--bg) 62%,transparent);opacity:.9;pointer-events:none}
-#hero{justify-content:center}.hero-copy{max-width:520px}.col{max-width:min(560px,46vw)}
-.scroll{right:auto;left:clamp(20px,5vw,72px);bottom:26px}
-#rig{flex-direction:column;align-items:flex-end;gap:10px}#rig .rw{display:flex;align-items:center;gap:14px}
-#cap{position:static;left:auto;bottom:auto;max-width:min(360px,34vw);text-align:right}
-@media(max-width:820px){.col{max-width:none}.col::before,.hero-copy::before{inset:-20px;background:var(--bg);opacity:.74}#cap{display:none!important}section{padding-bottom:130px}.scroll{display:none}#hero{justify-content:flex-end}#rig{bottom:calc(10px + var(--bot))}}
-footer{padding-top:30px;padding-bottom:56px;padding-right:min(480px,42vw)}
-@media(max-width:820px){footer{padding-right:20px;padding-bottom:140px}}
-/* plain view and small screens */
-body.plain #cv,body.plain #cap,body.plain .scroll{display:none}
+@media(pointer:coarse){#dial{width:88px;height:88px}}
+
+/* ===== Plain view ===== */
+body.plain #cv,body.plain #rig,body.plain .scroll,body.plain .link,body.plain .hint,body.plain .band{display:none}
+body.plain main{padding-top:0}
 body.plain section{min-height:0;padding-top:70px;background:var(--bg)}
-@media(max-width:820px){#nav{display:none}section{background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(3px)}#hero{background:none;backdrop-filter:none}#cap{max-width:90vw;bottom:8px}}
-@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+body.plain #hero{padding-top:120px}
+body.plain #hero h1{position:static;width:auto;height:auto;clip:auto;font-weight:800;letter-spacing:-.04em;line-height:.95;font-size:clamp(48px,8vw,96px);margin-bottom:18px}
+/* a centred 1200px page: section title on the left, content on the right */
+body.plain section{align-items:center}
+body.plain #hero h1,body.plain .hero-copy,body.plain .col{width:min(1200px,100%);max-width:none}
+body.plain .hero-copy>p{max-width:70ch}
+body.plain .col{display:grid;grid-template-columns:minmax(220px,1fr) minmax(0,2.2fr);column-gap:clamp(32px,6vw,96px);align-items:start;padding:28px 0;border-top:1.5px solid var(--grid)}
+body.plain .col>h2{grid-column:1;grid-row:1/span 30;font-size:clamp(32px,3.6vw,52px);position:sticky;top:90px}
+body.plain .col>:not(h2){grid-column:2}
+body.plain .col>br{display:none}
+body.plain .col>.idx{margin-top:4px}
+body.plain .col p{max-width:70ch}
+body.plain .col::before,body.plain .hero-copy::before{display:none}
+body.plain footer{padding:30px max(var(--gut),calc((100% - 1200px)/2)) 40px}
+@media(max-width:820px){
+  body.plain .col{display:block}
+  body.plain .col>h2{position:static}
+}
+
+/* ===== Mid-size desktop: give the copy and the figure their own halves ===== */
+@media(min-width:821px) and (max-width:1280px){.col{max-width:min(520px,44vw)}}
+
+/* ===== Small screens ===== */
+/* phones: the figure is pinned in a band across the top half and the content scrolls underneath it */
+@media(max-width:820px){
+  :root{--band:50svh}
+  .band{display:block;position:fixed;inset:0 0 auto;height:var(--band);background:var(--bg);border-bottom:1px solid var(--grid);z-index:4;transition:background .4s}
+  #cv{z-index:5}
+  main{padding-top:var(--band)}
+  section{min-height:0;padding:40px 20px 52px;scroll-margin-top:var(--band)}
+  #hero{justify-content:flex-start;padding-top:28px}
+  #nav{display:none}
+  #where{display:inline}
+  .col{max-width:none}
+  .col::before,.hero-copy::before{display:none}
+  #cap,.scroll,#hud{display:none}
+  footer{padding:30px 20px 40px}
+  #rig{top:calc(var(--band) - 56px);bottom:auto;right:12px;z-index:6}
+  #rig .rw{gap:10px}
+  #dial{width:48px;height:48px}
+  #dial .face{inset:5px}
+  #dial .nd{height:15px;margin-top:-15px}
+}
+@media(max-width:520px){
+  #where{display:none}
+  .pill .lg{display:none}
+  .pill{padding:5px 11px}
+  .tools{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-delay:0s!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body data-theme="light">
+<script>try{var t=localStorage.getItem('theme');if(t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches)document.body.dataset.theme='dark'}catch(e){}</script>
+<div class="band" aria-hidden="true"></div>
 <canvas id="cv" aria-hidden="true"></canvas>
 <header class="top">
-  <a class="logo" href="#hero">Ollie Nebel</a>
+  <div class="brand"><a class="logo" href="#hero">Ollie Nebel</a><span id="where" class="mono" aria-hidden="true"></span></div>
   <nav id="nav" aria-label="Sections"><a href="#about">About</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#achievements">Achievements</a><a href="#contact">Contact</a></nav>
   <div class="tools">
     <button class="tgl" id="tgl" role="switch" aria-checked="false" aria-label="Dark theme" title="Light or dark theme"><span class="knob"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button>
-    <button class="pill" id="ps" aria-pressed="false">Pause motion</button>
-    <button class="pill" id="pl">Plain view</button>
+    <button class="pill" id="ps" aria-pressed="false">Pause<span class="lg"> motion</span></button>
+    <button class="pill" id="pl"><span id="plt">Plain</span><span class="lg"> view</span></button>
   </div>
 </header>
 
@@ -110,6 +202,7 @@ body.plain section{min-height:0;padding-top:70px;background:var(--bg)}
     <p>Year 13 at Caterham School. Predicted A*A*A*A* in Mathematics, Further Mathematics, Physics and Computer Science. Applying for 2027 entry in engineering, finance, consulting and audit.</p>
     <ul class="hl"><li>Arkwright Scholar</li><li>UKMT Gold</li><li>Trailblazer Gold</li><li>President, Moncrieff-Jones Society</li></ul>
     <a class="btn p" href="cv.pdf">Download CV</a><a class="btn" href="#contact">Get in touch</a>
+    <button class="link mono" id="pl2">Short on time? Read the plain version</button>
   </div>
   <span class="scroll">Scroll to advance the simulation</span>
 </section>
@@ -119,16 +212,17 @@ body.plain section{min-height:0;padding-top:70px;background:var(--bg)}
     <h2><small>§1 Method</small>Same method, different fields.</h2>
     <p>Build a model, change the assumptions, see where the answer breaks, then explain it. That has meant a DCF sensitivity analysis, the Wharton cash flow model, OpenRocket flight simulations and independent research on hypersonic flow.</p>
     <dl class="facts"><dt>School</dt><dd>Caterham School, Year 13</dd><dt>Predicted</dt><dd>A*A*A*A*: Maths, Further Maths, Physics, Computer Science</dd><dt>GCSE</dt><dd>12 GCSEs including Grade 9 in Mathematics, English Language, Physics</dd><dt>Tools</dt><dd>Excel, Python, C#, JavaScript, Assembly, OpenRocket, Manim</dd></dl>
-    <p id="readout" aria-live="polite" style="color:var(--ink);margin-top:20px"></p><p class="mono" style="color:var(--sig);margin-top:10px">Turn the dial, bottom right, to change the volatility.</p>
+    <p id="readout" aria-live="polite"></p>
+    <p class="mono hint" style="color:var(--sig)">Turn the dial to change the volatility.</p>
   </div>
 </section>
 
 <section id="projects" data-state="flow">
-  <div class="col"><h2><small>§2 Results</small>Work, as models.</h2><p>Hover or focus a row and the particles reshape to match. Select one for the role, method and outcome.</p><ol class="idx" id="pj"></ol></div>
+  <div class="col"><h2><small>§2 Results</small>Work, as models.</h2><p class="hint">Hover or tap a row and the particles reshape to match. Select one for the role, method and outcome.</p><ol class="idx" id="pj"></ol></div>
 </section>
 
 <section id="experience" data-state="lease">
-  <div class="col"><h2><small>§3 Practice</small>Practice.</h2><ol class="idx" id="ex"></ol></div>
+  <div class="col"><h2><small>§3 Practice</small>Where I&rsquo;ve applied it.</h2><ol class="idx" id="ex"></ol></div>
 </section>
 
 <section id="achievements" data-state="fourier">
@@ -137,272 +231,1409 @@ body.plain section{min-height:0;padding-top:70px;background:var(--bg)}
 
 <section id="contact" data-state="cta">
   <div class="col"><h2><small>§5 Correspondence</small>Got a problem worth modelling?</h2><p>Open to apprenticeships and work experience in engineering, finance, consulting and audit, for 2027 entry. If it can be modelled, I would like to try.</p><br>
-    <a class="big" href="mailto:ollie.nebel@gmail.com">ollie.nebel@gmail.com</a><a class="big" href="https://www.linkedin.com/in/ollie-nebel-925741302/" target="_blank" rel="noopener">LinkedIn</a><a class="big" href="cv.pdf">Download CV</a><button class="btn" id="rerun" style="margin-top:26px">Re-run from the start ↑</button></div>
+    <a class="big" href="mailto:ollie.nebel@gmail.com">ollie.nebel@gmail.com</a><a class="big" href="https://www.linkedin.com/in/ollie-nebel-925741302/" target="_blank" rel="noopener">LinkedIn</a><a class="big" href="cv.pdf">Download CV</a>
+    <button class="btn" id="rerun" style="margin-top:26px">Re-run from the start ↑</button></div>
 </section>
 </main>
 <footer class="mono"><span>© 2026 Ollie Nebel</span><span>Every dot is a particle with a goal</span></footer>
-<div id="rig"><p id="cap" class="mono" aria-hidden="true"></p><div class="rw"><div class="rd mono"><b id="dl"></b><span id="dv"></span><i id="hud"></i></div><div id="dial" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Assumption dial" title="Drag, scroll or use arrow keys"><i class="face"></i><i class="nd"></i></div></div></div>
+<div id="rig">
+  <p id="cap" class="mono" aria-hidden="true"></p>
+  <div class="rw">
+    <div class="rd mono"><b id="dl"></b><span id="dv"></span><i id="hud"></i></div>
+    <div id="dial" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Assumption dial" title="Drag, scroll or use arrow keys"><i class="face"></i><i class="nd"></i></div>
+  </div>
+</div>
 
 <script>
+/* =====================================================================
+   Helpers
+   ===================================================================== */
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const cv = $('#cv'), cx = cv.getContext('2d');
-let W, H, DPR, N, X, Y, VX, VY, KK, AA, HT, WK, PM, mx = -1e4, my = -1e4, T = 0, paused = false, C = {};
-const rnd = (a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(11);
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const sm = v => v <= 0 ? 0 : v >= 1 ? 1 : v*v*(3 - 2*v);          // smoothstep
+const rnd = (a => () => {                                             // seeded RNG (mulberry32)
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+})(11);
 const gauss = () => Math.sqrt(-2*Math.log(rnd() + 1e-9)) * Math.cos(6.2832*rnd());
-const colours = () => { const s = getComputedStyle(document.body); C = {ink:s.getPropertyValue('--ink').trim(), sig:s.getPropertyValue('--sig').trim(), grid:s.getPropertyValue('--grid').trim(), mut:s.getPropertyValue('--mut').trim()}; };
+const store = {
+  get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }
+};
 
-/* ---------- data ---------- */
+/* =====================================================================
+   Content
+   [title, year, field, figure, role, method, outcome]
+   ===================================================================== */
 const PJ = [
- ['Modelling hypersonic flight','2025','Research','flow','Independent researcher and lecturer','Literature review, then Navier-Stokes through to DSMC simulation methods','Report, lecture and a published article'],
- ['Wharton Investment Competition','2025','Finance','fan','Data Lead, team of 6','Excel cash flow model and dataset management','5,000+ teams entered; add placement'],
- ['BNPL talk and Kelly criterion','2025','Finance','fan','Presenter and participant','Market growth, regulation, behavioural economics; Kelly derivation','Talk delivered; add slides link'],
- ['RSA cryptography and satellite QKD','2026','Research','qkd','Researcher and presenter','Euler\u2019s totient function and RSA; Manim animation; QKD link budgets','20-minute talk and a report'],
- ['Bridge design','2026','Engineering','truss','Team member','Inverted Pratt truss, strength-to-weight optimisation','108.26 g held 27.5 kg, about 254 to 1; won the year group'],
- ['UK Youth Rocketry Challenge','2026','Engineering','arc','Team of five','OpenRocket flight modelling, 3D printing, laser cutting','Regional round in Cambridge; 229 m target'],
- ['CPU from logic gates','2026','Engineering','cpu','Solo','Registers, ALU and conditional unit; custom instruction set','Maze-solving program running'],
- ['Metroidvania game','2025','Engineering','game','Solo','Custom input and movement systems on Unity physics','In progress']];
-const EX = [['Work experience, Stratos Aero','Oct 2026','Aircraft','Reviewed the lease valuation model and how residual value drives the value of a lease.','lease'],['Youth Panellist, Q5','Oct 2026 to now','Consulting','Sixth Form advisory panel on business issues faced by consultants and their clients.','network'],['Freelance web developer','Jun 2026 to now','Web','WordPress maintenance, performance and contact forms.','layout'],['High Ropes Instructor, Caterham','Mar 2025 to now','Safety','Safety protocols, equipment checks and sessions for ages 8 to 16.','ropes']];
-const AC = [['Arkwright Engineering Scholarship','Scholar'],['UKMT Senior Maths Challenge','Gold, Kangaroo'],['Trailblazer Challenge','Gold'],['Senior Physics Challenge','Silver'],['President, Moncrieff-Jones Society','2025 to now'],['Sergeant, RAF section, CCF','Four years'],['LAMDA Grade 8 Acting','High Distinction'],['Duke of Edinburgh\u2019s Award','Silver; Gold in progress']];
-const row = (t, a, b, det, st, i) => `<li><button class="row" data-s="${st || ''}" aria-expanded="false" aria-controls="d${st||''}${i}" data-d="${i}"><span>0${i+1}</span><b>${t}</b><span>${a}</span><i>+</i></button><div class="det" id="d${st||''}${i}"><div>${det}</div></div></li>`;
-$('#pj').innerHTML = PJ.map((p, i) => row(p[0], p[1] + ' / ' + p[2], '', `<dl><dt>Role</dt><dd>${p[4]}</dd><dt>Method</dt><dd>${p[5]}</dd><dt>Outcome</dt><dd>${p[6]}</dd></dl>`, p[3], i)).join('');
-$('#ex').innerHTML = EX.map((p, i) => row(p[0], p[1], '', `<p class="out">${p[3]}</p>`, p[4], i)).join('');
-$('#ac').innerHTML = AC.map((p, i) => row(p[0], p[1], '', '', 'fourier', i)).join('');
-$$('.row').forEach(b => { if (!b.nextElementSibling.textContent.trim()) b.querySelector('i').remove(); b.addEventListener('click', () => { const d = b.nextElementSibling; if (!d.textContent.trim()) return; const o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o); d.classList.toggle('open', o); }); });
+  ['Modelling hypersonic flight', '2025', 'Research', 'flow', 'Independent researcher and lecturer', 'Literature review, then Navier-Stokes through to DSMC simulation methods', 'Report, lecture and a published article', 'Streamlines from potential flow round a cylinder, with parcels slowing at the nose and speeding up over the top. Local supersonic flow starts at the critical Mach of about 0.40. Above Mach 1 the bow shock follows Billig\u2019s cylinder correlation: about 10 radii ahead at Mach 1.2, hugging the body by Mach 5, where the gas behind it is about 6\u00d7 hotter.'],
+  ['Wharton Investment Competition', '2025', 'Finance', 'fan', 'Data Lead, team of 6', 'Excel cash flow model and dataset management', '5,000+ teams entered; add placement', 'Geometric Brownian motion. The median path falls as volatility rises (growth rate \u03bc \u2212 \u03c3\u00b2/2), even though the average does not.'],
+  ['BNPL talk and Kelly criterion', '2025', 'Finance', 'fan', 'Presenter and participant', 'Market growth, regulation, behavioural economics; Kelly derivation', 'Talk delivered; add slides link', 'The same volatility drag sets the Kelly bet: long-run growth f\u03bc \u2212 f\u00b2\u03c3\u00b2/2 peaks at f = \u03bc/\u03c3\u00b2.'],
+  ['RSA cryptography and satellite QKD', '2026', 'Research', 'qkd', 'Researcher and presenter', 'Euler’s totient function and RSA; Manim animation; QKD link budgets', '20-minute talk and a report', 'Two stations 1,200 km apart, needing 15\u00b0 elevation. Low orbits race across the sky so passes are short; higher orbits stay in view longer, and a geostationary satellite hangs still, but beam loss grows with distance squared. Key per day peaks at about 700 km.'],
+  ['Bridge design', '2026', 'Engineering', 'truss', 'Team member', 'Inverted Pratt truss, strength-to-weight optimisation', '108.26 g held 27.5 kg, about 254 to 1; won the year group', 'Members are shaded by load. Push the load past 27.5 kg and the most-loaded end post buckles.'],
+  ['UK Youth Rocketry Challenge', '2026', 'Engineering', 'arc', 'Team of five', 'OpenRocket flight modelling, 3D printing, laser cutting', 'Regional round in Cambridge; 229 m target', 'The brief: fly a payload to exactly 229 m and recover it under a parachute. A 1D flight model (38 N motor for 1.6 s, drag \u00bd\u03c1C<sub>d</sub>Av\u00b2, 0.6 m chute) shows ballast tuning the apogee: about 680 g hits 229 m.'],
+  ['CPU from logic gates', '2026', 'Engineering', 'cpu', 'Solo', 'Registers, ALU and conditional unit; custom instruction set', 'Maze-solving program running', 'A five-instruction program (LDA, ADD, STA, OUT, BRA) on memory, program counter, instruction register, ALU and accumulator, all joined by one bus.'],
+  ['Metroidvania game', '2025', 'Engineering', 'game', 'Solo', 'Custom input and movement systems on Unity physics', 'In progress']
+];
+// [title, dates, outcome, figure]
+const EX = [
+  ['Work experience, Stratos Aero', 'Oct 2026', 'Reviewed the lease valuation model and how residual value drives the value of a lease.', 'lease', 'The model: a $50m narrowbody on a 12-year lease at 7%. Each month’s rent pays a return on the value still tied up, and the rest pays off value used up, so that part grows each year. A higher residual leaves less value to recover, so the rent falls; the lease rate factor is rent per month as a share of the price.'],
+  ['Youth Panellist, Q5', 'Oct 2026 to now', 'Sixth Form advisory panel on business issues faced by consultants and their clients.', 'network', 'The model: about 100 people, each able to link to near neighbours, with a few long-range ties. Links switch on at random as the dial turns. Below a tipping point an idea stays inside small groups; past it, one group spans the network and the idea reaches most people.'],
+  ['Freelance web developer', 'Jun 2026 to now', 'WordPress maintenance, performance and contact forms.', 'layout'],
+  ['High Ropes Instructor, Caterham', 'Mar 2025 to now', 'Safety protocols, equipment checks and sessions for ages 8 to 16.', 'ropes', 'The model: sag = W\u00b7x(L\u2212x)/(T\u00b7L), so more cable tension means a flatter line; the rider slows as the line climbs to the far platform.']
+];
+const AC = [
+  ['Arkwright Engineering Scholarship', 'Scholar'], ['UKMT Senior Maths Challenge', 'Gold, Kangaroo'],
+  ['Trailblazer Challenge', 'Gold'], ['Senior Physics Challenge', 'Silver'],
+  ['President, Moncrieff-Jones Society', '2025 to now'], ['Sergeant, RAF section, CCF', 'Four years'],
+  ['LAMDA Grade 8 Acting', 'High Distinction'], ['Duke of Edinburgh’s Award', 'Silver; Gold in progress']
+];
 
-/* ---------- particles ---------- */
-function size(){ W = innerWidth; H = innerHeight; DPR = Math.min(devicePixelRatio || 1, W < 700 ? 1.5 : 2); cv.width = W*DPR; cv.height = H*DPR; cv.style.width = W + 'px'; cv.style.height = H + 'px'; cx.setTransform(DPR, 0, 0, DPR, 0, 0); }
-function alloc(){
-  N = W < 700 ? 2200 : 4200;
-  [X, Y, VX, VY, KK, AA, WK] = Array.from({length:7}, () => new Float32Array(N)); HT = new Uint8Array(N); PM = new Uint16Array(N);
-  for (let i = 0; i < N; i++) { X[i] = Math.random()*W; Y[i] = Math.random()*H; KK[i] = .012 + Math.random()*.02; AA[i] = 1; PM[i] = i; }
-  for (let i = N-1; i > 0; i--) { const j = Math.random()*(i+1) | 0; [PM[i], PM[j]] = [PM[j], PM[i]]; }
+function rowHTML(list, r, i){
+  const n = String(i + 1).padStart(2, '0'), head = `<span>${n}</span><b>${r.t}</b><span>${r.meta}</span>`;
+  if (!r.det) return `<li><div class="row">${head}</div></li>`;
+  const id = `d-${list}-${i}`;
+  return `<li><button class="row" data-s="${r.st}" aria-expanded="false" aria-controls="${id}">${head}<i>+</i></button><div class="det" id="${id}"><div>${r.det}</div></div></li>`;
 }
-const reg = () => W > 820 ? {x:W*.44, y:H*.14, w:W*.52, h:Math.max(H*.45, H*.86 - 215)} : {x:W*.06, y:H*.1, w:W*.88, h:H*.42};
-const P = {mu:.08, sg:.2}, K = 26, S = 60, Z = Array.from({length:K}, () => Array.from({length:S}, gauss));
+const LISTS = {
+  pj: PJ.map(p => ({t:p[0], meta:p[1] + ' / ' + p[2], st:p[3], det:`<dl><dt>Role</dt><dd>${p[4]}</dd><dt>Method</dt><dd>${p[5]}</dd><dt>Outcome</dt><dd>${p[6]}</dd>${p[7] ? `<dt>The model</dt><dd>${p[7]}</dd>` : ''}</dl>`})),
+  ex: EX.map(p => ({t:p[0], meta:p[1], st:p[3], det:`<p class="out">${p[2]}</p>${p[4] ? `<p class="out fig">${p[4]}</p>` : ''}`})),
+  ac: AC.map(p => ({t:p[0], meta:p[1]}))
+};
+for (const id in LISTS) $('#' + id).innerHTML = LISTS[id].map((r, i) => rowHTML(id, r, i)).join('');
+$$('button.row').forEach(b => b.addEventListener('click', () => {
+  const open = b.getAttribute('aria-expanded') !== 'true';
+  b.setAttribute('aria-expanded', open);
+  b.nextElementSibling.classList.toggle('open', open);
+}));
 
+/* =====================================================================
+   Particle engine
+   Every particle springs toward a target given by the current figure.
+   ===================================================================== */
+const cv = $('#cv'), cx = cv.getContext('2d'), band = $('.band');
+const banded = () => getComputedStyle(band).display !== 'none';     // phone layout: the canvas fills the pinned band
+const NMAX = 4200;
+const RX = Float32Array.from({length:NMAX}, rnd), RY = Float32Array.from({length:NMAX}, rnd);
+let W, H, N = 0, X, Y, VX, VY, KK, AA, WK, HT, PM;
+let mx = -1e4, my = -1e4, pvx = 0, pvy = 0, T = 0, paused = false, C = {};
+
+function colours(){
+  const s = getComputedStyle(document.body), v = n => s.getPropertyValue(n).trim();
+  C = {ink:v('--ink'), sig:v('--sig'), grid:v('--grid'), mut:v('--mut'), bg:v('--bg')};
+}
+function size(){
+  W = innerWidth; H = banded() ? band.offsetHeight : innerHeight;
+  const dpr = Math.min(devicePixelRatio || 1, W < 700 ? 1.5 : 2);
+  cv.width = W*dpr; cv.height = H*dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function alloc(){
+  N = W < 700 ? 2200 : NMAX;
+  [X, Y, VX, VY, KK, AA, WK] = Array.from({length:7}, () => new Float32Array(N));
+  HT = new Uint8Array(N); PM = new Uint16Array(N);
+  for (let i = 0; i < N; i++) { X[i] = Math.random()*W; Y[i] = Math.random()*H; KK[i] = .012 + Math.random()*.02; PM[i] = i; }
+  for (let i = N - 1; i > 0; i--) { const j = Math.random()*(i + 1) | 0; [PM[i], PM[j]] = [PM[j], PM[i]]; }
+}
+
+/* Region the figure is drawn in: right half on desktop, top of screen on mobile. */
+const reg = () => {
+  if (W > 820) return {x:W*.44, y:H*.14, w:W*.52, h:Math.max(H*.45, H*.86 - 215)};
+  const top = $('.top').offsetHeight + 4, dial = 84;   // keeps axis labels drawn just below a figure clear of the dial              // phones: inside the band, under the header, above the dial
+  return {x:W*.05, y:top, w:W*.9, h:Math.max(140, H - top - dial)};
+};
+
+/* Sample text into points (used for the name and the closing line). */
 function textPts(lines, b){
   const c = document.createElement('canvas'), g = c.getContext('2d'), fs = 200, F = `800 ${fs}px 'Bricolage Grotesque'`;
-  g.font = F; const w = Math.max(...lines.map(l => g.measureText(l).width)); c.width = Math.ceil(w) + 20; c.height = Math.ceil(lines.length*fs*.98) + 40;
-  g.font = F; g.textBaseline = 'top'; lines.forEach((l, i) => g.fillText(l, 10, 10 + i*fs*.98));
+  g.font = F;
+  const w = Math.max(...lines.map(l => g.measureText(l).width));
+  c.width = Math.ceil(w) + 20; c.height = Math.ceil(lines.length*fs*.98) + 40;
+  g.font = F; g.textBaseline = 'top';
+  lines.forEach((l, i) => g.fillText(l, 10, 10 + i*fs*.98));
   const d = g.getImageData(0, 0, c.width, c.height).data, p = [];
   for (let y = 0; y < c.height; y += 4) for (let x = 0; x < c.width; x += 4) if (d[(y*c.width + x)*4 + 3] > 120) p.push([x, y]);
   const k = Math.min(b.w/c.width, b.h/c.height), ox = b.x + (b.w - c.width*k)/2, oy = b.y + (b.h - c.height*k)/2;
   return p.map(([x, y]) => [ox + x*k, oy + y*k]);
 }
-const DV = {name:.06, cta:.06, fan:.28, flow:.35, qkd:.12, truss:.35, arc:.25, cpu:.4, game:.5, lease:.4, network:.4, layout:.8, ropes:.5, fourier:.3};
-const DL = {name:'Temperature', cta:'Temperature', fan:'Volatility', flow:'Mach number', qkd:'Orbit altitude', truss:'Load', arc:'Drag coefficient', cpu:'Clock rate', game:'Jump power', lease:'Residual value', network:'Connections', layout:'Screen width', ropes:'Rope tension', fourier:'Terms'};
-const FIG = {name:1, fan:2, flow:3, qkd:4, truss:5, arc:6, cpu:7, game:8, lease:9, network:10, layout:11, ropes:12, fourier:13, cta:14};
-const RX = Float32Array.from({length:4200}, rnd), RY = Float32Array.from({length:4200}, rnd);
-const fixed = (pts, cap, hot = () => 0, draw, key) => ({cap:() => cap, draw, hot, fmt:() => key ? 'T = ' + Math.round(300 + DV[key]*2700) + ' K' : '',
-  at(j, t, o){ const p = pts[Math.floor(j*pts.length/N)], A = key ? .5 + DV[key]*DV[key]*70 : .6; o.x = p[0] + Math.sin(t*1.7 + j*3.1)*A; o.y = p[1] + Math.cos(t*1.3 + j*1.7)*A; o.a = 1; }});
+/* Spread n points evenly along segments [x1,y1,x2,y2,hot?]. Returns [points, hot flags, segment index]. */
 function along(segs, n = N){
-  const L = segs.map(s => Math.hypot(s[2]-s[0], s[3]-s[1])), tot = L.reduce((a, b) => a + b, 0), pts = [], hot = [], idx = [];
-  for (let i = 0; i < n; i++) { let d = (i + .5)/n*tot, k = 0; while (k < segs.length-1 && d > L[k]) { d -= L[k]; k++; } const s = segs[k], u = d/(L[k] || 1); pts.push([s[0] + (s[2]-s[0])*u, s[1] + (s[3]-s[1])*u]); hot.push(s[4] ? 1 : 0); idx.push(k); }
+  const L = segs.map(s => Math.hypot(s[2] - s[0], s[3] - s[1])), tot = L.reduce((a, b) => a + b, 0), pts = [], hot = [], idx = [];
+  let k = 0, acc = 0;
+  for (let i = 0; i < n; i++) {
+    const d = (i + .5)/n*tot;
+    while (k < segs.length - 1 && d > acc + L[k]) { acc += L[k]; k++; }
+    const s = segs[k], u = (d - acc)/(L[k] || 1);
+    pts.push([s[0] + (s[2] - s[0])*u, s[1] + (s[3] - s[1])*u]); hot.push(s[4] ? 1 : 0); idx.push(k);
+  }
   return [pts, hot, idx];
 }
-const rectp = (x, y, w, h, u) => { const d = u*2*(w + h); return d < w ? [x + d, y] : d < w + h ? [x + w, y + d - w] : d < 2*w + h ? [x + w - (d - w - h), y + h] : [x, y + h - (d - 2*w - h)]; };
-const sm = v => v <= 0 ? 0 : v >= 1 ? 1 : v*v*(3 - 2*v);
-function readout(){ const m = Math.exp((P.mu - P.sg*P.sg/2)*10), sp = 1.645*P.sg*Math.sqrt(10); $('#readout').textContent = `From 1.00 after 10 years: median ${m.toFixed(2)}, and 90% of outcomes between ${(m*Math.exp(-sp)).toFixed(2)} and ${(m*Math.exp(sp)).toFixed(2)}.`; }
+/* Point at fraction u around a rectangle's perimeter. */
+const rectp = (x, y, w, h, u) => {
+  const d = u*2*(w + h);
+  return d < w ? [x + d, y] : d < w + h ? [x + w, y + d - w] : d < 2*w + h ? [x + w - (d - w - h), y + h] : [x, y + h - (d - 2*w - h)];
+};
+/* Polyline as a function u in [0,1] -> point. */
+function poly(pts){
+  const L = [0];
+  for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const tot = L[L.length - 1];
+  return u => {
+    const d = clamp(u, 0, 1)*tot; let k = 1;
+    while (k < L.length - 1 && L[k] < d) k++;
+    const f = (d - L[k - 1])/((L[k] - L[k - 1]) || 1), a = pts[k - 1], b = pts[k];
+    return [a[0] + (b[0] - a[0])*f, a[1] + (b[1] - a[1])*f];
+  };
+}
+const circleSegs = (x, y, r, n = 8) => Array.from({length:n}, (_, k) => {
+  const a = k/n*6.2832, b = (k + 1)/n*6.2832;
+  return [x + Math.cos(a)*r, y + Math.sin(a)*r, x + Math.cos(b)*r, y + Math.sin(b)*r];
+});
+
+/* =====================================================================
+   Dial settings per figure
+   ===================================================================== */
+const DV = {name:.06, cta:.06, fan:.28, flow:.35, qkd:.12, truss:.35, arc:.25, cpu:.4, game:.5, lease:.4, network:.62, layout:.8, ropes:.5, fourier:.3};
+const DL = {name:'Temperature', cta:'Temperature', fan:'Volatility', flow:'Mach number', qkd:'Orbit altitude', truss:'Load', arc:'Launch mass', cpu:'Clock rate', game:'Jump power', lease:'Residual value', network:'Connections', layout:'Screen width', ropes:'Cable tension', fourier:'Terms'};
+const FIG = {name:1, fan:2, flow:3, qkd:4, truss:5, arc:6, cpu:7, game:8, lease:9, network:10, layout:11, ropes:12, fourier:13, cta:14};
+const P = {mu:.08, sg:.2};                                                   // GBM drift and volatility
+const ZF = Array.from({length:20}, () => Array.from({length:60}, gauss));    // fixed shocks, so paths morph smoothly
+
+function readout(){
+  const m = Math.exp((P.mu - P.sg*P.sg/2)*10), sp = 1.645*P.sg*Math.sqrt(10);
+  $('#readout').textContent = `From 1.00 after 10 years: median ${m.toFixed(2)}, and 90% of outcomes between ${(m*Math.exp(-sp)).toFixed(2)} and ${(m*Math.exp(sp)).toFixed(2)}.`;
+}
+
+/* A static point cloud (text) that "melts" as the temperature rises. */
+const fixed = (pts, cap, hot, key) => ({
+  cap: () => cap, hot,
+  fmt: () => 'T = ' + Math.round(300 + DV[key]*2700) + ' K',
+  at(j, t, o){
+    const p = pts[Math.floor(j*pts.length/N)], A = .5 + DV[key]*DV[key]*70;
+    o.x = p[0] + Math.sin(t*1.7 + j*3.1)*A; o.y = p[1] + Math.cos(t*1.3 + j*1.7)*A; o.a = 1;
+  }
+});
+
+/* =====================================================================
+   Figures. Each returns {at(j,t,o), hot(j), cap(), fmt(), set?, tick?, draw?}
+   ===================================================================== */
 const B = {
- name(){ return fixed(textPts(['OLLIE', 'NEBEL'], reg()), 'Name set in particles. Raise the temperature and it melts.', j => j % 9 === 0, null, 'name'); },
- cta(){ return fixed(textPts(['LET\u2019S', 'MODEL IT'], reg()), 'Let\u2019s model it. Raise the temperature and it melts again.', j => j % 7 === 0, null, 'cta'); },
- fan(){
-  const r = reg(), dt = 10/S, lo = -1.2, hi = 2.3, YY = l => r.y + r.h - (l - lo)/(hi - lo)*r.h, XX = s => r.x + s/S*r.w; let path, end, low;
-  const mk = () => { P.sg = .05 + .55*DV.fan; const dr = (P.mu - P.sg*P.sg/2)*dt, vo = P.sg*Math.sqrt(dt); path = Z.map(z => { let l = 0; return [0, ...z.map(v => l += dr + vo*v)]; }); end = path.map(p => p[S]); low = end.filter(e => e < Math.log(.5)).length; readout(); };
-  mk();
-  return {set:mk, fmt:() => Math.round(P.sg*100) + '% a year', cap:() => `Price paths, geometric Brownian motion, illustrative. ${low} of ${K} end below half their start (orange).`, hot:j => end[j % K] < Math.log(.5),
-   at(j, t, o){ const p = j % K, u = Math.floor(j/K)/(N/K)*S, s = Math.min(S-1, Math.floor(u)), f = u - s, l = path[p][s]*(1-f) + path[p][s+1]*f; o.x = XX(u); o.y = Math.max(r.y - 30, YY(l)) + Math.sin(t*1.4 + j)*1.1; o.a = 1; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.lineWidth = 1; [.5, 1, 2, 4, 8].forEach(v => { const y = YY(Math.log(v)); g.strokeStyle = C.grid; g.beginPath(); g.moveTo(r.x, y); g.lineTo(r.x + r.w, y); g.stroke(); g.fillStyle = C.mut; g.fillText(v + '\u00d7', r.x - 30, y + 4); });
-    [0, 5, 10].forEach(v => g.fillText(v + 'y', XX(v/10*S) - 6, r.y + r.h + 22)); g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath(); for (let s = 0; s <= S; s++) { const l = (P.mu - P.sg*P.sg/2)*s*dt, x = XX(s), y = Math.max(r.y - 30, YY(l)); s ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }};
- },
- flow(){
-  const r = reg(), sc = r.w/8, cxm = r.x + r.w/2, cym = r.y + r.h/2, nL = 28, M = 240, nc = Math.floor(N*.07), PS = [], Ys = [], pu = new Float32Array(N), hz = new Uint8Array(N); let ph = 0;
-  for (let q = 0; q < nL; q++) { const psi = (q < nL/2 ? q - nL/2 : q - nL/2 + 1)*.13, a = Math.abs(psi), ys = new Float32Array(M); PS.push(psi);
-   for (let m = 0; m < M; m++) { const x = -4 + 8*m/(M-1); let lo = Math.sqrt(Math.max(0, 1 - x*x)), hi = a + 2; for (let k = 0; k < 32; k++) { const y = (lo + hi)/2; (y - y/(x*x + y*y) < a ? lo = y : hi = y); } ys[m] = Math.sign(psi)*(lo + hi)/2; } Ys.push(ys); }
-  const Mn = () => .3 + DV.flow*5, xs = y => -(1.25 + .7/Mn()) + .38*y*y;
-  return {tick:dt => ph += dt*(.03 + DV.flow*.14), fmt:() => 'Mach ' + Mn().toFixed(1) + ', ' + (Mn() < .8 ? 'subsonic' : Mn() < 1.2 ? 'transonic' : Mn() < 3 ? 'supersonic' : 'hypersonic'),
-   cap:() => { const m = Mn(); return m < .8 ? 'Subsonic flow around a cylinder, illustrative. Smooth, symmetric streamlines.' : m < 1.2 ? 'Transonic: the flow is about to form a shock.' : m < 3 ? 'Supersonic: a bow shock forms. Gas upstream cannot sense the body until it hits the shock. Wake turbulence begins.' : 'Hypersonic: the shock hugs the body and the shock layer heats up (orange).'; },
-   hot:j => j < nc || hz[j] === 1,
-   at(j, t, o){
-    if (j < nc) { const a = j/nc*6.2832 + ph*.6; o.x = cxm + Math.cos(a)*sc; o.y = cym + Math.sin(a)*sc; o.a = 1; return; }
-    const q = j % nL, u0 = Math.floor(j/nL)/(N/nL) + ph, u = u0 - Math.floor(u0), m = Mn(), x = -4.5 + 9*u, psi = PS[q], ys = Ys[q][Math.min(M-1, Math.max(0, Math.round((x + 4)/8*(M-1))))]; let y = ys;
-    if (m > 1.05) y = psi + (ys - psi)*sm((x - xs(psi))/.4);
-    hz[j] = m > 2.5 && x > xs(psi) && x < xs(psi) + 1.2 ? 1 : 0;
-    if (x > 1 && m > 1.05) y += Math.sin(t*6 + j*1.9)*Math.min(1, (x - 1)/1.5)*Math.min(.22, .05*(m - 1));
-    if (u < pu[j] - .5) o.snap = 1; pu[j] = u;
-    o.x = cxm + x*sc; o.y = cym + y*sc; o.a = Math.min(1, (x + 4.5)/.5, (4.5 - x)/.5); },
-   draw(g){ const m = Mn(); if (m < 1.05) return; const sd = 1.25 + .7/m; g.strokeStyle = C.sig; g.lineWidth = 1.6; g.setLineDash([5, 5]); g.beginPath(); for (let y = -2.6; y <= 2.6; y += .1) { const x = cxm + (-sd + .38*y*y)*sc; y < -2.55 ? g.moveTo(x, cym + y*sc) : g.lineTo(x, cym + y*sc); } g.stroke(); g.setLineDash([]); g.fillStyle = C.sig; g.font = '11px IBM Plex Mono'; g.fillText('bow shock', cxm + (-sd + .38*6.76)*sc + 8, cym - 2.6*sc); }};
- },
- qkd(){
-  const r = reg(), cxm = r.x + r.w/2, R = r.w*.95, top = r.y + r.h - 30, cE = top + R, nE = Math.floor(N*.22), nS = 70, nSt = 36, nB = N - nE - nS - 2*nSt, pu = new Float32Array(N), rb = Float32Array.from({length:N}, rnd);
-  const earth = x => cE - Math.sqrt(R*R - (x - cxm)*(x - cxm)), xa = cxm - r.w*.36, xb = cxm + r.w*.36, stA = [xa, earth(xa)], stB = [xb, earth(xb)]; let alt = 500, eta = 1, db = 0, ph = 0;
-  const mk = () => { alt = 500 + DV.qkd*DV.qkd*35000; db = 20*Math.log10(alt/500); eta = Math.pow(10, -db/42); }; mk();
-  const sat = () => [cxm + Math.sin(ph*.25)*r.w*.06, top - 70 - DV.qkd*(r.h*.55 - 20)], tri = (s, k, n) => { const u = k/n*3, i = Math.floor(u), f = u - i, V = [[s[0], s[1] - 16], [s[0] - 10, s[1]], [s[0] + 10, s[1]]], a = V[i % 3], b = V[(i + 1) % 3]; return [a[0] + (b[0] - a[0])*f, a[1] + (b[1] - a[1])*f]; };
-  return {set:mk, tick:dt => ph += dt, fmt:() => `${Math.round(alt).toLocaleString('en-GB')} km, +${db.toFixed(0)} dB loss`, cap:() => 'Satellite quantum key distribution, illustrative: single photons travel down to two ground stations. A higher orbit means a wider beam and fewer photons arriving.',
-   hot:j => (j >= nE && j < nE + nS + 2*nSt) || (j >= nE + nS + 2*nSt && j % 9 === 0),
-   at(j, t, o){ o.a = 1;
-    if (j < nE) { const x = r.x - r.w*.1 + j/nE*r.w*1.2; o.x = x; o.y = earth(x) + Math.sin(j)*.8; return; }
-    if (j < nE + nS) { const k = j - nE, s = sat(), p = k < 20 ? rectp(s[0] - 8, s[1] - 6, 16, 12, k/20) : k < 45 ? rectp(s[0] - 38, s[1] - 3, 26, 6, (k - 20)/25) : rectp(s[0] + 12, s[1] - 3, 26, 6, (k - 45)/25); o.x = p[0]; o.y = p[1]; return; }
-    if (j < nE + nS + 2*nSt) { const k = j - nE - nS, st = k < nSt ? stA : stB, p = tri(st, k % nSt, nSt); o.x = p[0]; o.y = p[1]; return; }
-    const bj = j - nE - nS - 2*nSt, s = sat(), tg = bj % 2 ? stB : stA, u0 = Math.floor(bj/2)/(nB/2) + ph*.5, p = u0 - Math.floor(u0); if (p < pu[j] - .5) o.snap = 1; pu[j] = p;
-    const sp = (rb[j] - .5)*(3 + alt/35500*70*p) + (p > .85 ? (rb[(j*7) % N] - .5)*14*(p - .85)/.15 : 0), dx = tg[0] - s[0], dy = tg[1] - s[1], L = Math.hypot(dx, dy);
-    o.x = s[0] + dx*p - dy/L*sp; o.y = s[1] + dy*p + dx/L*sp; o.a = rb[(j*13) % N] < Math.pow(eta, p*3) ? 1 : 0; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.fillStyle = C.mut; g.fillText('Alice', stA[0] - 16, stA[1] + 24); g.fillText('Bob', stB[0] - 10, stB[1] + 24); const s = sat(); g.fillText('satellite', s[0] - 26, s[1] - 16); g.fillStyle = C.ink; g.fillText('photons received ' + (Math.pow(eta, 3)*100).toFixed(1) + '%', r.x + 4, r.y + 14); }};
- },
+  name(){ return fixed(textPts(['OLLIE', 'NEBEL'], reg()), 'Name set in particles. Raise the temperature and it melts.', j => j % 9 === 0, 'name'); },
+  cta(){ return fixed(textPts(['LET’S', 'MODEL IT'], reg()), 'Let’s model it. Raise the temperature and it melts again.', j => j % 7 === 0, 'cta'); },
 
- truss(){
-  const r = reg(), b = r.y + r.h*.72, h = r.h*.34, x0 = r.x + r.w*.06, x1 = r.x + r.w*.94, n = 6, dx = (x1 - x0)/n, Bn = k => [x0 + k*dx, b], Tn = k => [x0 + k*dx, b - h], sg = [], wt = [], add = (s, w) => { sg.push(s); wt.push(w); };
-  add([x0, b, x1, b], .5); add([...Tn(1), ...Tn(n-1)], .6); add([x0, b, ...Tn(1)], 1); add([x1, b, ...Tn(n-1)], 1);
-  for (let k = 1; k < n; k++) add([...Tn(k), ...Bn(k)], .35); for (let k = 1; k < n/2; k++) { add([...Tn(k), ...Bn(k+1)], .8); add([...Tn(n-k), ...Bn(n-k-1)], .8); }
-  sg.forEach(q => { q[1] = 2*b - h - q[1]; q[3] = 2*b - h - q[3]; }); const [pts, , idx] = along(sg), FAIL = .786, worst = wt.indexOf(Math.max(...wt)); let tb = -1;
-  return {set:() => { if (DV.truss > FAIL) { if (tb < 0) tb = T; } else tb = -1; }, fmt:() => (DV.truss*35).toFixed(1) + ' kg of 27.5', cap:() => DV.truss > FAIL ? 'Inverted Pratt truss: an end post buckles above 27.5 kg. The real bridge held 27.5 kg at 108.26 g.' : 'Inverted Pratt truss: orange members carry the most load. Turn it up until something gives.', hot:j => DV.truss*wt[idx[j]] > .3,
-   at(j, t, o){ const p = pts[j], k = idx[j]; o.x = p[0]; o.y = p[1]; o.a = 1; if (tb >= 0 && k === worst) { const q = T - tb; o.y += Math.min(420, 260*q*q); o.x += Math.sin(j)*q*18; o.a = Math.max(0, 1 - q*.7); } else { const s = DV.truss*wt[k]*.9; o.x += Math.sin(t*30 + j)*s; o.y += Math.cos(t*27 + j)*s; } }};
- },
- arc(){
-  const r = reg(), AX = r.x + 46, AW = r.w - 46, AY = r.y + 10, AH = r.h - 50, near = new Uint8Array(N), wgt = new Float32Array(N), P0 = .55, Q0 = .5; let cd = .45, dA = 0;
-  const A = (p, q) => 420*p/(.5 + q)*(1.35 - cd)/.9;
-  const mk = () => { cd = .3 + .6*DV.arc; for (let j = 0; j < N; j++) { const e = A(RX[j], 1 - RY[j]) - 229; near[j] = Math.abs(e) < 9 ? 1 : 0; wgt[j] = .3 + .7*Math.exp(-e*e/(2*45*45)); } dA = A(P0, Q0); }; mk();
-  return {set:mk, fmt:() => `Cd ${cd.toFixed(2)}, design apogee ${dA.toFixed(0)} m`, cap:() => `Design space for the rocket, illustrative: each dot is a design (motor impulse across, mass up). Orange dots land within 9 m of the 229 m target, and the ridge moves with the drag coefficient. The cross is the current design, ${dA - 229 > 0 ? '+' : ''}${(dA - 229).toFixed(0)} m from target.`, hot:j => near[j],
-   at(j, t, o){ o.x = AX + RX[j]*AW + Math.sin(t*1.3 + j)*.5; o.y = AY + RY[j]*AH + Math.cos(t*1.1 + j)*.5; o.a = wgt[j]; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.lineWidth = 1; g.strokeRect(AX, AY, AW, AH); g.fillStyle = C.mut; g.fillText('motor impulse \u2192', AX + AW - 110, AY + AH + 18); g.save(); g.translate(AX - 14, AY + 70); g.rotate(-Math.PI/2); g.fillText('mass \u2192', 0, 0); g.restore();
-    const x = AX + P0*AW, y = AY + (1 - Q0)*AH; g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath(); g.moveTo(x - 12, y); g.lineTo(x + 12, y); g.moveTo(x, y - 12); g.lineTo(x, y + 12); g.stroke(); g.fillStyle = C.sig; g.fillText('design ' + dA.toFixed(0) + ' m', x + 14, y - 8); g.fillStyle = C.mut; g.fillText('target 229 m', AX + 8, AY + 14); }};
- },
+  /* Geometric Brownian motion price paths with the analytic 90% band. */
+  fan(){
+    const r = reg(), K = 20, S = 60, dt = 10/S, lo = Math.log(.2), hi = Math.log(5), per = Math.ceil(N/K);
+    const G = 46, PW = r.w - G;                                   // right gutter holds the y-axis labels
+    const XX = s => r.x + s/S*PW, YY = l => r.y + r.h - (l - lo)/(hi - lo)*r.h;
+    const TX = new Float32Array(N), TY = new Float32Array(N), TA = new Float32Array(N), TU = new Float32Array(N), hotP = new Uint8Array(K);
+    let low = 0;
+    const mk = () => {
+      P.sg = .05 + .55*DV.fan;
+      const dr = (P.mu - P.sg*P.sg/2)*dt, vo = P.sg*Math.sqrt(dt);
+      low = 0;
+      for (let p = 0; p < K; p++) {
+        const xs = [XX(0)], ys = [YY(0)], cum = [0]; let l = 0;
+        for (let s = 1; s <= S; s++) {
+          l += dr + vo*ZF[p][s - 1]; xs.push(XX(s)); ys.push(YY(l));
+          cum.push(cum[s - 1] + Math.hypot(xs[s] - xs[s - 1], ys[s] - ys[s - 1]));
+        }
+        hotP[p] = l < Math.log(.5) ? 1 : 0; low += hotP[p];
+        // place particles evenly by arc length so steep stretches stay dense
+        for (let k = 0, s = 1; k < per; k++) {
+          const j = p + k*K; if (j >= N) break;
+          const d = (k + .5)/per*cum[S];
+          while (s < S && cum[s] < d) s++;
+          const f = (d - cum[s - 1])/((cum[s] - cum[s - 1]) || 1), y = ys[s - 1] + (ys[s] - ys[s - 1])*f;
+          TX[j] = xs[s - 1] + (xs[s] - xs[s - 1])*f;
+          TY[j] = clamp(y, r.y, r.y + r.h);
+          TA[j] = clamp(1 - Math.max(r.y - y, y - r.y - r.h)/14, 0, 1);   // fade out beyond the plot
+          TU[j] = (TX[j] - r.x)/PW;
+        }
+      }
+      readout();
+    };
+    mk();
+    const reveal = t => RM ? 1.01 : sm(t/1.8)*1.01;
+    return {
+      set: mk,
+      fmt: () => Math.round(P.sg*100) + '% a year',
+      cap: () => `Price paths, geometric Brownian motion, illustrative: ${low} of ${K} end below half their start (orange).`,
+      hot: j => hotP[j % K],
+      at(j, t, o){ o.x = TX[j]; o.y = TY[j] + Math.sin(t*1.4 + j)*.8; o.a = TU[j] > reveal(t) ? 0 : TA[j]; },
+      draw(g, t){
+        const rv = Math.min(1, reveal(t)), m = P.mu - P.sg*P.sg/2, z = 1.645*P.sg, n = Math.round(S*rv);
+        g.font = '11px IBM Plex Mono'; g.lineWidth = 1; g.textAlign = 'left';
+        [.25, .5, 1, 2, 4].forEach(v => {
+          const y = YY(Math.log(v));
+          g.strokeStyle = C.grid; g.globalAlpha = v === 1 ? 1 : .6; g.beginPath(); g.moveTo(r.x, y); g.lineTo(r.x + PW, y); g.stroke();
+          g.globalAlpha = 1; g.fillStyle = C.mut; g.fillText(v + '×', r.x + PW + 10, y + 4);
+        });
+        g.textAlign = 'center';
+        [0, 5, 10].forEach(v => g.fillText(v + 'y', XX(v/10*S), r.y + r.h + 20));
+        g.textAlign = 'left';
+        // legend above the plot, clear of the paths
+        const ly = r.y - 10;
+        g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath(); g.moveTo(r.x, ly - 4); g.lineTo(r.x + 16, ly - 4); g.stroke(); g.lineWidth = 1;
+        g.fillStyle = C.mut; g.fillText('median', r.x + 22, ly);
+        g.fillStyle = C.sig; g.globalAlpha = .18; g.fillRect(r.x + 82, ly - 9, 16, 10); g.globalAlpha = 1;
+        g.fillStyle = C.mut; g.fillText('90% of outcomes', r.x + 104, ly);
+        if (n < 1) return;
+        g.save(); g.beginPath(); g.rect(r.x, r.y, PW, r.h); g.clip();
+        // 90% band
+        g.beginPath();
+        for (let s = 0; s <= n; s++) { const tt = s*dt; g.lineTo(XX(s), YY(m*tt + z*Math.sqrt(tt))); }
+        for (let s = n; s >= 0; s--) { const tt = s*dt; g.lineTo(XX(s), YY(m*tt - z*Math.sqrt(tt))); }
+        g.fillStyle = C.sig; g.globalAlpha = .09; g.fill(); g.globalAlpha = 1;
+        // median
+        g.strokeStyle = C.sig; g.lineWidth = 2; g.beginPath();
+        for (let s = 0; s <= n; s++) g.lineTo(XX(s), YY(m*s*dt));
+        g.stroke(); g.restore();
+      }
+    };
+  },
 
- cpu(){
-  const r = reg(), cell = Math.min(r.w*.6/10, r.h*.86/10), gx = r.x, gy = r.y + r.h*.06, sz = cell*.78, NB = 80, rp = Math.floor(N*.07), per = Math.floor((N - 4*rp - NB)/100), rx = gx + 10*cell + cell*.9, rw = Math.min(r.w*.28, 150), rh = cell*1.1; let ph = 0;
-  const bx = a => [gx + (a % 10 + .5)*cell, gy + (Math.floor(a/10) + .5)*cell], RG = ['PC', 'IR', 'ACC', 'OUT'].map((n, i) => ({n, x:rx, y:gy + i*(rh + cell*.5), w:rw, h:rh})), cen = i => [RG[i].x + rw/2, RG[i].y + rh/2];
-  const PROG = [['LDA', 90], ['ADD', 91], ['STA', 92], ['OUT', 0], ['BRA', 0]], ACC = [7, 12, 12, 12, 12], dat = ins => ins[0] === 'LDA' || ins[0] === 'ADD' || ins[0] === 'STA';
-  return {tick:dt => ph += dt*(.25 + DV.cpu*1.6), fmt:() => (.25 + DV.cpu*1.6).toFixed(1) + ' steps/s', cap:() => 'Little Man Computer: mailboxes, program counter and accumulator running LDA, ADD, STA, OUT, BRA. Orange is the active mailbox and the data bus.',
-   hot:j => { const s = Math.floor(ph), pc = s % 5, f = ph - s, ins = PROG[pc]; if (j >= N - NB) return 1; if (j < per*100) return Math.floor(j/per) === (f < .35 ? pc : dat(ins) ? ins[1] : -1) ? 1 : 0; const i = Math.floor((j - per*100)/rp); return (i === 0 && f < .35) || (i === 1 && f > .3 && f < .5) || (i === 2 && f > .5 && f < .95 && ins[0] !== 'BRA') || (i === 3 && ins[0] === 'OUT' && f > .7) ? 1 : 0; },
-   at(j, t, o){
-    const s = Math.floor(ph), pc = s % 5, f = ph - s, ins = PROG[pc]; o.a = 1;
-    if (j >= N - NB) { const k = (j - (N - NB))/NB, a = f < .35; let A, Bp; if (a) { A = bx(pc); Bp = cen(1); } else if (ins[0] === 'LDA' || ins[0] === 'ADD') { A = bx(ins[1]); Bp = cen(2); } else if (ins[0] === 'STA') { A = cen(2); Bp = bx(ins[1]); } else if (ins[0] === 'OUT') { A = cen(2); Bp = cen(3); } else { A = cen(1); Bp = cen(0); }
-     const p = Math.min(1, Math.max(0, (a ? f/.35 : (f - .35)/.5)*1.3 - k*.3)); o.x = A[0] + (Bp[0] - A[0])*p; o.y = A[1] + (Bp[1] - A[1])*p; o.a = f > .9 ? 0 : 1; return; }
-    if (j < per*100) { const c = bx(Math.floor(j/per)), p = rectp(c[0] - sz/2, c[1] - sz/2, sz, sz, (j % per)/per); o.x = p[0]; o.y = p[1]; return; }
-    const g = RG[Math.min(3, Math.floor((j - per*100)/rp))], p = rectp(g.x, g.y, g.w, g.h, ((j - per*100) % rp)/rp); o.x = p[0]; o.y = p[1]; },
-   draw(g){ const s = Math.floor(ph), pc = s % 5, ins = PROG[pc]; g.font = '9px IBM Plex Mono'; g.fillStyle = C.mut; g.textAlign = 'center';
-    for (let a = 0; a < 100; a++) { const c = bx(a); g.fillText(a < 5 ? PROG[a][0] : a === 90 ? '7' : a === 91 ? '5' : a === 92 ? '12' : String(a).padStart(2, '0'), c[0], c[1] + 3); }
-    g.font = '11px IBM Plex Mono'; g.textAlign = 'left'; const vals = [pc, ins[0] + (ins[1] ? ' ' + ins[1] : ''), ACC[pc], ACC[pc]]; RG.forEach((q, i) => { g.fillStyle = C.mut; g.fillText(q.n, q.x, q.y - 5); g.fillStyle = C.ink; g.fillText(String(vals[i]), q.x + 8, q.y + rh/2 + 4); }); }};
- },
- game(){
-  const r = reg(), np = 6, nC = 70, seq = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1], PL = Array.from({length:np}, (_, i) => [r.x + r.w*(.03 + i*.16), r.y + r.h*(.38 + (i % 3)*.18 - (i === 4 ? .12 : 0)), r.w*.12]), [pts] = along(PL.map(p => [p[0], p[1], p[0] + p[2], p[1]])), off = Array.from({length:nC}, () => [(rnd() - .5)*9, (rnd() - .5)*14]); let ph = 0;
-  return {tick:dt => ph += dt*1.1, fmt:() => 'jump ' + Math.round(DV.game*100) + '%', cap:() => 'Metroidvania prototype: platforms and a jump arc. Jump power sets how far apart rooms can be.', hot:j => j >= N - nC,
-   at(j, t, o){ o.a = 1; if (j >= N - nC) { const s = Math.floor(ph), f = ph - s, A = PL[seq[s % 10]], Bq = PL[seq[(s + 1) % 10]], k = f < .25 ? 0 : (f - .25)/.75, apx = 30 + DV.game*170, w = off[j - (N - nC)]; o.x = A[0] + A[2]*.5 + (Bq[0] + Bq[2]*.5 - A[0] - A[2]*.5)*k + w[0]; o.y = A[1] + (Bq[1] - A[1])*k - 4*apx*k*(1 - k) - 14 + w[1]; return; } const p = pts[j]; o.x = p[0]; o.y = p[1]; }};
- },
- lease(){
-  const r = reg(), yrs = 10, bw = r.w/(yrs + 3.2), gy = r.y + r.h*.84, uh = r.h*.5/10; let pts = [], hot = [], pv = 0, res = 0;
-  const mk = () => { res = DV.lease*.6; const rs = []; for (let i = 0; i < yrs; i++) rs.push([r.x + i*bw, gy - uh, bw*.78, uh, 0]); rs.push([r.x + yrs*bw + bw*.2, gy - res*10*uh, bw*2.4, Math.max(.01, res*10*uh), 1]);
-   const A = rs.map(q => q[2]*q[3]), tot = A.reduce((a, b) => a + b); let acc = 0, k = 0; pts = []; hot = []; for (let j = 0; j < N; j++) { const d = (j + .5)/N*tot; while (k < rs.length - 1 && acc + A[k] < d) { acc += A[k]; k++; } const q = rs[k]; pts.push([q[0] + q[2]*RX[j], q[1] + q[3]*RY[j]]); hot.push(q[4]); }
-   pv = res*10/Math.pow(1.08, yrs); for (let t = 1; t <= yrs; t++) pv += 1/Math.pow(1.08, t); }; mk();
-  return {set:mk, fmt:() => Math.round(DV.lease*60) + '% residual', cap:() => `Lease economics, illustrative: ten years of rent plus the aircraft's residual value at the end. Together they set the lease value (${pv.toFixed(2)} for an aircraft worth 10, discounted at 8%).`, hot:j => hot[j],
-   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t + j)*.4; o.y = p[1] + Math.cos(t + j)*.4; o.a = 1; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.beginPath(); g.moveTo(r.x - 8, gy); g.lineTo(r.x + (yrs + 3.2)*bw, gy); g.stroke(); g.fillStyle = C.mut; [1, 5, 10].forEach(y => g.fillText('yr ' + y, r.x + (y - 1)*bw, gy + 18)); g.fillText('rent, 1 a year', r.x, gy - uh - 10); g.fillStyle = C.sig; g.fillText('residual', r.x + yrs*bw + bw*.3, gy - res*10*uh - 10); g.fillStyle = C.ink; g.fillText('Lease value ' + pv.toFixed(2) + ' (aircraft = 10)', r.x, r.y + 8); }};
- },
- network(){
-  const r = reg(), cxm = r.x + r.w/2, cym = r.y + r.h/2, R = Math.min(r.w, r.h)*.38, n = 9, nd = Array.from({length:n}, (_, i) => [cxm + Math.cos(i/n*6.2832 - 1.57)*R, cym + Math.sin(i/n*6.2832 - 1.57)*R]); let ph = 0, pts, hot, ed = 0;
-  const oct = (x, y, rr) => Array.from({length:8}, (_, k) => [x + Math.cos(k/8*6.2832)*rr, y + Math.sin(k/8*6.2832)*rr, x + Math.cos((k + 1)/8*6.2832)*rr, y + Math.sin((k + 1)/8*6.2832)*rr, 1]);
-  const mk = () => { const sg = []; nd.forEach((p, i) => { sg.push([p[0], p[1], nd[(i + 1) % n][0], nd[(i + 1) % n][1]], ...oct(p[0], p[1], 9)); }); ed = n; const ch = Math.round(DV.network*9); for (let k = 0; k < ch; k++) { const a = nd[(k*2) % n], b = nd[(k*2 + 3 + k) % n]; sg.push([a[0], a[1], b[0], b[1]]); ed++; } if (DV.network > .5) { nd.forEach(p => sg.push([cxm, cym, p[0], p[1]])); sg.push(...oct(cxm, cym, 14)); ed += n; } [pts, hot] = along(sg); }; mk();
-  return {set:mk, tick:dt => ph += dt, fmt:() => ed + ' links', cap:() => 'A discussion network: more connections bring more perspectives, and more to reconcile. Pulses are ideas moving between people.', hot:j => hot[j] || (j*7 + Math.floor(ph*50)) % 61 < 2,
-   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t*1.3 + j)*.6; o.y = p[1] + Math.cos(t*1.1 + j)*.6; o.a = 1; }};
- },
- layout(){
-  const r = reg(); let pts, hot, cols, wv;
-  const mk = () => { const wpx = r.w*(.3 + .7*DV.layout), fx = r.x + (r.w - wpx)/2, fy = r.y + r.h*.02, fh = r.h*.92, sg = [], R = (x, y, w, h, hh) => sg.push([x, y, x + w, y, hh], [x + w, y, x + w, y + h, hh], [x + w, y + h, x, y + h, hh], [x, y + h, x, y, hh]);
-   wv = Math.round(320 + DV.layout*1100); cols = wv > 900 ? 3 : wv > 600 ? 2 : 1; R(fx, fy, wpx, fh); R(fx, fy, wpx, fh*.07); R(fx + 8, fy + fh*.1, wpx - 16, fh*.2, 1);
-   const g = 8, cw = (wpx - 16 - g*(cols - 1))/cols, ch = cols === 1 ? fh*.09 : fh*.14; for (let i = 0; i < 6; i++) R(fx + 8 + (i % cols)*(cw + g), fy + fh*.34 + Math.floor(i/cols)*(ch + g), cw, ch); [pts, hot] = along(sg); }; mk();
-  return {set:mk, fmt:() => wv + ' px, ' + cols + (cols > 1 ? ' columns' : ' column'), cap:() => 'A responsive layout: the same six cards reflow as the screen narrows. Orange is the hero block.', hot:j => hot[j],
-   at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t*1.2 + j)*.5; o.y = p[1] + Math.cos(t*1.1 + j)*.5; o.a = 1; }};
- },
- ropes(){
-  const r = reg(), gy = r.y + r.h*.94, xA = r.x + r.w*.14, xB = r.x + r.w*.84, aA = gy - r.h*.62, aB = gy - r.h*.5, nF = Math.floor(N*.3), nP = 130, nS = N - nF - nP, CY = 7, lc = new Int16Array(N); let sag = 0, spts = [];
-  const wire = u => [xA + (xB - xA)*u, aA - 6 + (aB - aA + 6)*u + sag*4*u*(1 - u)], ell = (cx, cy, a, b, j) => { const th = RX[j]*6.2832, rr = Math.sqrt(RY[j]); return [cx + Math.cos(th)*a*rr, cy + Math.sin(th)*b*rr]; };
-  const LS = [[0,0,-7,38],[0,0,7,38],[0,36,0,58],[0,58,-7,80],[0,58,8,80],[0,40,-10,52],[0,40,10,52]];
-  for (let k = 0; k < 8; k++) { const a = k/8*6.2832, b = (k + 1)/8*6.2832; LS.push([Math.cos(a)*6, 30 + Math.sin(a)*6, Math.cos(b)*6, 30 + Math.sin(b)*6], [Math.cos(a)*3, Math.sin(a)*3, Math.cos(b)*3, Math.sin(b)*3]); }
-  const PL = along(LS, nP)[0];
-  const mk = () => { sag = r.h*(.12 - .09*DV.ropes); const pA = aA + 78, pB = aB + 78, sg = [[xA - 150, gy, xB + 150, gy], [xA - 11, gy, xA - 9, aA - 30], [xA + 11, gy, xA + 9, aA - 30], [xB - 10, gy, xB - 8, aB - 26], [xB + 10, gy, xB + 8, aB - 26],
-    [xA - 30, pA, xA + 44, pA], [xA - 30, pA + 7, xA + 44, pA + 7], [xA + 44, pA, xA + 44, pA - 30], [xB - 44, pB, xB + 30, pB], [xB - 44, pB + 7, xB + 30, pB + 7], [xB - 44, pB, xB - 44, pB - 30]];
-   for (let i = 0; i < 60; i++) { const a = wire(i/60), b = wire((i + 1)/60); sg.push([a[0], a[1], b[0], b[1]]); } spts = along(sg, nS)[0]; }; mk();
-  return {set:mk, fmt:() => Math.round(60 + DV.ropes*40) + '% tension', cap:() => 'Zip line on the high ropes course: tension sets how much the line sags between the two platforms. The climber hangs from the line by a harness and pulley.', hot:j => j >= nF + nS,
-   at(j, t, o){ const c = t/CY, ci = Math.floor(c), f = (c - ci)*CY; if (lc[j] !== ci) { lc[j] = ci; o.snap = 1; } o.a = 1;
-    if (j < nF) { const e = j % 2 ? ell(xB, aB - 56, 60, 46, j) : ell(xA, aA - 62, 78, 56, j); o.x = e[0] + Math.sin(t + j)*.5; o.y = e[1]; o.a = .65; return; }
-    if (j < nF + nS) { const p = spts[j - nF]; o.x = p[0]; o.y = p[1]; return; }
-    const ride = Math.min(1, Math.max(0, (f - .6)/3.8)), e = ride*ride*(3 - 2*ride), us = 38/(xB - xA), ue = (xB - xA - 42)/(xB - xA), w = wire(us + (ue - us)*e), th = .16*Math.sin(f*2.4)*Math.sin(ride*Math.PI), p = PL[j - nF - nS], cs = Math.cos(th), sn = Math.sin(th);
-    o.x = w[0] + p[0]*cs - p[1]*sn; o.y = w[1] + p[0]*sn + p[1]*cs; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.fillStyle = C.mut; const m = wire(.5); g.fillText('zip line', m[0] - 20, m[1] - 12); }};
- },
+  /* Flow past a cylinder (radius 1, centre at the origin, flow left to right).
+     Streamlines: incompressible potential flow, psi = y - y/(x^2 + y^2).
+     Speed: |w| = |1 - 1/z^2|. Parcels are spaced evenly in time, and every streamline carries the same
+     flux, so they bunch at the stagnation point and stretch out over the shoulders (up to 2x).
+     Critical Mach (Karman-Tsien, Cp min = -3): about 0.40. Above it, local supersonic pockets end in shocks on the body.
+     Above Mach 1: bow shock from Billig's (1967) cylinder correlation, undisturbed flow ahead of it,
+     oblique-shock slowdown behind it, and post-shock temperature from the normal-shock relations.
+     Real cylinders shed an unsteady wake at any practical Reynolds number, so the wake always wavers. */
+  flow(){
+    const r = reg(), sc = r.w/8, cxm = r.x + r.w/2, cym = r.y + r.h/2, nL = 28, G = 300, nc = Math.floor(N*.07), GAM = 1.4;
+    const X0 = -4.5, X1 = 4.5, DX = (X1 - X0)/(G - 1), PS = [], YI = [], pu = new Float32Array(N).fill(-1), hz = new Uint8Array(N);
+    // incompressible streamline heights on a grid (bisection on the stream function)
+    for (let q = 0; q < nL; q++) {
+      const psi = (q < nL/2 ? q - nL/2 : q - nL/2 + 1)*.13, a = Math.abs(psi), ys = new Float32Array(G);
+      PS.push(psi);
+      for (let m = 0; m < G; m++) {
+        const x = X0 + m*DX;
+        let lo = Math.sqrt(Math.max(0, 1 - x*x)), hi = a + 2;
+        for (let k = 0; k < 32; k++) { const y = (lo + hi)/2; (y - y/(x*x + y*y) < a ? lo = y : hi = y); }
+        ys[m] = Math.sign(psi)*(lo + hi)/2;
+      }
+      YI.push(ys);
+    }
+    // critical Mach: where the Karman-Tsien corrected Cp min (-3 incompressible) meets the sonic Cp*
+    const cpStar = m => 2/(GAM*m*m)*(Math.pow((2 + (GAM - 1)*m*m)/(GAM + 1), GAM/(GAM - 1)) - 1);
+    const cpKT = m => { const b = Math.sqrt(1 - m*m); return -3/(b + m*m/(1 + b)*-1.5); };
+    let lo = .1, hi = .99;
+    for (let k = 0; k < 50; k++) { const m = (lo + hi)/2; cpKT(m) > cpStar(m) ? lo = m : hi = m; }
+    const MCR = (lo + hi)/2;
+    const T2T1 = mn => (2*GAM*mn*mn - (GAM - 1))*((GAM - 1)*mn*mn + 2)/((GAM + 1)*(GAM + 1)*mn*mn);
+    const Mn = () => .3 + DV.flow*5;
+    const regime = m => m < MCR ? 'subsonic' : m < 1 ? 'transonic' : m < 5 ? 'supersonic' : 'hypersonic';
 
- fourier(){
-  const r = reg(), X0 = r.x + r.w*.03, Wd = r.w*.94, cy = r.y + r.h*.5, amp = r.h*.26, nSq = Math.floor(N*.2), CM = 700, cum = new Float32Array(CM + 1), cum2 = new Float32Array(CM + 1), px = new Float32Array(CM + 1), py = new Float32Array(CM + 1), qy = new Float32Array(CM + 1); let ph = 0, tot = 1, tot2 = 1; const nT = () => 1 + Math.round(DV.fourier*24);
-  const build = () => { const n = nT(); let L = 0, L2 = 0; for (let i = 0; i <= CM; i++) { const th = i/CM*12.566 - ph; let s = 0; for (let k = 1; k < 2*n; k += 2) s += Math.sin(k*th)/k; px[i] = X0 + Wd*i/CM; py[i] = cy - amp*1.2732*s; qy[i] = cy - amp*(Math.sin(th) >= 0 ? 1 : -1); if (i) { L += Math.hypot(px[i] - px[i-1], py[i] - py[i-1]); L2 += Math.hypot(px[i] - px[i-1], qy[i] - qy[i-1]); } cum[i] = L; cum2[i] = L2; } tot = L; tot2 = L2; }; build();
-  const pick = (cm, ys, s) => { let a = 0, b = CM; while (b - a > 1) { const m = (a + b) >> 1; cm[m] < s ? a = m : b = m; } const f = (s - cm[a])/((cm[b] - cm[a]) || 1); return [px[a] + (px[b] - px[a])*f, ys[a] + (ys[b] - ys[a])*f]; };
-  return {set:build, tick:dt => { ph += dt*.5; build(); }, fmt:() => nT() + (nT() === 1 ? ' term' : ' terms'), cap:() => 'Fourier series: a square wave (orange) built from sine waves. Each term sharpens the corners; the overshoot never fully goes away.', hot:j => j < nSq,
-   at(j, t, o){ const g = (j*.6180339) % 1, p = j < nSq ? pick(cum2, qy, g*tot2) : pick(cum, py, g*tot); o.x = p[0]; o.y = p[1]; o.a = 1; },
-   draw(g){ g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.lineWidth = 1; [-1, 0, 1].forEach(v => { g.beginPath(); g.moveTo(X0, cy - v*amp); g.lineTo(X0 + Wd, cy - v*amp); g.stroke(); g.fillStyle = C.mut; g.fillText(v > 0 ? '+1' : v < 0 ? '-1' : '0', X0 - 22, cy - v*amp + 4); }); }};
- }
+    let SH = null, clock = 0, M_ = 1;
+    const XY = [], TT = [], TQ = new Float32Array(nL), hotQ = new Uint8Array(nL);
+    // per streamline: a fixed block of parcels (LINE, START, CAP), how many of them show (CNT), and how far round its loop it is (PH, 0-1)
+    const LINE = new Uint8Array(N), START = new Int32Array(nL), CAP = new Int32Array(nL), CNT = new Float32Array(nL), PH = new Float64Array(nL), avail = N - nc;
+    // Billig: standoff D/R = 0.386 e^(4.67/M^2), shock radius Rc/R = 1.386 e^(1.8/(M-1)^0.75), far field -> Mach angle
+    const shockX = y => SH ? -(1 + SH.D) + SH.Rc/(SH.tb*SH.tb)*(Math.sqrt(1 + y*y*SH.tb*SH.tb/(SH.Rc*SH.Rc)) - 1) : -Infinity;
+    const paths = m => {
+      M_ = m;
+      SH = m > 1 ? {D:.386*Math.exp(4.67/(m*m)), Rc:1.386*Math.exp(1.8/Math.pow(m - 1, .75)), tb:Math.tan(Math.asin(1/m))} : null;
+      for (let q = 0; q < nL; q++) {
+        const psi = PS[q], xsq = shockX(psi);
+        // where this streamline crosses the shock: local shock angle -> normal Mach -> slowdown and heating
+        let fs = 1, heat = 1;
+        if (SH) {
+          const dxdy = Math.abs(psi/SH.Rc)/Math.sqrt(1 + psi*psi*SH.tb*SH.tb/(SH.Rc*SH.Rc)), th = Math.atan2(1, dxdy), mn = m*Math.sin(th);
+          if (mn > 1) { const rn = ((GAM - 1)*mn*mn + 2)/((GAM + 1)*mn*mn); fs = Math.hypot(Math.cos(th), Math.sin(th)*rn); heat = T2T1(mn); }
+        }
+        hotQ[q] = heat > 2 ? 1 : 0;
+        const ys = new Float32Array(G), tc = new Float32Array(G);
+        let tsum = 0;
+        for (let i = 0; i < G; i++) {
+          const x = X0 + i*DX;
+          ys[i] = SH ? psi + (YI[q][i] - psi)*sm((x - xsq)/.4) : YI[q][i];   // undisturbed ahead of the shock
+          if (i) {
+            const xm = x - DX/2, ym = (ys[i] + ys[i - 1])/2, rr = xm*xm + ym*ym, r4 = rr*rr;
+            let v = Math.hypot(1 - (xm*xm - ym*ym)/r4, 2*xm*ym/r4);           // |1 - 1/z^2|
+            if (SH) v = xm < xsq ? 1 : v*fs;                                    // uniform ahead, slowed behind
+            tsum += Math.hypot(DX, ys[i] - ys[i - 1])/Math.max(v, .08);
+          }
+          tc[i] = tsum;
+        }
+        XY[q] = ys; TT[q] = tc; TQ[q] = tsum;
+      }
+    };
+    // Equal flux between streamlines -> equal parcels per unit time, so a slower line holds more parcels.
+    // Each line's block is sized for the largest share it takes at any Mach, so turning the dial never
+    // moves a parcel to another line: a block just shows more or fewer of its parcels.
+    const SHR = new Float64Array(nL);
+    for (let i = 0; i <= 40; i++) { paths(.3 + i/40*5); const tot = TQ.reduce((a, b) => a + b, 0); for (let q = 0; q < nL; q++) SHR[q] = Math.max(SHR[q], TQ[q]/tot); }
+    const SUM = SHR.reduce((a, b) => a + b, 0);
+    for (let q = 0, acc = 0; q < nL; q++) { CAP[q] = q === nL - 1 ? avail - acc : Math.floor(avail*SHR[q]/SUM); START[q] = acc; LINE.fill(q, acc, acc + CAP[q]); acc += CAP[q]; }
+    const mk = () => {
+      paths(Mn());
+      const tot = TQ.reduce((a, b) => a + b, 0);
+      for (let q = 0; q < nL; q++) CNT[q] = Math.min(CAP[q], avail/SUM*TQ[q]/tot);
+    };
+    mk();
+    const T21axis = () => M_ > 1 ? T2T1(M_) : 1;
+    return {
+      set: mk,
+      tick: dt => {
+        // advance each line as a fraction of its own loop, so a change in loop time (the dial) doesn't jump parcels along
+        const s = dt*(.27 + 1.26*DV.flow);
+        clock += s;
+        for (let q = 0; q < nL; q++) PH[q] = (PH[q] + s/TQ[q]) % 1;
+      },
+      fmt: () => 'Mach ' + M_.toFixed(1) + ', ' + regime(M_),
+      cap: () => {
+        const m = M_;
+        return m < MCR ? 'Subsonic flow round a cylinder, illustrative: parcels slow at the nose and speed up over the top.'
+          : m < 1 ? 'Transonic: the flow over the top goes supersonic and ends in shocks on the body (orange).'
+          : m < 5 ? 'Supersonic: a bow shock stands ahead of the body, and the gas upstream gets no warning of it.'
+          : `Hypersonic: the shock hugs the body and the gas behind it reaches about ${T21axis().toFixed(1)}× the free-stream temperature (orange).`;
+      },
+      hot: j => j < nc || hz[j] === 1,
+      at(j, t, o){
+        if (j < nc) { const a = j/nc*6.2832 + clock*.05; o.x = cxm + Math.cos(a)*sc; o.y = cym + Math.sin(a)*sc; o.a = 1; return; }
+        const k = j - nc, q = LINE[k], s = k - START[q], n = CNT[q], tc = TT[q];
+        const u = (PH[q] + Math.min(s/n, 1)) % 1, tt = u*TQ[q];   // parcels evenly spaced in time; spare ones wait, hidden, on the first
+        let a = 0, b = G - 1;
+        while (b - a > 1) { const mid = (a + b) >> 1; tc[mid] < tt ? a = mid : b = mid; }
+        const f = (tt - tc[a])/((tc[b] - tc[a]) || 1), x = X0 + (a + f)*DX;
+        let y = XY[q][a] + (XY[q][b] - XY[q][a])*f;
+        if (x > 1) y += Math.sin(t*6 + j*1.9)*Math.min(1, (x - 1)/1.5)*(M_ > 1 ? Math.min(.22, .08 + .05*(M_ - 1)) : .08);   // unsteady wake
+        hz[j] = SH && hotQ[q] && x > shockX(PS[q]) && x < .2 ? 1 : 0;                                                        // hot shock layer
+        if (pu[j] >= 0 && Math.abs(u - pu[j]) > .5) o.snap = 1;   // wrapped to the start (the dial only nudges parcels along)
+        pu[j] = u;
+        o.x = cxm + x*sc; o.y = cym + y*sc; o.a = Math.min(1, (x - X0)/.5, (X1 - x)/.5, Math.max(0, n - s));   // last parcel fades with the count
+      },
+      draw(g){
+        const m = M_;
+        g.font = '11px IBM Plex Mono'; g.strokeStyle = C.sig; g.fillStyle = C.sig;
+        if (m >= MCR && m < 1) {
+          // transonic: shocks standing on the shoulders, growing as Mach rises
+          const L = .2 + .9*(m - MCR)/(1 - MCR);
+          g.lineWidth = 2;
+          [-1, 1].forEach(sg => { const ph = sg*80*Math.PI/180, cx_ = Math.cos(ph), cy_ = -Math.sin(ph); g.beginPath(); g.moveTo(cxm + cx_*sc, cym + cy_*sc); g.lineTo(cxm + cx_*(1 + L)*sc, cym + cy_*(1 + L)*sc); g.stroke(); });
+          g.fillText('shocks on the body', cxm + .3*sc, cym - (2 + L)*sc);
+          return;
+        }
+        if (!SH) return;
+        g.lineWidth = 1.6; g.setLineDash([5, 5]); g.beginPath();
+        let started = false, top = null;
+        for (let y = -2.6; y <= 2.601; y += .05) {
+          const x = shockX(y); if (x < X0) { started = false; continue; }
+          const px = cxm + x*sc, py = cym + y*sc;
+          started ? g.lineTo(px, py) : g.moveTo(px, py); started = true;
+          if (!top) top = [px, py];
+        }
+        g.stroke(); g.setLineDash([]);
+        if (top) g.fillText('bow shock', top[0] + 8, top[1]);
+        else g.fillText(`← bow shock ${(1 + SH.D).toFixed(0)} radii ahead`, cxm + X0*sc, cym - 2.4*sc);
+      }
+    };
+  },
+
+  /* Satellite QKD: the uptime vs loss trade-off.
+     True-scale physics: ground stations 1,200 km apart, link needs 15 degrees elevation at both.
+     Higher orbit -> longer shared view (uptime) but a longer slant range (more beam loss).
+     Key per day ~ (share of time in view) / range^2 peaks at an intermediate altitude.
+     The satellite crosses the sky at its true angular speed relative to the ground: fast in LEO, still at GEO. */
+  qkd(){
+    const r = reg(), DY = W > 820 ? r.h*.12 : 0, cxm = r.x + r.w/2, R = r.w*.62, top = r.y + r.h*.62 + DY, cE = top + R;   // DY: sit lower on desktop   // smaller Earth, kept inside the figure area
+    const nE = Math.floor(N*.2), nS = 70, nSt = 36, nB = N - nE - nS - 2*nSt, pu = new Float32Array(N), rb = Float32Array.from({length:N}, rnd);
+    const earth = x => cE - Math.sqrt(R*R - (x - cxm)*(x - cxm));
+    const xa = cxm - r.w*.3, xb = cxm + r.w*.3, stA = [xa, earth(xa)], stB = [xb, earth(xb)];
+    const RE = 6371, MU = 398600, WE = 7.2921e-5, GEO = 35700, EPS = 15*Math.PI/180, BETA = 600/RE;
+    const phys = h => {
+      const Rs = RE + h, half = Math.max(0, Math.acos(RE*Math.cos(EPS)/Rs) - EPS - BETA);
+      const rel = Math.sqrt(MU/(Rs*Rs*Rs)) - WE;                          // angular speed across the sky, rad/s
+      const up = h >= GEO || rel < 1e-7 ? Infinity : 2*half/rel;          // seconds both stations can see it, per pass
+      const duty = h >= GEO ? 1 : half/Math.PI;                           // share of the day in view
+      const L = Math.sqrt(RE*RE + Rs*Rs - 2*RE*Rs*Math.cos(BETA));        // slant range at mid-pass, km
+      return {up, L, rel, v:Math.sqrt(MU/Rs), key:duty/(L*L), frac:half/Math.acos(RE/Rs)};
+    };
+    const altOf = v => 400*Math.pow(90, v), REF = phys(500);
+    const CURVE = Array.from({length:61}, (_, i) => phys(altOf(i/60)).key/REF.key), CMAX = Math.max(...CURVE), BEST = CURVE.indexOf(CMAX);
+    const sdB = v => (v < 0 ? '\u2212' : '+') + Math.abs(v).toFixed(1) + ' dB';
+    const fmtT = s => s >= 3600 ? (s/3600).toFixed(1) + ' h' : (s/60).toFixed(1) + ' min';
+    const cls = h => h < 2000 ? 'LEO' : h < GEO ? 'MEO' : 'GEO';
+    let alt = 500, P = REF, db = 0, eta = 1, Ro = R, A = .5, win = .1, ph = 0, vis = 1;
+    const mk = () => {
+      alt = altOf(DV.qkd); P = phys(alt);
+      db = 20*Math.log10(P.L/REF.L);                                      // extra beam-spreading loss vs 500 km
+      eta = Math.max(.03, Math.pow(10, -db/10));
+      Ro = R + 30 + (r.h*.5 - 30)*DV.qkd;
+      A = Math.asin(Math.min(1, r.w*.5/Ro)); win = A*P.frac;
+      vis = clamp(P.rel/REF.rel, 0, 1);                                   // relative to a 500 km orbit
+    };
+    mk();
+    const sat = () => { const a = alt >= GEO || RM ? 0 : -A + 2*A*(ph % 1);   // reduced motion: parked overhead, link visible
+      return [cxm + Ro*Math.sin(a), cE - Ro*Math.cos(a), a]; };
+    return {
+      set: mk, tick: dt => ph += dt*.25*vis, capInside: W > 820,
+      fmt: () => `${Math.round(alt).toLocaleString('en-GB')} km (${cls(alt)}), ${sdB(db)}`,
+      cap: () => `Satellite QKD, illustrative: higher orbits stay in view longer (orange arc) but lose more photons. Key per day peaks near ${Math.round(altOf(BEST/60)/100)*100} km.`,
+      hot: j => (j >= nE && j < nE + nS + 2*nSt) || (j >= nE + nS + 2*nSt && j % 9 === 0),
+      at(j, t, o){
+        o.a = 1;
+        if (j < nE) { const x = r.x + j/nE*r.w; o.x = x; o.y = earth(x) + Math.sin(j)*.8; return; }
+        const s = sat();
+        if (j < nE + nS) {
+          const k = j - nE;
+          const p = k < 20 ? rectp(s[0] - 8, s[1] - 6, 16, 12, k/20) : k < 45 ? rectp(s[0] - 38, s[1] - 3, 26, 6, (k - 20)/25) : rectp(s[0] + 12, s[1] - 3, 26, 6, (k - 45)/25);
+          o.x = p[0]; o.y = p[1]; o.tight = 1; return;
+        }
+        if (j < nE + nS + 2*nSt) {
+          const k = j - nE - nS, st = k < nSt ? stA : stB, u = (k % nSt)/nSt*3, i = Math.floor(u), f = u - i;
+          const V = [[st[0], st[1] - 16], [st[0] - 10, st[1]], [st[0] + 10, st[1]]], a = V[i % 3], b = V[(i + 1) % 3];
+          o.x = a[0] + (b[0] - a[0])*f; o.y = a[1] + (b[1] - a[1])*f; return;
+        }
+        // photons: only while both stations can see the satellite
+        const bj = j - nE - nS - 2*nSt, tg = bj % 2 ? stB : stA, u0 = Math.floor(bj/2)/(nB/2) + t*.6, p = u0 - Math.floor(u0);
+        if (p < pu[j] - .5) o.snap = 1;
+        pu[j] = p;
+        const sp = (rb[j] - .5)*(3 + DV.qkd*60*p), dx = tg[0] - s[0], dy = tg[1] - s[1], L = Math.hypot(dx, dy);
+        o.x = s[0] + dx*p - dy/L*sp; o.y = s[1] + dy*p + dx/L*sp;
+        o.a = Math.abs(s[2]) < win && rb[(j*13) % N] < Math.pow(eta, p) ? 1 : 0;
+      },
+      draw(g){
+        g.font = '11px IBM Plex Mono'; g.lineWidth = 1;
+        // Earth: a soft fill, with the caption set inside it on desktop
+        g.save(); g.beginPath(); g.rect(r.x, r.y, r.w, H); g.clip();
+        g.beginPath(); g.arc(cxm, cE, R, 0, 6.2832); g.fillStyle = C.grid; g.globalAlpha = .22; g.fill(); g.globalAlpha = 1; g.restore();
+        if (W > 820) {
+          const depth = 70, mw = Math.min(r.w*.46, 2*Math.sqrt(2*R*depth) - 40);
+          drawCaption(g, 'Fig. ' + FIG.qkd + '.', this.cap(), cxm - mw/2, top + depth, mw, 15);
+        }
+        // orbit, and the arc where both stations can see the satellite
+        g.strokeStyle = C.grid; g.setLineDash([3, 5]); g.beginPath(); g.arc(cxm, cE, Ro, -Math.PI/2 - A, -Math.PI/2 + A); g.stroke(); g.setLineDash([]);
+        g.strokeStyle = C.sig; g.lineWidth = 2.5; g.beginPath(); g.arc(cxm, cE, Ro, -Math.PI/2 - win, -Math.PI/2 + win); g.stroke(); g.lineWidth = 1;
+        // drawn last (below) so the chart backdrop never covers it
+        const inView = () => { g.textAlign = 'center'; g.fillStyle = C.sig; g.fillText('in view of both: ' + (alt >= GEO ? 'always (geostationary)' : fmtT(P.up) + ' a pass'), cxm, cE - Ro - 12); g.textAlign = 'left'; };
+        g.fillStyle = C.mut; g.fillText('Alice', stA[0], stA[1] + 22); g.fillText('Bob', stB[0], stB[1] + 22);
+        // key-per-pass curve: uptime / range^2
+        const bx = r.x, by = r.y + 22 + DY, bw = r.w*.34, bh = r.h*.2, X = i => bx + i/60*bw, Y = v => by + bh - v/CMAX*(bh - 20);   // headroom keeps the title clear of the curve
+        g.fillStyle = C.bg; g.globalAlpha = .92; g.fillRect(bx - 8, by - 22, bw + 16, bh + 42); g.globalAlpha = 1;   // backdrop so high orbits pass behind the chart
+        const narrow = r.w < 600;
+        g.textAlign = 'left'; g.fillStyle = C.ink; g.fillText(narrow ? 'key per day' : 'key per day  (time in view ÷ distance²)', bx, by - 8);
+        g.strokeStyle = C.grid; g.beginPath(); g.moveTo(bx, by); g.lineTo(bx, by + bh); g.lineTo(bx + bw, by + bh); g.stroke();
+        g.strokeStyle = C.ink; g.lineWidth = 1.5; g.beginPath(); CURVE.forEach((v, i) => g.lineTo(X(i), Y(v))); g.stroke(); g.lineWidth = 1;
+        const vx = h => bx + Math.log(h/400)/Math.log(90)*bw;
+        g.fillStyle = C.mut; g.strokeStyle = C.grid;
+        g.beginPath(); g.moveTo(vx(2000), by + bh); g.lineTo(vx(2000), by + bh + 4); g.stroke();
+        g.textAlign = 'center'; g.fillText('LEO', (bx + vx(2000))/2, by + bh + 14); g.fillText('MEO', (vx(2000) + bx + bw)/2, by + bh + 14);
+        g.textAlign = 'right'; g.fillText('GEO', bx + bw, by + bh + 14);
+        g.textAlign = 'center'; g.fillText('best', X(BEST), Y(CMAX) - 6);
+        const cv0 = phys(alt).key/REF.key;
+        g.fillStyle = C.sig; g.beginPath(); g.arc(X(DV.qkd*60), Y(cv0), 4, 0, 6.2832); g.fill();
+        // stats
+        g.textAlign = 'right'; g.fillStyle = C.ink;
+        const km = Math.round(P.L).toLocaleString('en-GB');
+        if (r.h < 220) { g.fillStyle = C.sig; g.fillText(`${cls(alt)} \u00b7 ${P.v.toFixed(1)} km/s`, r.x + r.w, by); inView(); return; }   // short phone band: the dial readout already gives altitude and loss
+        g.fillText(narrow ? `range ${km} km` : `slant range ${km} km`, r.x + r.w, by);
+        g.fillText(narrow ? `loss ${sdB(db)}` : `beam loss ${sdB(db)} vs 500 km`, r.x + r.w, by + 16);
+        g.fillText(narrow ? `key ${cv0.toFixed(2)}×` : `key per day ${cv0.toFixed(2)}× the 500 km value`, r.x + r.w, by + 32);
+        g.fillStyle = C.sig; g.fillText(narrow ? `${cls(alt)} · ${P.v.toFixed(1)} km/s` : `${cls(alt)} · orbital speed ${P.v.toFixed(1)} km/s`, r.x + r.w, by + 48);
+        inView();
+      }
+    };
+  },
+
+  /* Inverted Pratt truss: the heaviest-loaded member fails above 27.5 kg. */
+  truss(){
+    const r = reg(), b = r.y + r.h*.72, h = r.h*.34, x0 = r.x + r.w*.06, x1 = r.x + r.w*.94, n = 6, dx = (x1 - x0)/n;
+    const Bn = k => [x0 + k*dx, b], Tn = k => [x0 + k*dx, b - h], sg = [], wt = [], add = (s, w) => { sg.push(s); wt.push(w); };
+    add([x0, b, x1, b], .5); add([...Tn(1), ...Tn(n - 1)], .6); add([x0, b, ...Tn(1)], 1); add([x1, b, ...Tn(n - 1)], 1);
+    for (let k = 1; k < n; k++) add([...Tn(k), ...Bn(k)], .35);
+    for (let k = 1; k < n/2; k++) { add([...Tn(k), ...Bn(k + 1)], .8); add([...Tn(n - k), ...Bn(n - k - 1)], .8); }
+    sg.forEach(q => { q[1] = 2*b - h - q[1]; q[3] = 2*b - h - q[3]; });          // flip: inverted truss
+    const [pts, , idx] = along(sg), FAIL = .786, worst = wt.indexOf(Math.max(...wt));
+    let tb = -1;
+    return {
+      set: () => { if (DV.truss > FAIL) { if (tb < 0) tb = T; } else tb = -1; },
+      fmt: () => (DV.truss*35).toFixed(1) + ' kg of 27.5',
+      cap: () => DV.truss > FAIL ? 'Inverted Pratt truss: an end post buckles above 27.5 kg. The real bridge held 27.5 kg at 108.26 g.' : 'Inverted Pratt truss: orange members carry the most load. Turn it up until something gives.',
+      hot: j => DV.truss*wt[idx[j]] > .3,
+      at(j, t, o){
+        const p = pts[j], k = idx[j];
+        o.x = p[0]; o.y = p[1]; o.a = 1;
+        if (tb >= 0 && k === worst) { const q = T - tb; o.y += Math.min(420, 260*q*q); o.x += Math.sin(j)*q*18; o.a = Math.max(0, 1 - q*.7); }
+        else { const s = DV.truss*wt[k]*.9; o.x += Math.sin(t*30 + j)*s; o.y += Math.cos(t*27 + j)*s; }
+      }
+    };
+  },
+
+  /* UK Youth Rocketry Challenge: fly a payload to exactly 229 m, recover it under a parachute.
+     1D flight sim: 38 N motor for 1.6 s, Cd 0.6, drag 1/2 rho Cd A v^2, then a 0.6 m chute.
+     The dial sets launch mass (ballast), which is how the team tuned the apogee. */
+  arc(){
+    const r = reg(), TARGET = 229, HMAX = 320, S = clamp(r.h/420, .8, 1.3);
+    const gy = r.y + r.h - 18, tx = r.x + r.w*.06, px0 = r.x + r.w*(r.w < 600 ? .3 : .22), pw = r.x + r.w - 8 - px0;
+    const Yh = h => gy - h/HMAX*(gy - r.y - 112*S);
+    const sim = m => {
+      const A = Math.PI*.033*.033, Ac = Math.PI*.3*.3, cd = .6, dt = .02, pts = [[0, 0]];
+      let h = 0, v = 0, t = 0, ap = 0, tap = 0, up = true;
+      while (t < 200) {
+        const a = up ? ((t < 1.6 ? 38 : 0) - .5*1.225*cd*A*v*Math.abs(v))/m - 9.81 : (.5*1.225*1.5*Ac*v*v)/m - 9.81;
+        v += a*dt; h += v*dt; t += dt;
+        if (up && t > 1.6 && v <= 0) { up = false; ap = h; tap = t; }
+        if (h <= 0 && t > 1) { pts.push([t, 0]); break; }
+        pts.push([t, h]);
+      }
+      return {pts, ap, tap, tl:t, dt};
+    };
+    const nG = 240, nR = 240, nC = 170, nP = 110, nT = N - nG - nR - nC - nP;
+    const iR = nG, iC = iR + nR, iP = iC + nC, iT = iP + nP;
+    // static: ground and launch rail
+    const GP = along([[r.x, gy, r.x + r.w, gy], [tx + 6*S, gy, tx + 6*S, gy - 90*S]], nG)[0];   // launch rail touching the body
+    // rocket (nose up, origin at the base) and parachute, in local px
+    const ROCK = [[-5, 0, -5, -56], [5, 0, 5, -56], [-5, 0, 5, 0], [-5, -56, 0, -76], [5, -56, 0, -76], [-5, -40, 5, -40],
+      [-5, -14, -13, -2], [-13, -2, -13, 4], [-13, 4, -5, 0], [5, -14, 13, -2], [13, -2, 13, 4], [13, 4, 5, 0]];
+    const CHUTE = [];
+    for (let k = 0; k < 12; k++) { const a = Math.PI + k/12*Math.PI, b = Math.PI + (k + 1)/12*Math.PI; CHUTE.push([Math.cos(a)*28, -112 + Math.sin(a)*16, Math.cos(b)*28, -112 + Math.sin(b)*16]); }
+    CHUTE.push([-28, -112, 28, -112], [-28, -112, 0, -76], [28, -112, 0, -76], [-10, -112, 0, -76], [10, -112, 0, -76]);
+    const sc = segs => segs.map(q => q.map(v => v*S));
+    const RP = along(sc(ROCK), nR)[0], CP = along(sc(CHUTE), nC)[0];
+    let mass = .65, F = null, TX = new Float32Array(nT), TY = new Float32Array(nT), TT = new Float32Array(nT);
+    const mk = () => {
+      mass = .55 + .25*DV.arc; F = sim(mass);
+      // trajectory particles spread evenly along the altitude-time curve in the plot
+      const P = F.pts.map(([t, h]) => [px0 + t/F.tl*pw, Yh(h), t]), L = [0];
+      for (let i = 1; i < P.length; i++) L.push(L[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]));
+      const tot = L[L.length - 1];
+      for (let k = 0, i = 1; k < nT; k++) {
+        const d = (k + .5)/nT*tot;
+        while (i < P.length - 1 && L[i] < d) i++;
+        const f = (d - L[i - 1])/((L[i] - L[i - 1]) || 1);
+        TX[k] = P[i - 1][0] + (P[i][0] - P[i - 1][0])*f; TY[k] = P[i - 1][1] + (P[i][1] - P[i - 1][1])*f; TT[k] = P[i - 1][2] + (P[i][2] - P[i - 1][2])*f;
+      }
+    };
+    mk();
+    // animation: on the pad, ascent (fast), descent (compressed), hold, repeat
+    const CY = 9.5;
+    const flightT = t => {
+      if (RM) return F.tl;
+      const f = t % CY;
+      return f < .7 ? 0 : f < 3.2 ? (f - .7)/2.5*F.tap : f < 7.2 ? F.tap + (f - 3.2)/4*(F.tl - F.tap) : F.tl;
+    };
+    const hAt = t => { const i = Math.min(F.pts.length - 1, Math.floor(t/F.dt)); return F.pts[i][1]; };
+    return {
+      set: mk,
+      fmt: () => `${Math.round(mass*1000)} g, apogee ${Math.round(F.ap)} m`,
+      cap: () => { const e = Math.round(F.ap - TARGET); return `Rocket flight, illustrative: at ${Math.round(mass*1000)} g it reaches ${Math.round(F.ap)} m, ${Math.abs(e)} m ${e >= 0 ? 'above' : 'below'} the 229 m target.`; },
+      hot: j => (j >= iC && j < iT),
+      at(j, t, o){
+        const ft = flightT(t), h = hAt(ft), ry = Yh(h), desc = ft >= F.tap;
+        o.a = 1;
+        if (j < iR) { const p = GP[j]; o.x = p[0]; o.y = p[1]; return; }
+        if (j < iC) { const p = RP[j - iR]; o.x = tx + p[0]; o.y = ry + p[1]; o.tight = 1; return; }
+        if (j < iP) { const p = CP[j - iC]; o.x = tx + p[0]; o.y = ry + p[1]; o.tight = 1; o.a = desc && ft < F.tl + 1 ? 1 : 0; if (!desc) o.snap = 1; return; }
+        if (j < iT) {                                     // exhaust plume while the motor burns
+          const k = j - iP, burn = ft > 0 && ft < 1.6;
+          o.x = tx + (RX[k] - .5)*10*S*(1 + RY[k]); o.y = ry + (4 + RY[k]*34*(.6 + .4*Math.sin(t*40 + k)))*S;
+          o.a = burn ? 1 : 0; if (!burn) o.snap = 1; return;
+        }
+        const k = j - iT; o.x = TX[k]; o.y = TY[k]; o.a = TT[k] <= ft ? .9 : 0;
+      },
+      draw(g, t){
+        const ft = flightT(t), e = Math.round(F.ap - TARGET);
+        g.font = '11px IBM Plex Mono'; g.lineWidth = 1;
+        // axes
+        g.strokeStyle = C.grid; g.beginPath(); g.moveTo(px0, Yh(HMAX)); g.lineTo(px0, gy); g.stroke();
+        g.fillStyle = C.mut; g.textAlign = 'right';
+        [0, 100, 200, 300].forEach(v => g.fillText(v + ' m', px0 - 6, Yh(v) + 4));
+        g.textAlign = 'left'; g.fillText('0 s', px0 + 2, gy + 14);
+        g.textAlign = 'right'; g.fillText(F.tl.toFixed(0) + ' s', px0 + pw, gy + 14); g.textAlign = 'left';
+        // target altitude
+        g.strokeStyle = C.sig; g.setLineDash([5, 5]); g.beginPath(); g.moveTo(r.x, Yh(TARGET)); g.lineTo(px0 + pw, Yh(TARGET)); g.stroke(); g.setLineDash([]);
+        g.fillStyle = C.sig; g.textAlign = 'right'; g.fillText('target 229 m', px0 + pw, Yh(TARGET) - 6); g.textAlign = 'left';
+        // phase label beside the rocket
+        const phase = ft <= 0 ? 'on the pad' : ft < 1.6 ? 'motor burn' : ft < F.tap ? 'coasting' : ft < F.tl ? 'parachute' : 'landed';
+        g.fillStyle = C.ink; g.textAlign = 'center'; g.fillText(phase, tx, Yh(hAt(ft)) - (ft >= F.tap ? 136 : 86)*S); g.textAlign = 'left';   // above the rocket, clear of the axis
+        // apogee
+        if (ft >= F.tap) {
+          const x = px0 + F.tap/F.tl*pw, y = Yh(F.ap);
+          g.fillStyle = C.sig; g.beginPath(); g.arc(x, y, 4, 0, 6.2832); g.fill();
+          g.fillText(`apogee ${Math.round(F.ap)} m (${e >= 0 ? '+' : ''}${e})`, x + 8, y - (Math.abs(y - Yh(TARGET)) < 14 ? 16 : 6));
+        }
+      }
+    };
+  },
+
+  /* Little Man Computer, simplified: components joined by wires, pulses follow the wires. */
+  cpu(){
+    const r = reg(), pt = (fx, fy) => [r.x + fx*r.w, r.y + fy*r.h];
+    const PROG = [['LDA', 5, 'LDA 90'], ['ADD', 6, 'ADD 91'], ['STA', 7, 'STA 92'], ['OUT', -1, 'OUT'], ['BRA', 0, 'BRA 00']];
+    const MEM = [['00', 'LDA 90'], ['01', 'ADD 91'], ['02', 'STA 92'], ['03', 'OUT'], ['04', 'BRA 00'], ['90', '7'], ['91', '5'], ['92', '12']];
+    const ACC_AFTER = [7, 12, 12, 12, 12];
+    const M1 = .28, BUS = .37, CH = .92/MEM.length, cy = a => .04 + (a + .5)*CH;
+    const BOX = {PC:[.45, .04, .62, .20], IR:[.45, .30, .62, .46], ACC:[.78, .62, .98, .80], OUT:[.78, .04, .98, .20]};
+    const ALU = [[.45, .58], [.62, .65], [.62, .77], [.45, .84]];
+    const segs = [], tags = [];
+    const line = (ps, tag) => { for (let i = 1; i < ps.length; i++) { const a = pt(...ps[i - 1]), b = pt(...ps[i]); segs.push([a[0], a[1], b[0], b[1]]); tags.push(tag); } };
+    const box = (b, tag) => line([[b[0], b[1]], [b[2], b[1]], [b[2], b[3]], [b[0], b[3]], [b[0], b[1]]], tag);
+    MEM.forEach((_, i) => box([0, .04 + i*CH + .008, M1, .04 + (i + 1)*CH - .008], 'm' + i));
+    for (const k in BOX) box(BOX[k], k);
+    line([...ALU, ALU[0]], 'ALU');
+    [
+      [[BUS, cy(0)], [BUS, cy(7)]],                                  // bus spine
+      ...MEM.map((_, i) => [[M1, cy(i)], [BUS, cy(i)]]),             // mailbox taps
+      [[BUS, .12], [.45, .12]], [[BUS, .38], [.45, .38]], [[BUS, .68], [.45, .68]],
+      [[.62, .71], [.78, .71]],                                      // ALU -> ACC
+      [[.88, .80], [.88, .90], [.535, .90], [.535, .805]],           // ACC -> ALU feedback
+      [[.88, .62], [.88, .20]],                                      // ACC -> OUT
+      [[.80, .62], [.80, .52], [BUS, .52]],                          // ACC -> bus (store)
+      [[.535, .30], [.535, .20]]                                     // IR -> PC (branch)
+    ].forEach(w => line(w, 'w'));
+    const NB = 90, NS = N - NB, [pts, , idx] = along(segs, NS);
+    const R = ps => poly(ps.map(q => pt(...q)));
+    const ROUTES = PROG.map((ins, pc) => {
+      const a = ins[1], fetch = R([[.45, .12], [BUS, .12], [BUS, cy(pc)], [M1, cy(pc)], [BUS, cy(pc)], [BUS, .38], [.45, .38]]);
+      let exec, tx;
+      if (ins[0] === 'LDA' || ins[0] === 'ADD') { exec = R([[M1, cy(a)], [BUS, cy(a)], [BUS, .68], [.45, .68], [.62, .71], [.78, .71]]); tx = ['m' + a, 'ALU', 'ACC']; }
+      else if (ins[0] === 'STA') { exec = R([[.80, .62], [.80, .52], [BUS, .52], [BUS, cy(a)], [M1, cy(a)]]); tx = ['ACC', 'm' + a]; }
+      else if (ins[0] === 'OUT') { exec = R([[.88, .62], [.88, .20]]); tx = ['ACC', 'OUT']; }
+      else { exec = R([[.535, .30], [.535, .20]]); tx = ['IR', 'PC']; }
+      return {fetch, exec, tf:new Set(['PC', 'm' + pc, 'IR']), tx:new Set(tx)};
+    });
+    const NONE = new Set(), S = {route:null, prog:0, tags:NONE, label:'', pc:0, f:0};
+    let ph = 0;
+    const update = () => {
+      const s = Math.floor(ph), pc = s % 5, f = ph - s, R0 = ROUTES[pc];
+      S.pc = pc; S.f = f;
+      if (f < .45) { S.route = R0.fetch; S.prog = f/.45; S.tags = R0.tf; S.label = 'FETCH  mailbox 0' + pc; }
+      else if (f >= .5 && f < .95) { S.route = R0.exec; S.prog = (f - .5)/.45; S.tags = R0.tx; S.label = 'EXECUTE  ' + PROG[pc][2]; }
+      else { S.route = null; S.tags = NONE; }
+    };
+    update();
+    return {
+      tick: dt => { ph += dt*(.1 + DV.cpu*1.9); update(); },
+      fmt: () => (.1 + DV.cpu*1.9).toFixed(1) + ' steps/s',
+      cap: () => 'Little Man Computer, simplified: each instruction is fetched along the bus, then executed. Orange marks the parts in use.',
+      hot: j => j >= NS ? 1 : S.tags.has(tags[idx[j]]) ? 1 : 0,
+      at(j, t, o){
+        if (j < NS) { const p = pts[j]; o.x = p[0]; o.y = p[1]; o.a = tags[idx[j]] === 'w' ? .45 : 1; return; }
+        const k = (j - NS)/NB, rt = S.route || ROUTES[S.pc].exec, u = S.route ? S.prog*1.3 - k*.3 : 1, p = rt(u);
+        o.x = p[0]; o.y = p[1]; o.tight = 1;
+        if (S.route && u > 0 && u < 1) o.a = 1; else { o.a = 0; o.snap = 1; }
+      },
+      draw(g){
+        const {pc, f} = S;
+        g.font = '11px IBM Plex Mono'; g.textBaseline = 'middle';
+        MEM.forEach((m, i) => {
+          const y = pt(0, cy(i))[1];
+          g.textAlign = 'left'; g.fillStyle = C.mut; g.fillText(m[0], r.x + 8, y);
+          g.textAlign = 'right'; g.fillStyle = C.ink; g.fillText(m[1], pt(M1, 0)[0] - 8, y);
+        });
+        g.textAlign = 'left'; g.fillStyle = C.mut;
+        g.fillText('memory', r.x, pt(0, .04)[1] - 10);
+        const vals = {
+          PC: String(f < .45 ? pc : (pc + 1) % 5).padStart(2, '0'),
+          IR: PROG[f < .45 ? (pc + 4) % 5 : pc][2],
+          ACC: String(ACC_AFTER[f > .75 ? pc : (pc + 4) % 5]),
+          OUT: '12'
+        };
+        for (const k in BOX) {
+          const b = BOX[k], [x0, y0] = pt(b[0], b[1]), y1 = pt(0, b[3])[1];
+          g.fillStyle = C.mut; g.fillText(k, x0, y0 - 10);
+          g.fillStyle = C.ink; g.fillText(vals[k], x0 + 8, (y0 + y1)/2);
+        }
+        g.fillStyle = C.mut;
+        g.fillText('ALU', ...pt(.49, .71));
+        g.fillText('bus', ...pt(BUS + .01, .95));
+        g.fillStyle = C.sig; g.fillText(S.label, ...pt(.45, .97));
+        g.textBaseline = 'alphabetic';
+      }
+    };
+  },
+
+  /* Metroidvania: platforms and a jump arc. */
+  game(){
+    const r = reg(), np = 6, nC = 70, seq = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1];
+    const PL = Array.from({length:np}, (_, i) => [r.x + r.w*(.03 + i*.16), r.y + r.h*(.38 + (i % 3)*.18 - (i === 4 ? .12 : 0)), r.w*.12]);
+    const [pts] = along(PL.map(p => [p[0], p[1], p[0] + p[2], p[1]])), off = Array.from({length:nC}, () => [(rnd() - .5)*9, (rnd() - .5)*14]);
+    let ph = 0;
+    return {
+      tick: dt => ph += dt*1.1,
+      fmt: () => 'jump ' + Math.round(DV.game*100) + '%',
+      cap: () => 'Metroidvania prototype: platforms and a jump arc. Jump power sets how far apart rooms can be.',
+      hot: j => j >= N - nC,
+      at(j, t, o){
+        o.a = 1;
+        if (j >= N - nC) {
+          const s = Math.floor(ph), f = ph - s, A = PL[seq[s % 10]], Bq = PL[seq[(s + 1) % 10]], k = f < .25 ? 0 : (f - .25)/.75, apx = 30 + DV.game*170, w = off[j - (N - nC)];
+          o.x = A[0] + A[2]*.5 + (Bq[0] + Bq[2]*.5 - A[0] - A[2]*.5)*k + w[0];
+          o.y = A[1] + (Bq[1] - A[1])*k - 4*apx*k*(1 - k) - 14 + w[1];
+          return;
+        }
+        const p = pts[j]; o.x = p[0]; o.y = p[1];
+      }
+    };
+  },
+
+  /* Aircraft operating lease, illustrative: a $50m narrowbody on a 12-year lease at 7%.
+     Level monthly rent recovers the price less the present value of the residual. Each month it pays a 7% return
+     on the value still tied up in the aircraft, and the rest pays off value: the value the airline uses up.
+     That part grows each year, because less value is left to earn a return on. The aircraft flies along the
+     12 years, shedding the value used up into each year's bar; what stays aboard is the residual (orange). */
+  lease(){
+    const r = reg(), PRICE = 50, YRS = 12, RATE = .07, Y0 = 1.2, YRDUR = .62, HOLD = 2.6, RW = 1.9, TF = .65;
+    const FLY = YRS*YRDUR, END = Y0 + FLY, CYC = END + HOLD + RW, narrow = r.w < 600, PW = Math.min(r.w*(narrow ? .38 : .3), 300);
+    // aircraft side view (nose right), rasterised then sampled like the name text; points relative to its centre
+    const plane = (() => {
+      const c = document.createElement('canvas'), g = c.getContext('2d'), CW = 1000, CH = 240;
+      c.width = CW; c.height = CH; g.fillStyle = '#000';
+      const poly2 = ps => { g.beginPath(); ps.forEach((q, i) => i ? g.lineTo(...q) : g.moveTo(...q)); g.closePath(); g.fill(); };
+      g.beginPath();                                                     // fuselage with tail upsweep
+      g.moveTo(40, 112); g.lineTo(840, 112);
+      g.bezierCurveTo(925, 112, 975, 140, 968, 158);
+      g.bezierCurveTo(960, 172, 905, 176, 840, 176);
+      g.lineTo(300, 176); g.bezierCurveTo(200, 176, 110, 150, 40, 124);
+      g.closePath(); g.fill();
+      poly2([[44, 114], [78, 10], [122, 10], [200, 114]]);               // fin
+      poly2([[48, 132], [160, 130], [178, 142], [62, 144]]);             // tailplane
+      g.fillRect(500, 170, 44, 14);                                      // pylon
+      g.beginPath(); g.ellipse(530, 196, 64, 19, 0, 0, 6.2832); g.fill();   // engine
+      g.globalCompositeOperation = 'destination-out';
+      for (let x = 230; x < 820; x += 24) g.fillRect(x, 128, 9, 11);      // cabin windows
+      poly2([[872, 124], [922, 124], [944, 140], [880, 140]]);           // cockpit
+      const d = g.getImageData(0, 0, CW, CH).data, p = [], k = PW/CW;
+      for (let y = 0; y < CH; y += 4) for (let x = 0; x < CW; x += 4) if (d[(y*CW + x)*4 + 3] > 120) p.push([(x - CW/2)*k, (y - CH/2)*k]);
+      return {pts:p, h:CH*k};
+    })();
+    // the aircraft flies above the bars: over year k's bar during year k
+    const PH = plane.h, fy = r.y + 26 + PH/2, xs = r.x + PW/2, xe = r.x + r.w - PW/2, bw = (xe - xs)/YRS;
+    const ty = fy + PH/2 + 12, ly = ty + 22, top = ly + (narrow ? 30 : 16), gy = r.y + r.h*.98, uh = (gy - top)/6.5;
+    const lv = new Uint8Array(N), LAG = new Float32Array(N), BX = new Float32Array(N), BY = new Float32Array(N);
+    const BAL = new Float64Array(YRS + 1), PRIN = new Float64Array(YRS), I = RATE/12;
+    let R = 0, pmt = 0, rentYr = 0;
+    const valAt = y => { const c = Math.pow(1 + I, 12*y); return PRICE*c - pmt*(c - 1)/I; };   // value still tied up after y years
+    const mk = () => {
+      R = PRICE*(.1 + .6*DV.lease);
+      const v = Math.pow(1 + I, -YRS*12);
+      pmt = (PRICE - R*v)*I/(1 - v);                 // monthly rent that recovers price less PV of residual
+      rentYr = pmt*12;
+      for (let y = 0; y <= YRS; y++) BAL[y] = valAt(y);
+      for (let y = 0; y < YRS; y++) PRIN[y] = BAL[y] - BAL[y + 1];
+      // each particle is $50m/N of the aircraft: the first (price - residual) of it is used up, year by year, in order
+      for (let j = 0; j < N; j++) {
+        const u = RX[j]*PRICE;
+        if (u >= PRICE - R) { lv[j] = 0; continue; }  // stays: residual value
+        let y = 0;
+        while (y < YRS - 1 && PRICE - BAL[y + 1] <= u) y++;
+        const f = clamp((u - (PRICE - BAL[y]))/PRIN[y], 0, 1);
+        lv[j] = y + 1; LAG[j] = f;                    // leaves the aircraft f of the way through its year...
+        BX[j] = xs + (y + .15 + .7*RY[j])*bw;          // ...and lands in that year's bar, so the bar fills from the bottom
+        BY[j] = gy - 2 - clamp(f + ((j*.7548) % 1 - .5)*.06, 0, 1)*Math.max(0, PRIN[y]*uh - 4);
+      }
+    };
+    mk();
+    const fOf = t => RM ? END + .5 : t % CYC;
+    const cxAt = f => f < Y0 ? xs : f < END ? xs + (xe - xs)*(f - Y0)/FLY : f < END + HOLD ? xe : xs;
+    const home = (j, f, t) => {                      // particle j's place on the aircraft, which bobs and pitches gently
+      const p = plane.pts[Math.floor(j*plane.pts.length/N)], a = Math.cos(t*1.4)*.025, c = Math.cos(a), s = Math.sin(a);
+      return [cxAt(f) + p[0]*c - p[1]*s, fy + Math.sin(t*1.4)*3 + p[0]*s + p[1]*c];
+    };
+    // after a dial change, each particle glides from where it was instead of jumping
+    const LX = new Float32Array(N), LY = new Float32Array(N), FX = new Float32Array(N), FY = new Float32Array(N);
+    let bt = -1e9, lt = 0, lastT = -1e9;
+    return {
+      set(){
+        if (!RM && !paused && T - lastT < .2) { FX.set(LX); FY.set(LY); bt = lt; } else bt = -1e9;
+        mk();
+      },
+      fmt: () => `${Math.round(R/PRICE*100)}% residual, $${Math.round(pmt*1000)}k a month`,
+      cap: () => `Aircraft lease, illustrative: rent pays a 7% return on the value still tied up, and the rest pays for the value used up, which grows each year. The orange that stays is the residual. Lease rate factor ${(pmt/PRICE*100).toFixed(2)}% a month.`,
+      hot: j => lv[j] === 0,
+      at(j, t, o){
+        const f = fOf(t);
+        let x, y, tight = 1;
+        if (f >= END + HOLD) {                                         // a new lease: everything flies back into the aircraft
+          const s = sm((f - END - HOLD - ((j*.618034) % 1)*.6)/(RW - .75)), h = home(j, f, t);
+          const a = lv[j] ? [BX[j], BY[j]] : home(j, END, t);
+          x = a[0] + (h[0] - a[0])*s; y = a[1] + (h[1] - a[1])*s - Math.sin(Math.PI*s)*(20 + RY[j]*35);
+        } else if (!lv[j] || f < Y0 + (lv[j] - 1 + LAG[j])*YRDUR) {    // still aboard
+          [x, y] = home(j, f, t);
+        } else {
+          const fd = Y0 + (lv[j] - 1 + LAG[j])*YRDUR, s = (f - fd)/TF;
+          if (s < 1) {                                                 // falls: keeps the aircraft's forward speed, gravity pulls it down
+            const p = home(j, fd, t - (f - fd)), vx = (xe - xs)/FLY*TF;
+            x = p[0] + (BX[j] - p[0])*s + vx*s*(1 - s); y = p[1] + (BY[j] - p[1])*s*s;
+          } else { x = BX[j]; y = BY[j]; tight = 0; }                  // landed: the cursor can stir the pile
+        }
+        if (t >= bt && t - bt < .45) { const s = sm((t - bt)/.45); x = FX[j] + (x - FX[j])*s; y = FY[j] + (y - FY[j])*s; tight = 1; }
+        LX[j] = x; LY[j] = y; lt = t; lastT = T;
+        o.x = x; o.y = y; o.a = 1; o.tight = tight;
+      },
+      draw(g, t){
+        const f = fOf(t), rew = f >= END + HOLD, y = rew ? 0 : clamp((f - Y0)/YRDUR, 0, YRS), rh = rentYr*uh;
+        g.font = '11px IBM Plex Mono'; g.lineWidth = 1; g.textAlign = 'left';
+        // the 12 years as a flight path: dashed ahead, solid where flown, a tick at each year
+        const fx = xs + (xe - xs)*y/YRS;
+        g.strokeStyle = C.grid; g.setLineDash([3, 5]); g.beginPath(); g.moveTo(fx, ty); g.lineTo(xe, ty); g.stroke(); g.setLineDash([]);
+        g.strokeStyle = C.mut; g.beginPath(); g.moveTo(xs, ty); g.lineTo(fx, ty);
+        for (let k = 0; k <= YRS; k++) { const x = xs + k*bw; g.moveTo(x, ty - 3); g.lineTo(x, ty + 3); }
+        g.stroke();
+        // rent bars: dots are the value used up; the shading above them is the return, paid month by month
+        g.strokeStyle = C.grid; g.beginPath(); g.moveTo(xs, gy); g.lineTo(xe, gy); g.stroke();
+        for (let k = 0; k < YRS; k++) {
+          const x = xs + (k + .15)*bw, w = bw*.7, ph = PRIN[k]*uh, pk = clamp(y - k, 0, 1), now = !rew && y > k && y < k + 1;
+          if (pk > 0) { const ih = (rh - ph)*pk; g.fillStyle = C.ink; g.globalAlpha = .12; g.fillRect(x, gy - ph - ih, w, ih); g.globalAlpha = 1; }   // orange is kept for the residual
+          g.strokeStyle = now ? C.ink : pk > 0 ? C.mut : C.grid; g.strokeRect(x + .5, gy - rh + .5, w - 1, rh - 1);
+        }
+        g.fillStyle = C.mut; g.textAlign = 'center';
+        [1, 6, 12].forEach(k => g.fillText('yr ' + k, xs + (k - .5)*bw, gy + 16));
+        g.textAlign = 'left';
+        if (narrow) { g.fillText('dots: value used up', r.x, ly); g.fillText('shaded: 7% return on the rest', r.x, ly + 14); }
+        else g.fillText('dots: value used up · shaded: 7% return on the value still tied up', r.x, ly);
+        g.textAlign = 'right'; g.fillStyle = C.ink;
+        g.fillText(`rent $${rentYr.toFixed(1)}m a year`, r.x + r.w, narrow ? ly + 14 : ly);
+        g.textAlign = 'left';
+        // a label riding above the aircraft
+        if (rew) return;
+        const end = f >= END, txt = f < Y0 ? `delivery · value $${PRICE.toFixed(1)}m` : end ? `end of lease · residual $${R.toFixed(1)}m returns to the lessor` : `year ${Math.ceil(y)} of 12 · value $${valAt(y).toFixed(1)}m`;
+        const tw = g.measureText(txt).width;
+        g.fillStyle = end ? C.sig : C.ink;
+        g.fillText(txt, clamp(cxAt(f) - PW/2, r.x, r.x + r.w - tw), fy - PH/2 - 10);
+      }
+    };
+  },
+
+  /* Q5 advisory panel: how an idea spreads through a network of people, illustrative.
+     Each person can link to their five nearest neighbours, and 1 in 16 has a long-range tie (curved). Links switch on
+     in a fixed random order (bond percolation), so turning the dial only adds or removes links. Below a critical
+     number of links each, people sit in small separate groups; past it, one group spans the network. The idea starts
+     with someone in the largest group and spreads by earliest arrival: it travels along links at a fixed speed, with
+     a short pause at each person. Everyone stays lit for a while, then the network goes dark in the order it lit up. */
+  network(){
+    const r = reg(), top = r.y + 24, hh = r.y + r.h - top;
+    let s0 = 5;
+    const rng = () => { s0 = s0 + 0x6D2B79F5 | 0; let q = Math.imul(s0 ^ s0 >>> 15, 1 | s0); q = q + Math.imul(q ^ q >>> 7, 61 | q) ^ q; return ((q ^ q >>> 14) >>> 0)/4294967296; };
+    const n = Math.round(clamp(r.w*hh/4300, 40, 110)), SP = Math.sqrt(r.w*hh/n), RN = clamp(SP*.08, 3.5, 5.5), pad = RN + 8;
+    const nx = new Float32Array(n), ny = new Float32Array(n);
+    for (let i = 0; i < n; i++) {                                    // best-candidate sampling: an even spread without a grid
+      let bd = -1;
+      for (let c = 0; c < 30; c++) {
+        const x = r.x + pad + rng()*(r.w - 2*pad), y = top + pad + rng()*(hh - 2*pad);
+        let d = Infinity;
+        for (let k = 0; k < i; k++) d = Math.min(d, (x - nx[k])**2 + (y - ny[k])**2);
+        if (d > bd) { bd = d; nx[i] = x; ny[i] = y; }
+      }
+    }
+    const d2 = (a, b) => (nx[a] - nx[b])**2 + (ny[a] - ny[b])**2;
+    const ED = [], seen = new Set();
+    const add = (a, b, far) => {
+      const key = Math.min(a, b)*n + Math.max(a, b);
+      if (a === b || seen.has(key)) return;
+      seen.add(key);
+      const dx = nx[b] - nx[a], dy = ny[b] - ny[a], L = Math.hypot(dx, dy);
+      ED.push({a, b, far, L:far ? L*1.04 : L, ox:-dy*.12, oy:dx*.12});
+    };
+    for (let i = 0; i < n; i++) {
+      const ord = Array.from({length:n}, (_, k) => k).sort((p, q) => d2(i, p) - d2(i, q));
+      for (let k = 1; k <= 5; k++) add(i, ord[k], 0);
+    }
+    for (let i = 0; i < n; i += 16)
+      for (let c = 0; c < 40; c++) { const b = Math.floor(rng()*n); if (d2(i, b) > (r.w*.4)**2) { add(i, b, 1); break; } }
+    for (let i = ED.length - 1; i > 0; i--) { const k = Math.floor(rng()*(i + 1)); [ED[i], ED[k]] = [ED[k], ED[i]]; }
+
+    // particles: a small disc per person, then a five-particle pulse for each link the dial can switch on
+    const KMIN = .5, KMAX = 3.2, PP = 5, EMAX = Math.min(ED.length, Math.ceil(KMAX*n/2)), NN = N - EMAX*PP, M = Math.ceil(NN/n);
+    const mOf = v => Math.min(EMAX, (KMIN + v*(KMAX - KMIN))*n/2);  // links on; fractional, so the newest one fades in
+    const groups = on => {                                          // the largest connected group (union-find)
+      const pa = Int32Array.from({length:n}, (_, i) => i), fd = i => { while (pa[i] !== i) i = pa[i] = pa[pa[i]]; return i; };
+      for (let e = 0; e < on; e++) pa[fd(ED[e].a)] = fd(ED[e].b);
+      const cnt = new Int32Array(n);
+      let best = 0;
+      for (let i = 0; i < n; i++) { const g = fd(i); if (++cnt[g] > cnt[best]) best = g; }
+      return Array.from({length:n}, (_, i) => i).filter(i => fd(i) === best);
+    };
+    let KC = KMAX;                                                  // links each where one group first holds half the people
+    for (let v = 0; v <= 1; v += .01) { const on = Math.round(mOf(v)); if (groups(on).length >= n/2) { KC = 2*on/n; break; } }
+
+    const V = SP/.34, DLY = .1, HOLD = 1.8, GAP = .7;               // about a third of a second per link
+    const A = new Float32Array(n), PE = new Int32Array(n), adj = Array.from({length:n}, () => []);
+    const LW = new Int16Array(N).fill(-2), LU = new Float32Array(N);   // each pulse particle's last sender and progress
+    let mf = 0, on = 0, LC = [0], seed = 0, MAXA = 0, cs = 1;
+    const spread = () => {                                          // earliest arrival from the seed (Dijkstra)
+      A.fill(Infinity); PE.fill(-1); A[seed] = 0;
+      const done = new Uint8Array(n);
+      for (;;) {
+        let u = -1;
+        for (let i = 0; i < n; i++) if (!done[i] && A[i] < Infinity && (u < 0 || A[i] < A[u])) u = i;
+        if (u < 0) break;
+        done[u] = 1;
+        for (const e of adj[u]) { const E = ED[e], w = E.a === u ? E.b : E.a, ta = A[u] + DLY + E.L/V; if (ta < A[w]) { A[w] = ta; PE[w] = e; } }
+      }
+      MAXA = 0;
+      for (let i = 0; i < n; i++) if (A[i] < Infinity) MAXA = Math.max(MAXA, A[i]);
+    };
+    const mk = () => {
+      mf = mOf(DV.network); on = Math.round(mf);
+      adj.forEach(l => l.length = 0);
+      for (let e = 0; e < on; e++) { adj[ED[e].a].push(e); adj[ED[e].b].push(e); }
+      LC = groups(on);
+      spread();
+    };
+    const pick = () => { seed = LC[Math.floor(rng()*LC.length)]; spread(); };
+    mk(); pick();
+    const OFF = () => MAXA + HOLD;                                  // how long each person stays lit
+    const clk = t => {                                              // time into the current spread
+      if (RM) return MAXA + .01;
+      if (t < cs - 1) cs = 1;                                       // back on this figure: start again
+      if (t - cs > 2*MAXA + HOLD + GAP) { cs = t; pick(); }
+      return t - cs;
+    };
+    const lit = (i, tc) => tc >= A[i] && tc < A[i] + OFF();
+    const px = (i, t) => nx[i] + Math.sin(t*.55 + i*2.1)*1.6, py = (i, t) => ny[i] + Math.cos(t*.45 + i*1.3)*1.6;
+    const ept = (E, u, t) => {                                      // point u of the way along a link, from end a
+      const ax = px(E.a, t), ay = py(E.a, t), bx = px(E.b, t), by = py(E.b, t);
+      if (!E.far) return [ax + (bx - ax)*u, ay + (by - ay)*u];
+      const qx = (ax + bx)/2 + E.ox, qy = (ay + by)/2 + E.oy, v = 1 - u;
+      return [v*v*ax + 2*u*v*qx + u*u*bx, v*v*ay + 2*u*v*qy + u*u*by];
+    };
+    return {
+      set: mk,
+      fmt: () => `${(2*mf/n).toFixed(1)} links each, reaches ${Math.round(LC.length/n*100)}%`,
+      cap: () => `How an idea spreads, illustrative: links switch on at random. Below about ${KC.toFixed(1)} links each, people sit in small separate groups; past that, one group spans the network and the idea reaches most of it.`,
+      hot: (j, t) => j < NN ? lit(j % n, clk(t)) : 1,
+      at(j, t, o){
+        const tc = clk(t);
+        if (j < NN) {                                               // a person: a disc that pops when the idea arrives
+          const i = j % n, k = Math.floor(j/n), a = k*2.39996, s = tc - A[i];
+          const pop = s > 0 && s < .7 ? Math.sin(s/.7*Math.PI)*(1 - s/.7) : 0, rr = RN*Math.sqrt((k + .5)/M)*(1 + 2.2*pop);
+          o.x = px(i, t) + Math.cos(a)*rr; o.y = py(i, t) + Math.sin(a)*rr; o.a = 1;
+          return;
+        }
+        // a pulse: a short comet along each link that delivered the idea to someone
+        const q = j - NN, e = Math.floor(q/PP), p = q % PP, E = ED[e];
+        const w = e >= on ? -1 : PE[E.b] === e ? E.a : PE[E.a] === e ? E.b : -1;
+        const u = w < 0 ? -1 : (tc - A[w] - DLY)/(E.L/V) - p*.07;
+        if (u <= 0 || u >= 1) {                                     // hidden, waiting at the sending end
+          const pt = ept(E, w === E.b ? 1 : 0, t);
+          o.x = pt[0]; o.y = pt[1]; o.a = 0; o.snap = 1; LW[q] = -2;
+          return;
+        }
+        if (LW[q] !== w || Math.abs(u - LU[q])*E.L > 12) o.snap = 1; // the dial rerouted it: restart here rather than streak across
+        LW[q] = w; LU[q] = u;
+        const pt = ept(E, w === E.a ? u : 1 - u, t);
+        o.x = pt[0]; o.y = pt[1]; o.a = 1 - p*.12; o.tight = 1;
+      },
+      draw(g, t){
+        const tc = clk(t), off = OFF();
+        const seg = (E, u0, u1) => {
+          if (u1 <= u0) return;
+          const st = E.far ? 14 : 1;
+          for (let s = 0; s <= st; s++) { const pt = ept(E, u0 + (u1 - u0)*s/st, t); s ? g.lineTo(pt[0], pt[1]) : g.moveTo(pt[0], pt[1]); }
+        };
+        g.save(); g.lineCap = 'round';
+        // links, faint; the newest fades in as the dial turns
+        g.strokeStyle = C.ink; g.lineWidth = 1;
+        for (let e = 0, ce = Math.ceil(mf); e < ce; e++) { g.globalAlpha = .22*clamp(mf - e, 0, 1); g.beginPath(); seg(ED[e], 0, 1); g.stroke(); }
+        // the idea burns along every link from both ends, then they cool in the same order
+        g.globalAlpha = 1; g.strokeStyle = C.sig; g.lineWidth = 1.6; g.beginPath();
+        for (let e = 0; e < on; e++) {
+          const E = ED[e];
+          if (A[E.a] === Infinity) continue;
+          const fa = x => clamp((x - DLY)/(E.L/V), 0, 1);
+          seg(E, fa(tc - off - A[E.a]), fa(tc - A[E.a]));
+          seg(E, 1 - fa(tc - A[E.b]), 1 - fa(tc - off - A[E.b]));
+        }
+        g.stroke();
+        // a ring spreads from each person as they hear it
+        g.lineWidth = 1.2;
+        let cnt = 0;
+        for (let i = 0; i < n; i++) {
+          const s = tc - A[i];
+          if (s >= 0) cnt++;
+          if (s > 0 && s < .8) { g.globalAlpha = (1 - s/.8)*.7; g.beginPath(); g.arc(px(i, t), py(i, t), RN + 4 + s*26, 0, 6.2832); g.stroke(); }
+        }
+        g.globalAlpha = 1; g.font = '11px IBM Plex Mono'; g.textAlign = 'left'; g.fillStyle = C.mut;
+        g.fillText(`idea reached ${cnt} of ${n} people`, r.x, r.y + 10);
+        g.restore();
+      }
+    };
+  },
+
+  /* Responsive layout: six cards reflow as the screen narrows. */
+  layout(){
+    const r = reg();
+    let pts, hot, cols, wv;
+    const mk = () => {
+      const wpx = r.w*(.3 + .7*DV.layout), fx = r.x + (r.w - wpx)/2, fy = r.y + r.h*.02, fh = r.h*.92, sg = [];
+      const R = (x, y, w, h, hh) => sg.push([x, y, x + w, y, hh], [x + w, y, x + w, y + h, hh], [x + w, y + h, x, y + h, hh], [x, y + h, x, y, hh]);
+      wv = Math.round(320 + DV.layout*1100); cols = wv > 900 ? 3 : wv > 600 ? 2 : 1;
+      R(fx, fy, wpx, fh); R(fx, fy, wpx, fh*.07); R(fx + 8, fy + fh*.1, wpx - 16, fh*.2, 1);
+      const gp = 8, cw = (wpx - 16 - gp*(cols - 1))/cols, ch = cols === 1 ? fh*.09 : fh*.14;
+      for (let i = 0; i < 6; i++) R(fx + 8 + (i % cols)*(cw + gp), fy + fh*.34 + Math.floor(i/cols)*(ch + gp), cw, ch);
+      [pts, hot] = along(sg);
+    };
+    mk();
+    return {
+      set: mk,
+      fmt: () => wv + ' px, ' + cols + (cols > 1 ? ' columns' : ' column'),
+      cap: () => 'A responsive layout: the same six cards reflow as the screen narrows. Orange is the hero block.',
+      hot: j => hot[j],
+      at(j, t, o){ const p = pts[j]; o.x = p[0] + Math.sin(t*1.2 + j)*.5; o.y = p[1] + Math.cos(t*1.1 + j)*.5; o.a = 1; }
+    };
+  },
+
+  /* Zip line: the rider is a point load, so the cable kinks beneath them.
+     Sag under the load: d = W x (L - x) / (T L). */
+  ropes(){
+    const r = reg(), gy = r.y + r.h*.98;
+    const xA = r.x + r.w*.05, xB = r.x + r.w*.95, aA = gy - r.h*.56, aB = gy - r.h*.46, Lpx = xB - xA;   // gentle fall, about 8 m over 120 m
+    const SPAN = 120, WKN = .88, pxm = Lpx/SPAN, CY = 8, FS = clamp(r.h/520, .6, .95), HANG = 80*FS;   // span m, rider weight kN, figure scale
+    const nTree = Math.floor(N*.18), nR = 240, nC = Math.floor(N*.18), nS = N - nTree - nR - nC;
+    const DW = r.w*.045, xs = xA + DW*.5, xe = xB - DW*.5, lc = new Int16Array(N).fill(-1);
+    let Tkn = 3, sagMax = 0, lastT = NaN, ur = .1, rx = xs, ry = aA, th = 0, ra = 1, d = 0;
+
+    // two conifers, each with a platform round the trunk; the cable is anchored to the trunks
+    const sg = [[r.x - r.w*.04, gy, r.x + r.w*1.02, gy]], TRI = [];
+    const tree = (x, anchor, top, side) => {
+      const fb = anchor - 8, tierH = (fb - top)*.5, wMax = r.w*.06;
+      sg.push([x - 3, gy, x - 2, top + tierH*.4], [x + 3, gy, x + 2, top + tierH*.4]);          // trunk
+      for (let k = 0; k < 3; k++) {                                                          // foliage tiers
+        const ay = top + k*(fb - top - tierH)/2, hw = wMax*(.5 + .25*k);
+        sg.push([x, ay, x - hw, ay + tierH], [x, ay, x + hw, ay + tierH], [x - hw, ay + tierH, x + hw, ay + tierH]);
+        TRI.push([x, ay, hw, tierH]);
+      }
+      const deck = anchor + HANG, post = x - side*DW;
+      sg.push([x - DW, deck, x + DW, deck], [x - DW, deck + 5, x + DW, deck + 5]);              // deck boards
+      sg.push([x - 2, deck + DW*.8, x - DW*.8, deck + 5], [x + 2, deck + DW*.8, x + DW*.8, deck + 5]);   // struts
+      sg.push([post, deck, post, deck - 26*FS], [post, deck - 26*FS, x, deck - 26*FS]);          // safety rail
+      sg.push(...circleSegs(x, anchor, 3, 6));                                                // cable anchor
+    };
+    tree(xA, aA, aA - r.h*.36, 1); tree(xB, aB, aB - r.h*.32, -1);
+    const SP = along(sg, nS)[0];
+
+    // climber hanging from a harness (Go Ape style), facing right; pulley at 0,0
+    const RIDER = [
+      ...circleSegs(-4, -3, 3, 6), ...circleSegs(4, -3, 3, 6), [-7, 1, 7, 1],   // pulley on the cable
+      [0, 1, -5, 35],                                                           // lanyard to the harness
+      [-11, 35, -1, 35], [-11, 38, -1, 38],                                     // harness waist belt
+      ...circleSegs(-8, 14, 5), [-14, 11, -2, 11],                              // head and helmet
+      [-8, 19, -6, 36],                                                         // torso
+      [-7, 22, -2, 15], [-6, 23, -1, 12],                                       // hands on the lanyard
+      [-6, 37, -3, 55], [-3, 55, -4, 72], [-4, 72, 0, 73],                      // legs dangling
+      [-6, 37, -8, 55], [-8, 55, -7, 72], [-7, 72, -3, 73]
+    ];
+    const RHOT = 16;                                                            // pulley, lanyard, harness drawn orange
+    const [RP, , RI] = along(RIDER.map(q => q.map(v => v*FS)), nR);
+
+    const chord = x => aA + (aB - aA)*(x - xA)/Lpx;
+    const cableY = x => {
+      const u = (x - xA)/Lpx, self = 6*4*u*(1 - u), kink = d*(u < ur ? u/ur : (1 - u)/(1 - ur));
+      return chord(x) + self + kink;
+    };
+    const mk = () => { Tkn = 6 + 9*DV.ropes; sagMax = WKN*.25*SPAN/Tkn; lastT = NaN; };
+    mk();
+    const ride = t => {
+      if (t === lastT) return;
+      lastT = t;
+      const f = RM ? 3.4 : (t/CY - Math.floor(t/CY))*CY, tau = clamp((f - .8)/5.2, 0, 1);   // reduced motion: hold mid-ride
+      // accelerate down the slope, then slow on the climb up to the far platform
+      const p = tau < .75 ? 4/3*tau*tau : .75 + 2*(tau - .75) - 4*(tau - .75)*(tau - .75);
+      const x = xs + (xe - xs)*p, after = f - 6;
+      ur = (x - xA)/Lpx;
+      th = tau <= 0 ? 0 : tau < .75 ? .1*sm(tau/.2) : tau < 1 ? -.32*Math.sin((tau - .75)/.25*Math.PI/2) : -.32*Math.exp(-after*1.4)*Math.cos(after*4.5);
+      ra = f < .4 ? f/.4 : f > 7.2 ? clamp(1 - (f - 7.2)/.5, 0, 1) : 1;
+      d = WKN*ur*(1 - ur)*SPAN/Tkn*pxm*ra;
+      rx = x; ry = cableY(x);
+    };
+    return {
+      set: mk,
+      fmt: () => `${Tkn.toFixed(1)} kN, max sag ${sagMax.toFixed(1)} m`,
+      cap: () => 'Zip line, illustrative: the rider is a point load, so the cable kinks beneath them. More tension, less sag.',
+      hot: j => j >= N - nR && RI[j - (N - nR)] < RHOT,
+      at(j, t, o){
+        ride(t); o.a = 1;
+        if (j < nTree) {                                   // needles: soft fill inside each foliage tier
+          const tr = TRI[j % TRI.length]; let u = RX[j], v = RY[j];
+          if (u + v > 1) { u = 1 - u; v = 1 - v; }
+          const y = tr[1] + (u + v)*tr[3];
+          o.x = tr[0] + (v - u)*tr[2] + Math.sin(t*.7 + tr[1]*.05)*(y - tr[1])*.02; o.y = y; o.a = .3; return;
+        }
+        if (j < nTree + nS) { const p = SP[j - nTree]; o.x = p[0]; o.y = p[1]; return; }
+        if (j < nTree + nS + nC) { const x = xA + (j - nTree - nS + .5)/nC*Lpx; o.x = x; o.y = cableY(x); o.tight = 1; return; }
+        const ci = Math.floor(t/CY); if (lc[j] !== ci) { lc[j] = ci; o.snap = 1; }
+        const p = RP[j - (N - nR)], c = Math.cos(th), s = Math.sin(th);
+        o.x = rx + p[0]*c - p[1]*s; o.y = ry + p[0]*s + p[1]*c; o.a = ra; o.tight = 1;
+      },
+      draw(g, t){
+        ride(t);
+        g.font = '11px IBM Plex Mono'; g.lineWidth = 1;
+        // unloaded chord for reference
+        g.strokeStyle = C.grid; g.setLineDash([3, 4]); g.beginPath(); g.moveTo(xA, aA); g.lineTo(xB, aB); g.stroke(); g.setLineDash([]);
+        // sag under the rider
+        if (d > 4) {
+          const cy0 = chord(rx);
+          g.strokeStyle = C.sig; g.beginPath(); g.moveTo(rx - 14, cy0); g.lineTo(rx - 14, ry); g.stroke();
+          g.fillStyle = C.sig; g.textAlign = 'center'; g.fillText('sag ' + (d/pxm).toFixed(1) + ' m', rx - 14, cy0 - 8); g.textAlign = 'left';   // above the chord, clear of the cable
+        }
+        g.fillStyle = C.mut; g.fillText(`span ${SPAN} m`, (xA + xB)/2 - 30, Math.min(aA, aB) - 26);
+      }
+    };
+  },
+
+  /* Fourier series of a square wave.
+     Particles are pinned to points on the wave (not to the screen), so they travel with it
+     as it scrolls, wrapping from the right edge back to the left. */
+  fourier(){
+    const r = reg(), X0 = r.x + r.w*.03, Wd = r.w*.94, cy = r.y + r.h*.5, amp = r.h*.26, nSq = Math.floor(N*.2), CM = 700;
+    const PERIODS = 2, SPAN = PERIODS*2*Math.PI, TH0 = Math.PI/2;   // start on a plateau so the wrap seam never cuts a vertical edge
+    const cum = new Float32Array(CM + 1), cum2 = new Float32Array(CM + 1), px = new Float32Array(CM + 1), py = new Float32Array(CM + 1), qy = new Float32Array(CM + 1);
+    const FX = new Float32Array(N), FY = new Float32Array(N), prevX = new Float32Array(N).fill(-1);
+    let ph = 0;
+    const nT = () => 1 + Math.round(DV.fourier*24);
+    const pick = (cm, ys, s) => {
+      let a = 0, b = CM;
+      while (b - a > 1) { const m = (a + b) >> 1; cm[m] < s ? a = m : b = m; }
+      const f = (s - cm[a])/((cm[b] - cm[a]) || 1);
+      return [px[a] + (px[b] - px[a])*f - X0, ys[a] + (ys[b] - ys[a])*f];
+    };
+    // Build both curves once at zero phase; only the dial (number of terms) rebuilds them.
+    const build = () => {
+      const n = nT(); let L = 0, L2 = 0;
+      for (let i = 0; i <= CM; i++) {
+        const th = TH0 + i/CM*SPAN; let s = 0;
+        for (let k = 1; k < 2*n; k += 2) s += Math.sin(k*th)/k;
+        px[i] = X0 + Wd*i/CM; py[i] = cy - amp*1.2732*s; qy[i] = cy - amp*(Math.sin(th) >= 0 ? 1 : -1);
+        if (i) { L += Math.hypot(px[i] - px[i - 1], py[i] - py[i - 1]); L2 += Math.hypot(px[i] - px[i - 1], qy[i] - qy[i - 1]); }
+        cum[i] = L; cum2[i] = L2;
+      }
+      // spread particles evenly by arc length, stored in wave coordinates (x from 0 to Wd)
+      for (let j = 0; j < N; j++) {
+        const g = (j*.6180339) % 1, p = j < nSq ? pick(cum2, qy, g*L2) : pick(cum, py, g*L);
+        FX[j] = p[0]; FY[j] = p[1];
+      }
+    };
+    build();
+    return {
+      set: build, tick: dt => ph += dt*.5,
+      fmt: () => nT() + (nT() === 1 ? ' term' : ' terms'),
+      cap: () => 'Fourier series: a square wave (orange) built from sine waves. Each term sharpens the corners; the overshoot never fully goes away.',
+      hot: j => j < nSq,
+      at(j, t, o){
+        const off = ph/SPAN*Wd, x = ((FX[j] + off) % Wd + Wd) % Wd;
+        if (x < prevX[j] - Wd/2) o.snap = 1;          // wrapped round: jump straight to the left edge
+        prevX[j] = x;
+        o.x = X0 + x; o.y = FY[j]; o.a = Math.min(1, x/24, (Wd - x)/24);
+      },
+      draw(g){
+        g.font = '11px IBM Plex Mono'; g.strokeStyle = C.grid; g.lineWidth = 1;
+        [-1, 0, 1].forEach(v => {
+          g.beginPath(); g.moveTo(X0, cy - v*amp); g.lineTo(X0 + Wd, cy - v*amp); g.stroke();
+          g.fillStyle = C.mut; g.fillText(v > 0 ? '+1' : v < 0 ? '-1' : '0', X0 - 22, cy - v*amp + 4);
+        });
+      }
+    };
+  }
 };
 
-/* ---------- state machine ---------- */
-let ST = {}, st, prev, cur = '', sec = 'name', hover = '', now0 = performance.now();
+/* =====================================================================
+   State machine: which figure is showing
+   ===================================================================== */
+let ST = {}, st, prev, cur = '', sec = 'name', hover = '', activeSec = 'hero', booted = false;
 const get = n => ST[n] || (ST[n] = B[n]());
-function setState(n, instant){
-  if (n === cur && !instant) return; prev = st; cur = n; st = get(n); st.t0 = T; const t = performance.now();
-  for (let i = 0; i < N; i++) WK[i] = t + Math.random()*(instant ? 0 : 650);
-  if (st.set) st.set(); capUpdate(); dialUpdate();
-}
 const eff = () => ((activeSec === 'projects' || activeSec === 'experience') && hover) || sec;
-let activeSec = 'hero';
-function sync(){ setState(eff()); }
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { sec = e.target.dataset.state; if (activeSec !== e.target.id) hover = ''; activeSec = e.target.id; sync(); $$('#nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); } }), {threshold:.5});
-$$('section[data-state]').forEach(s => io.observe(s));
-$$('#pj .row, #ex .row').forEach(b => { const on = () => { hover = b.dataset.s; sync(); }; ['mouseenter', 'focus', 'click'].forEach(v => b.addEventListener(v, on)); });
+function setState(n, instant){
+  if (n === cur && !instant) return;
+  prev = st; cur = n; st = get(n); st.t0 = T;
+  // hand particles over in a left-to-right sweep
+  const now = performance.now();
+  for (let i = 0; i < N; i++) WK[i] = now + (instant ? 0 : 60 + clamp(X[i]/W, 0, 1)*420 + Math.random()*140);
+  if (st.set) st.set();
+  capUpdate(); dialUpdate();
+}
+function sync(){ if (booted) setState(eff()); }
 
+const NAMES = {hero:'', about:'About', projects:'Projects', experience:'Experience', achievements:'Achievements', contact:'Contact'};
+const onSection = es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const s = e.target;
+  sec = s.dataset.state;
+  if (activeSec !== s.id) hover = '';
+  activeSec = s.id;
+  sync();
+  $$('#nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + s.id));
+  $('#where').textContent = NAMES[s.id];
+});
+const mqPhone = matchMedia('(max-width: 820px)');
+let io;
+function watchSections(){                    // a section is "active" when it crosses the reading line
+  if (io) io.disconnect();
+  io = new IntersectionObserver(onSection, {rootMargin: mqPhone.matches ? '-72% 0px -27% 0px' : '-45% 0px -45% 0px'});
+  $$('section[data-state]').forEach(s => io.observe(s));
+}
+watchSections();
+mqPhone.addEventListener('change', watchSections);
+$$('#pj .row, #ex .row').forEach(b => {
+  const on = () => {                         // a hovered or tapped row always wins, even if the reading line has moved on
+    const sct = b.closest('section');
+    hover = b.dataset.s; activeSec = sct.id; sec = sct.dataset.state; sync();
+  };
+  ['mouseenter', 'focus', 'click'].forEach(v => b.addEventListener(v, on));
+});
 
-/* ---------- loop ---------- */
-const o = {x:0, y:0, a:1}; let last = performance.now();
+/* =====================================================================
+   Frame loop
+   ===================================================================== */
+const o = {x:0, y:0, a:1, snap:0, tight:0};   // tight: follow the target closely (moving rigid parts)
+let last = performance.now();
 function frame(now){
-  requestAnimationFrame(frame); if (document.hidden || document.body.classList.contains('plain')) return;
-  const dt = Math.min(.05, (now - last)/1000), f = dt*60; last = now; const snap = RM || paused; if (!snap) T += dt; if (!snap && st.tick) st.tick(dt); const SPD = Math.min(40, Math.hypot(pvx, pvy));
-  const RR = 110*110;
+  requestAnimationFrame(frame);
+  if (document.hidden || document.body.classList.contains('plain')) { last = now; return; }
+  const dt = Math.min(.05, (now - last)/1000), f = dt*60, still = RM || paused;
+  last = now;
+  if (!still) { T += dt; if (st.tick) st.tick(dt); }
+  const SPD = Math.min(40, Math.hypot(pvx, pvy)), RR = 110*110, damp = Math.pow(.86, f);
   for (let i = 0; i < N; i++) {
-    const SS = now >= WK[i] ? st : prev || st, j = PM[i], tt = T - SS.t0; o.snap = 0; SS.at(j, tt, o); if (o.snap) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; AA[i] = 0; }
-    AA[i] += (o.a - AA[i])*.15; HT[i] = SS.hot(j, tt) ? 1 : 0;
-    if (snap) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; continue; }
-    VX[i] = (VX[i] + (o.x - X[i])*KK[i]*f)*Math.pow(.86, f); VY[i] = (VY[i] + (o.y - Y[i])*KK[i]*f)*Math.pow(.86, f);
-    const dx = X[i] - mx, dy = Y[i] - my, d2 = dx*dx + dy*dy; if (d2 < RR) { const d = Math.sqrt(d2) + .01, q = 1 - d/110, al = SPD > .5 ? (dx*pvx + dy*pvy)/(d*Math.hypot(pvx, pvy) + 1e-6) : 0, s = q*(1.2 + SPD*.1*Math.max(0, al))*f; VX[i] += dx/d*s; VY[i] += dy/d*s; if (al < 0) { VX[i] -= pvx*.05*q*al*f; VY[i] -= pvy*.05*q*al*f; } }
+    const SS = now >= WK[i] ? st : prev || st, j = PM[i], tt = T - SS.t0;
+    o.snap = o.tight = 0; SS.at(j, tt, o);
+    if (o.snap) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; AA[i] = 0; }
+    AA[i] += (o.a - AA[i])*.15;
+    HT[i] = SS.hot(j, tt) ? 1 : 0;
+    if (still) { X[i] = o.x; Y[i] = o.y; VX[i] = VY[i] = 0; continue; }
+    if (o.tight && SS === st) { const k = tt > 1.2 ? 1 : Math.min(1, .25*f); X[i] += (o.x - X[i])*k; Y[i] += (o.y - Y[i])*k; VX[i] = VY[i] = 0; continue; }
+    VX[i] = (VX[i] + (o.x - X[i])*KK[i]*f)*damp;
+    VY[i] = (VY[i] + (o.y - Y[i])*KK[i]*f)*damp;
+    // cursor pushes particles away, harder in the direction it is moving
+    const dx = X[i] - mx, dy = Y[i] - my, d2 = dx*dx + dy*dy;
+    if (d2 < RR) {
+      const d = Math.sqrt(d2) + .01, q = 1 - d/110, al = SPD > .5 ? (dx*pvx + dy*pvy)/(d*Math.hypot(pvx, pvy) + 1e-6) : 0, s = q*(1.2 + SPD*.1*Math.max(0, al))*f;
+      VX[i] += dx/d*s; VY[i] += dy/d*s;
+      if (al < 0) { VX[i] -= pvx*.05*q*al*f; VY[i] -= pvy*.05*q*al*f; }
+    }
     X[i] += VX[i]*f; Y[i] += VY[i]*f;
   }
-  cx.clearRect(0, 0, W, H); if (st.draw) st.draw(cx, T - st.t0); drawCone(); hudTick(dt);
-  for (const hot of [0, 1]) { cx.fillStyle = hot ? C.sig : C.ink; const z = hot ? 3 : 2.2; for (let i = 0; i < N; i++) if (HT[i] === hot && AA[i] > .04) { const s = z*AA[i]; cx.fillRect(X[i] - s/2, Y[i] - s/2, s, s); } }
+  cx.clearRect(0, 0, W, H);
+  if (st.draw) st.draw(cx, T - st.t0);
+  drawCone(); hudTick(dt);
+  for (const hot of [0, 1]) {
+    cx.fillStyle = hot ? C.sig : C.ink;
+    const z = hot ? 3 : 2.2;
+    for (let i = 0; i < N; i++) if (HT[i] === hot && AA[i] > .04) { const s = z*AA[i]; cx.fillRect(X[i] - s/2, Y[i] - s/2, s, s); }
+  }
 }
-addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; pvx = .6*pvx + .4*(e.movementX || 0); pvy = .6*pvy + .4*(e.movementY || 0); });
-addEventListener('pointerleave', () => { mx = my = -1e4; });
-addEventListener('pointerdown', e => { if (RM || paused || e.target.closest('#rig')) return; for (let i = 0; i < N; i++) { const dx = X[i] - e.clientX, dy = Y[i] - e.clientY, d = Math.hypot(dx, dy); if (d < 260) { const s = (1 - d/260)*14; VX[i] += dx/(d + 1)*s; VY[i] += dy/(d + 1)*s; } } });
 
-/* ---------- dial, hud, cursor shock ---------- */
-function capUpdate(){ $('#cap').innerHTML = '<b>Fig. ' + FIG[cur] + '.</b> ' + st.cap(); }
-function dialUpdate(){ const v = DV[cur], d = $('#dial'); d.style.setProperty('--a', (-135 + 270*v) + 'deg'); d.style.setProperty('--p', v); d.setAttribute('aria-valuenow', Math.round(v*100)); $('#dl').textContent = DL[cur]; $('#dv').textContent = st.fmt(); }
-function setDial(v){ DV[cur] = Math.max(0, Math.min(1, v)); if (st.set) st.set(); capUpdate(); dialUpdate(); }
-let dragY = null, dragV = 0, pvx = 0, pvy = 0, fps = 60, fc = 0; const dial = $('#dial');
+/* =====================================================================
+   Pointer input
+   ===================================================================== */
+const releaseCursor = () => { mx = my = -1e4; pvx = pvy = 0; };
+addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; pvx = .6*pvx + .4*(e.movementX || 0); pvy = .6*pvy + .4*(e.movementY || 0); });
+addEventListener('pointerleave', releaseCursor);
+addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') releaseCursor(); });   // touch: don't leave a hole where the finger was
+addEventListener('pointercancel', releaseCursor);
+addEventListener('pointerdown', e => {
+  if (RM || paused || e.target.closest('#rig')) return;
+  for (let i = 0; i < N; i++) {
+    const dx = X[i] - e.clientX, dy = Y[i] - e.clientY, d = Math.hypot(dx, dy);
+    if (d < 260) { const s = (1 - d/260)*14; VX[i] += dx/(d + 1)*s; VY[i] += dy/(d + 1)*s; }
+  }
+});
+
+/* =====================================================================
+   Dial, caption, HUD
+   ===================================================================== */
+function capUpdate(){
+  $('#cap').innerHTML = '<b>Fig. ' + FIG[cur] + '.</b> ' + st.cap();
+  $('#cap').style.display = st.capInside ? 'none' : '';       // some figures draw their caption on the canvas
+}
+/* Wrapped caption on the canvas, with the figure number in the accent colour. */
+function drawCaption(g, label, text, x, y, maxW, lh){
+  const words = (label + ' ' + text).split(' '), lines = [];
+  let line = '';
+  for (const w of words) { const t = line ? line + ' ' + w : w; if (g.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+  if (line) lines.push(line);
+  g.textAlign = 'left';
+  lines.forEach((l, i) => {
+    let lx = x;
+    if (i === 0) { g.fillStyle = C.sig; g.fillText(label, lx, y); lx += g.measureText(label + ' ').width; l = l.slice(label.length + 1); }
+    g.fillStyle = C.mut; g.fillText(l, lx, y + i*lh);
+  });
+}
+function dialUpdate(){
+  const v = DV[cur], d = $('#dial'), txt = st.fmt();
+  d.style.setProperty('--a', (-135 + 270*v) + 'deg'); d.style.setProperty('--p', v);
+  d.setAttribute('aria-valuenow', Math.round(v*100));
+  d.setAttribute('aria-valuetext', DL[cur] + ': ' + txt);
+  $('#dl').textContent = DL[cur]; $('#dv').textContent = txt;
+}
+function setDial(v){ DV[cur] = clamp(v, 0, 1); if (st.set) st.set(); capUpdate(); dialUpdate(); }
+const dial = $('#dial');
+let dragY = null, dragV = 0, fps = 60, fc = 0;
 dial.addEventListener('pointerdown', e => { dial.setPointerCapture(e.pointerId); dragY = e.clientY; dragV = DV[cur]; });
 dial.addEventListener('pointermove', e => { if (dragY !== null) setDial(dragV + (dragY - e.clientY)/180); });
 dial.addEventListener('pointerup', () => dragY = null);
-dial.addEventListener('keydown', e => { const k = {ArrowUp:.03, ArrowRight:.03, ArrowDown:-.03, ArrowLeft:-.03, PageUp:.1, PageDown:-.1}[e.key]; if (k) { e.preventDefault(); setDial(DV[cur] + k); } });
+dial.addEventListener('pointercancel', () => dragY = null);
+dial.addEventListener('keydown', e => {
+  const k = {ArrowUp:.03, ArrowRight:.03, ArrowDown:-.03, ArrowLeft:-.03, PageUp:.1, PageDown:-.1}[e.key];
+  if (k) { e.preventDefault(); setDial(DV[cur] + k); }
+});
 dial.addEventListener('wheel', e => { e.preventDefault(); setDial(DV[cur] - e.deltaY/1200); }, {passive:false});
-function drawCone(){ const sp = Math.hypot(pvx, pvy); if (sp < 6 || mx < 0) return; const a = Math.asin(Math.min(1, 6/sp)), g = Math.atan2(-pvy, -pvx); cx.strokeStyle = C.sig; cx.globalAlpha = Math.min(.5, sp/60); cx.lineWidth = 1.2; for (const s of [-1, 1]) { cx.beginPath(); cx.moveTo(mx, my); cx.lineTo(mx + Math.cos(g + s*a)*110, my + Math.sin(g + s*a)*110); cx.stroke(); } cx.globalAlpha = 1; }
-function hudTick(dt){ fps += (1/Math.max(dt, .001) - fps)*.05; pvx *= .9; pvy *= .9; if (++fc % 20 === 0) $('#hud').textContent = `n = ${N} \u00b7 ${Math.round(fps)} fps \u00b7 cursor Mach ${(Math.hypot(pvx, pvy)/6).toFixed(1)}`; }
-/* ---------- controls ---------- */
-$('#tgl').onclick = e => { const d = document.body.dataset.theme !== 'dark'; document.body.dataset.theme = d ? 'dark' : 'light'; e.currentTarget.setAttribute('aria-checked', d); colours(); };
-$('#ps').onclick = e => { paused = !paused; e.currentTarget.setAttribute('aria-pressed', paused); };
-$('#pl').onclick = e => { const p = document.body.classList.toggle('plain'); e.currentTarget.textContent = p ? 'Particle view' : 'Plain view'; };
-if (new URLSearchParams(location.search).has('plain')) $('#pl').click();
-addEventListener('resize', () => { size(); alloc(); ST = {}; cur = ''; prev = null; sync(); });
 
-$('#rerun').onclick = () => { scrollTo({top:0, behavior:RM ? 'auto' : 'smooth'}); for (let i = 0; i < N; i++) { const a = Math.random()*6.28, v = 8 + Math.random()*14; VX[i] += Math.cos(a)*v; VY[i] += Math.sin(a)*v; } };
-/* ---------- boot ---------- */
-size(); alloc(); colours(); readout();
-if (matchMedia('(prefers-color-scheme: dark)').matches) $('#tgl').click();
-document.fonts.load("800 100px 'Bricolage Grotesque'").then(() => { cur = ''; ST = {}; setState('name', true); requestAnimationFrame(frame); });
+/* Mach cone behind a fast cursor. */
+function drawCone(){
+  const sp = Math.hypot(pvx, pvy); if (sp < 6 || mx < 0) return;
+  const a = Math.asin(Math.min(1, 6/sp)), g = Math.atan2(-pvy, -pvx);
+  cx.strokeStyle = C.sig; cx.globalAlpha = Math.min(.5, sp/60); cx.lineWidth = 1.2;
+  for (const s of [-1, 1]) { cx.beginPath(); cx.moveTo(mx, my); cx.lineTo(mx + Math.cos(g + s*a)*110, my + Math.sin(g + s*a)*110); cx.stroke(); }
+  cx.globalAlpha = 1;
+}
+function hudTick(dt){
+  fps += (1/Math.max(dt, .001) - fps)*.05; pvx *= .9; pvy *= .9;
+  if (++fc % 20 === 0) $('#hud').textContent = `n = ${N} · ${Math.round(fps)} fps · cursor Mach ${(Math.hypot(pvx, pvy)/6).toFixed(1)}`;
+}
+
+/* =====================================================================
+   Controls
+   ===================================================================== */
+function setTheme(dark, save){
+  document.body.dataset.theme = dark ? 'dark' : 'light';
+  $('#tgl').setAttribute('aria-checked', dark);
+  colours();
+  if (save) store.set('theme', dark ? 'dark' : 'light');
+}
+$('#tgl').onclick = () => setTheme(document.body.dataset.theme !== 'dark', true);
+$('#ps').onclick = e => { paused = !paused; e.currentTarget.setAttribute('aria-pressed', paused); };
+$('#pl').onclick = () => { const p = document.body.classList.toggle('plain'); $('#plt').textContent = p ? 'Particle' : 'Plain'; };
+$('#pl2').onclick = () => $('#pl').click();
+$('#rerun').onclick = () => {
+  scrollTo({top:0, behavior:RM ? 'auto' : 'smooth'});
+  for (let i = 0; i < N; i++) { const a = Math.random()*6.28, v = 8 + Math.random()*14; VX[i] += Math.cos(a)*v; VY[i] += Math.sin(a)*v; }
+};
+
+/* Resize: ignore the mobile address bar showing/hiding (height-only, small change). */
+let rzT = 0, lastW = 0, lastH = 0;
+function onResize(){
+  size();
+  if (W === lastW && Math.abs(H - lastH) < 120) return;
+  lastW = W; lastH = H;
+  if ((W < 700 ? 2200 : NMAX) !== N) alloc();
+  ST = {}; const n = cur || eff(); cur = ''; prev = null;
+  if (booted) setState(n);
+}
+addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(onResize, 150); });
+
+/* =====================================================================
+   Boot
+   ===================================================================== */
+size(); lastW = W; lastH = H; alloc();
+setTheme(document.body.dataset.theme === 'dark');
+readout();
+if (new URLSearchParams(location.search).has('plain')) $('#pl').click();
+function boot(){
+  if (booted) return;
+  booted = true; ST = {}; cur = '';
+  setState(eff());
+  requestAnimationFrame(frame);
+  setTimeout(() => document.body.classList.add('ready'), RM ? 0 : 650);
+}
+document.fonts.load("800 100px 'Bricolage Grotesque'").then(boot, boot);
+setTimeout(boot, 2500);
 console.log('%cOllie Nebel', 'font:700 18px sans-serif', '\nParticles are drawn on a 2D canvas. Click to scatter them.');
 </script>
 </body>
